@@ -11,11 +11,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
+enum FieldType {
+  text
+  number
+  date
+  singleSelect
+  multiSelect
+  checkbox
+  url
+  email
+}
+
+model Project {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tables    Table[]
 
   @@index([name])
+}
+
+model Table {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  projectId Int
+  project   Project  @relation(fields: [projectId], references: [id])
+  fields    Field[]
+  rows      Row[]
+
+  @@index([name])
+}
+
+model Field {
+  id        Int       @id @default(autoincrement())
+  name      String
+  type      FieldType
+  position  Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tableId   Int
+  table     Table     @relation(fields: [tableId], references: [id])
+  cells     Cell[]
+
+  @@index([tableId])
+}
+
+model Row {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tableId   Int
+  table     Table    @relation(fields: [tableId], references: [id])
+  cells     Cell[]
+
+  @@index([tableId])
+}
+
+model Cell {
+  id      Int     @id @default(autoincrement())
+  value   String? // stored as string; parse based on Field.type
+  rowId   Int
+  fieldId Int
+  row     Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  field   Field   @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  @@unique([rowId, fieldId])
+  @@index([rowId])
+  @@index([fieldId])
 }
