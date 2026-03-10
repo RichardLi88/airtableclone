@@ -1,14 +1,35 @@
-import { PrismaClient, FieldType } from "../generated/prisma";
+import { PrismaClient, ColumnType } from "../generated/prisma";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Clean up any previous demo data for idempotent runs
-  await prisma.project.deleteMany({
+  // Clean up any previous demo data for idempotent runs.
+  // Delete children first to avoid FK issues (and be explicit about scope).
+  const existingBase = await prisma.base.findFirst({
     where: { name: "Lyra" },
+    select: { id: true },
   });
 
-  const project = await prisma.project.create({
+  if (existingBase) {
+    const tables = await prisma.table.findMany({
+      where: { baseId: existingBase.id },
+      select: { id: true },
+    });
+    const tableIds = tables.map((t) => t.id);
+
+    if (tableIds.length > 0) {
+      await prisma.cell.deleteMany({
+        where: { row: { tableId: { in: tableIds } } },
+      });
+      await prisma.row.deleteMany({ where: { tableId: { in: tableIds } } });
+      await prisma.column.deleteMany({ where: { tableId: { in: tableIds } } });
+      await prisma.table.deleteMany({ where: { id: { in: tableIds } } });
+    }
+
+    await prisma.base.delete({ where: { id: existingBase.id } });
+  }
+
+  const base = await prisma.base.create({
     data: {
       name: "Lyra",
     },
@@ -17,51 +38,51 @@ async function main() {
   const table = await prisma.table.create({
     data: {
       name: "Lyra Employees",
-      projectId: project.id,
+      baseId: base.id,
     },
   });
 
   // Define fields (columns)
-  const nameField = await prisma.field.create({
+  const nameColumn = await prisma.column.create({
     data: {
       name: "Name",
-      type: FieldType.text,
+      type: ColumnType.text,
       position: 0,
       tableId: table.id,
     },
   });
 
-  const ageField = await prisma.field.create({
+  const ageColumn = await prisma.column.create({
     data: {
       name: "Age",
-      type: FieldType.number,
+      type: ColumnType.number,
       position: 1,
       tableId: table.id,
     },
   });
 
-  const addressField = await prisma.field.create({
+  const addressColumn = await prisma.column.create({
     data: {
       name: "Address",
-      type: FieldType.text,
+      type: ColumnType.text,
       position: 2,
       tableId: table.id,
     },
   });
 
-  const hobbiesField = await prisma.field.create({
+  const hobbiesColumn = await prisma.column.create({
     data: {
       name: "Hobbies",
-      type: FieldType.multiSelect,
+      type: ColumnType.multiSelect,
       position: 3,
       tableId: table.id,
     },
   });
 
-  const websiteField = await prisma.field.create({
+  const websiteColumn = await prisma.column.create({
     data: {
       name: "Website",
-      type: FieldType.url,
+      type: ColumnType.url,
       position: 4,
       tableId: table.id,
     },
@@ -102,27 +123,27 @@ async function main() {
       data: [
         {
           rowId: row.id,
-          fieldId: nameField.id,
+          columnId: nameColumn.id,
           value: employee.name,
         },
         {
           rowId: row.id,
-          fieldId: ageField.id,
+          columnId: ageColumn.id,
           value: String(employee.age),
         },
         {
           rowId: row.id,
-          fieldId: addressField.id,
+          columnId: addressColumn.id,
           value: employee.address,
         },
         {
           rowId: row.id,
-          fieldId: hobbiesField.id,
+          columnId: hobbiesColumn.id,
           value: JSON.stringify(employee.hobbies),
         },
         {
           rowId: row.id,
-          fieldId: websiteField.id,
+          columnId: websiteColumn.id,
           value: employee.website,
         },
       ],

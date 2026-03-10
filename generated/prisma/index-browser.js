@@ -115,10 +115,13 @@ Prisma.NullTypes = {
  */
 
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
-exports.Prisma.ProjectScalarFieldEnum = {
+exports.Prisma.BaseScalarFieldEnum = {
   id: 'id',
   name: 'name',
   createdAt: 'createdAt',
@@ -130,10 +133,10 @@ exports.Prisma.TableScalarFieldEnum = {
   name: 'name',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  projectId: 'projectId'
+  baseId: 'baseId'
 };
 
-exports.Prisma.FieldScalarFieldEnum = {
+exports.Prisma.ColumnScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
@@ -154,7 +157,7 @@ exports.Prisma.CellScalarFieldEnum = {
   id: 'id',
   value: 'value',
   rowId: 'rowId',
-  fieldId: 'fieldId'
+  columnId: 'columnId'
 };
 
 exports.Prisma.SortOrder = {
@@ -162,11 +165,16 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.FieldType = exports.$Enums.FieldType = {
+exports.ColumnType = exports.$Enums.ColumnType = {
   text: 'text',
   number: 'number',
   date: 'date',
@@ -178,9 +186,9 @@ exports.FieldType = exports.$Enums.FieldType = {
 };
 
 exports.Prisma.ModelName = {
-  Project: 'Project',
+  Base: 'Base',
   Table: 'Table',
-  Field: 'Field',
+  Column: 'Column',
   Row: 'Row',
   Cell: 'Cell'
 };

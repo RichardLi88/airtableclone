@@ -2,6 +2,23 @@
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
+## Database (PostgreSQL)
+
+This repo is configured to use **PostgreSQL** via Prisma.
+
+- Create your local env file:
+
+```bash
+cp .env.example .env
+```
+
+- Push the schema to your database and generate the Prisma client:
+
+```bash
+npm run db:push
+npm run db:generate
+```
+
 ## What's next? How do I make an app with this?
 
 We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.

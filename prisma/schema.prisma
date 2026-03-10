@@ -7,11 +7,11 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
-enum FieldType {
+enum ColumnType {
     text
     number
     date
@@ -22,7 +22,7 @@ enum FieldType {
     email
 }
 
-model Project {
+model Base {
     id        Int      @id @default(autoincrement())
     name      String
     createdAt DateTime @default(now())
@@ -37,18 +37,18 @@ model Table {
     name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    projectId Int
-    project   Project @relation(fields: [projectId], references: [id])
-    fields    Field[]
+    baseId    Int
+    base      Base @relation(fields: [baseId], references: [id])
+    columns   Column[]
     rows      Row[]
 
     @@index([name])
 }
 
-model Field {
+model Column {
     id        Int      @id @default(autoincrement())
     name      String
-    type      FieldType
+    type      ColumnType
     position  Int      
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -74,11 +74,11 @@ model Cell {
     id        Int      @id @default(autoincrement())
     value     String?  // stored as string; parse based on Field.type
     rowId     Int
-    fieldId   Int
+    columnId  Int
     row       Row      @relation(fields: [rowId], references: [id], onDelete: Cascade)
-    field     Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+    column    Column   @relation(fields: [columnId], references: [id], onDelete: Cascade)
 
-    @@unique([rowId, fieldId])
+    @@unique([rowId, columnId])
     @@index([rowId])
-    @@index([fieldId])
+    @@index([columnId])
 }

@@ -14,20 +14,20 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
- * Model Project
+ * Model Base
  * 
  */
-export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
+export type Base = $Result.DefaultSelection<Prisma.$BasePayload>
 /**
  * Model Table
  * 
  */
 export type Table = $Result.DefaultSelection<Prisma.$TablePayload>
 /**
- * Model Field
+ * Model Column
  * 
  */
-export type Field = $Result.DefaultSelection<Prisma.$FieldPayload>
+export type Column = $Result.DefaultSelection<Prisma.$ColumnPayload>
 /**
  * Model Row
  * 
@@ -43,7 +43,7 @@ export type Cell = $Result.DefaultSelection<Prisma.$CellPayload>
  * Enums
  */
 export namespace $Enums {
-  export const FieldType: {
+  export const ColumnType: {
   text: 'text',
   number: 'number',
   date: 'date',
@@ -54,13 +54,13 @@ export namespace $Enums {
   email: 'email'
 };
 
-export type FieldType = (typeof FieldType)[keyof typeof FieldType]
+export type ColumnType = (typeof ColumnType)[keyof typeof ColumnType]
 
 }
 
-export type FieldType = $Enums.FieldType
+export type ColumnType = $Enums.ColumnType
 
-export const FieldType: typeof $Enums.FieldType
+export const ColumnType: typeof $Enums.ColumnType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -69,8 +69,8 @@ export const FieldType: typeof $Enums.FieldType
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Projects
- * const projects = await prisma.project.findMany()
+ * // Fetch zero or more Bases
+ * const bases = await prisma.base.findMany()
  * ```
  *
  *
@@ -90,8 +90,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Projects
-   * const projects = await prisma.project.findMany()
+   * // Fetch zero or more Bases
+   * const bases = await prisma.base.findMany()
    * ```
    *
    *
@@ -181,14 +181,14 @@ export class PrismaClient<
   }>>
 
       /**
-   * `prisma.project`: Exposes CRUD operations for the **Project** model.
+   * `prisma.base`: Exposes CRUD operations for the **Base** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Projects
-    * const projects = await prisma.project.findMany()
+    * // Fetch zero or more Bases
+    * const bases = await prisma.base.findMany()
     * ```
     */
-  get project(): Prisma.ProjectDelegate<ExtArgs, ClientOptions>;
+  get base(): Prisma.BaseDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.table`: Exposes CRUD operations for the **Table** model.
@@ -201,14 +201,14 @@ export class PrismaClient<
   get table(): Prisma.TableDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.field`: Exposes CRUD operations for the **Field** model.
+   * `prisma.column`: Exposes CRUD operations for the **Column** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Fields
-    * const fields = await prisma.field.findMany()
+    * // Fetch zero or more Columns
+    * const columns = await prisma.column.findMany()
     * ```
     */
-  get field(): Prisma.FieldDelegate<ExtArgs, ClientOptions>;
+  get column(): Prisma.ColumnDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.row`: Exposes CRUD operations for the **Row** model.
@@ -670,9 +670,9 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Project: 'Project',
+    Base: 'Base',
     Table: 'Table',
-    Field: 'Field',
+    Column: 'Column',
     Row: 'Row',
     Cell: 'Cell'
   };
@@ -693,81 +693,81 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "project" | "table" | "field" | "row" | "cell"
+      modelProps: "base" | "table" | "column" | "row" | "cell"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
-      Project: {
-        payload: Prisma.$ProjectPayload<ExtArgs>
-        fields: Prisma.ProjectFieldRefs
+      Base: {
+        payload: Prisma.$BasePayload<ExtArgs>
+        fields: Prisma.BaseFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.ProjectFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload> | null
+            args: Prisma.BaseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.ProjectFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+            args: Prisma.BaseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>
           }
           findFirst: {
-            args: Prisma.ProjectFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload> | null
+            args: Prisma.BaseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.ProjectFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+            args: Prisma.BaseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>
           }
           findMany: {
-            args: Prisma.ProjectFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+            args: Prisma.BaseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>[]
           }
           create: {
-            args: Prisma.ProjectCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+            args: Prisma.BaseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>
           }
           createMany: {
-            args: Prisma.ProjectCreateManyArgs<ExtArgs>
+            args: Prisma.BaseCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.ProjectCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+            args: Prisma.BaseCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>[]
           }
           delete: {
-            args: Prisma.ProjectDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+            args: Prisma.BaseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>
           }
           update: {
-            args: Prisma.ProjectUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+            args: Prisma.BaseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>
           }
           deleteMany: {
-            args: Prisma.ProjectDeleteManyArgs<ExtArgs>
+            args: Prisma.BaseDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.ProjectUpdateManyArgs<ExtArgs>
+            args: Prisma.BaseUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.ProjectUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+            args: Prisma.BaseUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>[]
           }
           upsert: {
-            args: Prisma.ProjectUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+            args: Prisma.BaseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BasePayload>
           }
           aggregate: {
-            args: Prisma.ProjectAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateProject>
+            args: Prisma.BaseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBase>
           }
           groupBy: {
-            args: Prisma.ProjectGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ProjectGroupByOutputType>[]
+            args: Prisma.BaseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BaseGroupByOutputType>[]
           }
           count: {
-            args: Prisma.ProjectCountArgs<ExtArgs>
-            result: $Utils.Optional<ProjectCountAggregateOutputType> | number
+            args: Prisma.BaseCountArgs<ExtArgs>
+            result: $Utils.Optional<BaseCountAggregateOutputType> | number
           }
         }
       }
@@ -845,77 +845,77 @@ export namespace Prisma {
           }
         }
       }
-      Field: {
-        payload: Prisma.$FieldPayload<ExtArgs>
-        fields: Prisma.FieldFieldRefs
+      Column: {
+        payload: Prisma.$ColumnPayload<ExtArgs>
+        fields: Prisma.ColumnFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.FieldFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload> | null
+            args: Prisma.ColumnFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.FieldFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>
+            args: Prisma.ColumnFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
           }
           findFirst: {
-            args: Prisma.FieldFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload> | null
+            args: Prisma.ColumnFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.FieldFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>
+            args: Prisma.ColumnFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
           }
           findMany: {
-            args: Prisma.FieldFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>[]
+            args: Prisma.ColumnFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>[]
           }
           create: {
-            args: Prisma.FieldCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>
+            args: Prisma.ColumnCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
           }
           createMany: {
-            args: Prisma.FieldCreateManyArgs<ExtArgs>
+            args: Prisma.ColumnCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.FieldCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>[]
+            args: Prisma.ColumnCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>[]
           }
           delete: {
-            args: Prisma.FieldDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>
+            args: Prisma.ColumnDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
           }
           update: {
-            args: Prisma.FieldUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>
+            args: Prisma.ColumnUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
           }
           deleteMany: {
-            args: Prisma.FieldDeleteManyArgs<ExtArgs>
+            args: Prisma.ColumnDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.FieldUpdateManyArgs<ExtArgs>
+            args: Prisma.ColumnUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.FieldUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>[]
+            args: Prisma.ColumnUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>[]
           }
           upsert: {
-            args: Prisma.FieldUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FieldPayload>
+            args: Prisma.ColumnUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
           }
           aggregate: {
-            args: Prisma.FieldAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateField>
+            args: Prisma.ColumnAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateColumn>
           }
           groupBy: {
-            args: Prisma.FieldGroupByArgs<ExtArgs>
-            result: $Utils.Optional<FieldGroupByOutputType>[]
+            args: Prisma.ColumnGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ColumnGroupByOutputType>[]
           }
           count: {
-            args: Prisma.FieldCountArgs<ExtArgs>
-            result: $Utils.Optional<FieldCountAggregateOutputType> | number
+            args: Prisma.ColumnCountArgs<ExtArgs>
+            result: $Utils.Optional<ColumnCountAggregateOutputType> | number
           }
         }
       }
@@ -1163,9 +1163,9 @@ export namespace Prisma {
     omit?: Prisma.GlobalOmitConfig
   }
   export type GlobalOmitConfig = {
-    project?: ProjectOmit
+    base?: BaseOmit
     table?: TableOmit
-    field?: FieldOmit
+    column?: ColumnOmit
     row?: RowOmit
     cell?: CellOmit
   }
@@ -1244,32 +1244,32 @@ export namespace Prisma {
 
 
   /**
-   * Count Type ProjectCountOutputType
+   * Count Type BaseCountOutputType
    */
 
-  export type ProjectCountOutputType = {
+  export type BaseCountOutputType = {
     tables: number
   }
 
-  export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tables?: boolean | ProjectCountOutputTypeCountTablesArgs
+  export type BaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tables?: boolean | BaseCountOutputTypeCountTablesArgs
   }
 
   // Custom InputTypes
   /**
-   * ProjectCountOutputType without action
+   * BaseCountOutputType without action
    */
-  export type ProjectCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ProjectCountOutputType
+     * Select specific fields to fetch from the BaseCountOutputType
      */
-    select?: ProjectCountOutputTypeSelect<ExtArgs> | null
+    select?: BaseCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * ProjectCountOutputType without action
+   * BaseCountOutputType without action
    */
-  export type ProjectCountOutputTypeCountTablesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseCountOutputTypeCountTablesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TableWhereInput
   }
 
@@ -1279,12 +1279,12 @@ export namespace Prisma {
    */
 
   export type TableCountOutputType = {
-    fields: number
+    columns: number
     rows: number
   }
 
   export type TableCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    fields?: boolean | TableCountOutputTypeCountFieldsArgs
+    columns?: boolean | TableCountOutputTypeCountColumnsArgs
     rows?: boolean | TableCountOutputTypeCountRowsArgs
   }
 
@@ -1302,8 +1302,8 @@ export namespace Prisma {
   /**
    * TableCountOutputType without action
    */
-  export type TableCountOutputTypeCountFieldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FieldWhereInput
+  export type TableCountOutputTypeCountColumnsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ColumnWhereInput
   }
 
   /**
@@ -1315,32 +1315,32 @@ export namespace Prisma {
 
 
   /**
-   * Count Type FieldCountOutputType
+   * Count Type ColumnCountOutputType
    */
 
-  export type FieldCountOutputType = {
+  export type ColumnCountOutputType = {
     cells: number
   }
 
-  export type FieldCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    cells?: boolean | FieldCountOutputTypeCountCellsArgs
+  export type ColumnCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cells?: boolean | ColumnCountOutputTypeCountCellsArgs
   }
 
   // Custom InputTypes
   /**
-   * FieldCountOutputType without action
+   * ColumnCountOutputType without action
    */
-  export type FieldCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FieldCountOutputType
+     * Select specific fields to fetch from the ColumnCountOutputType
      */
-    select?: FieldCountOutputTypeSelect<ExtArgs> | null
+    select?: ColumnCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * FieldCountOutputType without action
+   * ColumnCountOutputType without action
    */
-  export type FieldCountOutputTypeCountCellsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnCountOutputTypeCountCellsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CellWhereInput
   }
 
@@ -1381,40 +1381,40 @@ export namespace Prisma {
    */
 
   /**
-   * Model Project
+   * Model Base
    */
 
-  export type AggregateProject = {
-    _count: ProjectCountAggregateOutputType | null
-    _avg: ProjectAvgAggregateOutputType | null
-    _sum: ProjectSumAggregateOutputType | null
-    _min: ProjectMinAggregateOutputType | null
-    _max: ProjectMaxAggregateOutputType | null
+  export type AggregateBase = {
+    _count: BaseCountAggregateOutputType | null
+    _avg: BaseAvgAggregateOutputType | null
+    _sum: BaseSumAggregateOutputType | null
+    _min: BaseMinAggregateOutputType | null
+    _max: BaseMaxAggregateOutputType | null
   }
 
-  export type ProjectAvgAggregateOutputType = {
+  export type BaseAvgAggregateOutputType = {
     id: number | null
   }
 
-  export type ProjectSumAggregateOutputType = {
+  export type BaseSumAggregateOutputType = {
     id: number | null
   }
 
-  export type ProjectMinAggregateOutputType = {
-    id: number | null
-    name: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type ProjectMaxAggregateOutputType = {
+  export type BaseMinAggregateOutputType = {
     id: number | null
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type ProjectCountAggregateOutputType = {
+  export type BaseMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BaseCountAggregateOutputType = {
     id: number
     name: number
     createdAt: number
@@ -1423,29 +1423,29 @@ export namespace Prisma {
   }
 
 
-  export type ProjectAvgAggregateInputType = {
+  export type BaseAvgAggregateInputType = {
     id?: true
   }
 
-  export type ProjectSumAggregateInputType = {
+  export type BaseSumAggregateInputType = {
     id?: true
   }
 
-  export type ProjectMinAggregateInputType = {
-    id?: true
-    name?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type ProjectMaxAggregateInputType = {
+  export type BaseMinAggregateInputType = {
     id?: true
     name?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type ProjectCountAggregateInputType = {
+  export type BaseMaxAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BaseCountAggregateInputType = {
     id?: true
     name?: true
     createdAt?: true
@@ -1453,158 +1453,158 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type ProjectAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Project to aggregate.
+     * Filter which Base to aggregate.
      */
-    where?: ProjectWhereInput
+    where?: BaseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Projects to fetch.
+     * Determine the order of Bases to fetch.
      */
-    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    orderBy?: BaseOrderByWithRelationInput | BaseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: ProjectWhereUniqueInput
+    cursor?: BaseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Projects from the position of the cursor.
+     * Take `±n` Bases from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Projects.
+     * Skip the first `n` Bases.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Projects
+     * Count returned Bases
     **/
-    _count?: true | ProjectCountAggregateInputType
+    _count?: true | BaseCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: ProjectAvgAggregateInputType
+    _avg?: BaseAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: ProjectSumAggregateInputType
+    _sum?: BaseSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: ProjectMinAggregateInputType
+    _min?: BaseMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: ProjectMaxAggregateInputType
+    _max?: BaseMaxAggregateInputType
   }
 
-  export type GetProjectAggregateType<T extends ProjectAggregateArgs> = {
-        [P in keyof T & keyof AggregateProject]: P extends '_count' | 'count'
+  export type GetBaseAggregateType<T extends BaseAggregateArgs> = {
+        [P in keyof T & keyof AggregateBase]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateProject[P]>
-      : GetScalarType<T[P], AggregateProject[P]>
+        : GetScalarType<T[P], AggregateBase[P]>
+      : GetScalarType<T[P], AggregateBase[P]>
   }
 
 
 
 
-  export type ProjectGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ProjectWhereInput
-    orderBy?: ProjectOrderByWithAggregationInput | ProjectOrderByWithAggregationInput[]
-    by: ProjectScalarFieldEnum[] | ProjectScalarFieldEnum
-    having?: ProjectScalarWhereWithAggregatesInput
+  export type BaseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BaseWhereInput
+    orderBy?: BaseOrderByWithAggregationInput | BaseOrderByWithAggregationInput[]
+    by: BaseScalarFieldEnum[] | BaseScalarFieldEnum
+    having?: BaseScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: ProjectCountAggregateInputType | true
-    _avg?: ProjectAvgAggregateInputType
-    _sum?: ProjectSumAggregateInputType
-    _min?: ProjectMinAggregateInputType
-    _max?: ProjectMaxAggregateInputType
+    _count?: BaseCountAggregateInputType | true
+    _avg?: BaseAvgAggregateInputType
+    _sum?: BaseSumAggregateInputType
+    _min?: BaseMinAggregateInputType
+    _max?: BaseMaxAggregateInputType
   }
 
-  export type ProjectGroupByOutputType = {
+  export type BaseGroupByOutputType = {
     id: number
     name: string
     createdAt: Date
     updatedAt: Date
-    _count: ProjectCountAggregateOutputType | null
-    _avg: ProjectAvgAggregateOutputType | null
-    _sum: ProjectSumAggregateOutputType | null
-    _min: ProjectMinAggregateOutputType | null
-    _max: ProjectMaxAggregateOutputType | null
+    _count: BaseCountAggregateOutputType | null
+    _avg: BaseAvgAggregateOutputType | null
+    _sum: BaseSumAggregateOutputType | null
+    _min: BaseMinAggregateOutputType | null
+    _max: BaseMaxAggregateOutputType | null
   }
 
-  type GetProjectGroupByPayload<T extends ProjectGroupByArgs> = Prisma.PrismaPromise<
+  type GetBaseGroupByPayload<T extends BaseGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<ProjectGroupByOutputType, T['by']> &
+      PickEnumerable<BaseGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ProjectGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof BaseGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], ProjectGroupByOutputType[P]>
-            : GetScalarType<T[P], ProjectGroupByOutputType[P]>
+              : GetScalarType<T[P], BaseGroupByOutputType[P]>
+            : GetScalarType<T[P], BaseGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type ProjectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type BaseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    tables?: boolean | Project$tablesArgs<ExtArgs>
-    _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["project"]>
+    tables?: boolean | Base$tablesArgs<ExtArgs>
+    _count?: boolean | BaseCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["base"]>
 
-  export type ProjectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type BaseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-  }, ExtArgs["result"]["project"]>
+  }, ExtArgs["result"]["base"]>
 
-  export type ProjectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type BaseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-  }, ExtArgs["result"]["project"]>
+  }, ExtArgs["result"]["base"]>
 
-  export type ProjectSelectScalar = {
+  export type BaseSelectScalar = {
     id?: boolean
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
-  export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tables?: boolean | Project$tablesArgs<ExtArgs>
-    _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
+  export type BaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["base"]>
+  export type BaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tables?: boolean | Base$tablesArgs<ExtArgs>
+    _count?: boolean | BaseCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type ProjectIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type BaseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type BaseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
-  export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Project"
+  export type $BasePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Base"
     objects: {
       tables: Prisma.$TablePayload<ExtArgs>[]
     }
@@ -1613,136 +1613,136 @@ export namespace Prisma {
       name: string
       createdAt: Date
       updatedAt: Date
-    }, ExtArgs["result"]["project"]>
+    }, ExtArgs["result"]["base"]>
     composites: {}
   }
 
-  type ProjectGetPayload<S extends boolean | null | undefined | ProjectDefaultArgs> = $Result.GetResult<Prisma.$ProjectPayload, S>
+  type BaseGetPayload<S extends boolean | null | undefined | BaseDefaultArgs> = $Result.GetResult<Prisma.$BasePayload, S>
 
-  type ProjectCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ProjectFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ProjectCountAggregateInputType | true
+  type BaseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BaseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BaseCountAggregateInputType | true
     }
 
-  export interface ProjectDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Project'], meta: { name: 'Project' } }
+  export interface BaseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Base'], meta: { name: 'Base' } }
     /**
-     * Find zero or one Project that matches the filter.
-     * @param {ProjectFindUniqueArgs} args - Arguments to find a Project
+     * Find zero or one Base that matches the filter.
+     * @param {BaseFindUniqueArgs} args - Arguments to find a Base
      * @example
-     * // Get one Project
-     * const project = await prisma.project.findUnique({
+     * // Get one Base
+     * const base = await prisma.base.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends ProjectFindUniqueArgs>(args: SelectSubset<T, ProjectFindUniqueArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends BaseFindUniqueArgs>(args: SelectSubset<T, BaseFindUniqueArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Project that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Base that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {ProjectFindUniqueOrThrowArgs} args - Arguments to find a Project
+     * @param {BaseFindUniqueOrThrowArgs} args - Arguments to find a Base
      * @example
-     * // Get one Project
-     * const project = await prisma.project.findUniqueOrThrow({
+     * // Get one Base
+     * const base = await prisma.base.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends ProjectFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends BaseFindUniqueOrThrowArgs>(args: SelectSubset<T, BaseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Project that matches the filter.
+     * Find the first Base that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProjectFindFirstArgs} args - Arguments to find a Project
+     * @param {BaseFindFirstArgs} args - Arguments to find a Base
      * @example
-     * // Get one Project
-     * const project = await prisma.project.findFirst({
+     * // Get one Base
+     * const base = await prisma.base.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends ProjectFindFirstArgs>(args?: SelectSubset<T, ProjectFindFirstArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends BaseFindFirstArgs>(args?: SelectSubset<T, BaseFindFirstArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Project that matches the filter or
+     * Find the first Base that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProjectFindFirstOrThrowArgs} args - Arguments to find a Project
+     * @param {BaseFindFirstOrThrowArgs} args - Arguments to find a Base
      * @example
-     * // Get one Project
-     * const project = await prisma.project.findFirstOrThrow({
+     * // Get one Base
+     * const base = await prisma.base.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends ProjectFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends BaseFindFirstOrThrowArgs>(args?: SelectSubset<T, BaseFindFirstOrThrowArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Projects that matches the filter.
+     * Find zero or more Bases that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProjectFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {BaseFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Projects
-     * const projects = await prisma.project.findMany()
+     * // Get all Bases
+     * const bases = await prisma.base.findMany()
      * 
-     * // Get first 10 Projects
-     * const projects = await prisma.project.findMany({ take: 10 })
+     * // Get first 10 Bases
+     * const bases = await prisma.base.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const projectWithIdOnly = await prisma.project.findMany({ select: { id: true } })
+     * const baseWithIdOnly = await prisma.base.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends ProjectFindManyArgs>(args?: SelectSubset<T, ProjectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends BaseFindManyArgs>(args?: SelectSubset<T, BaseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Project.
-     * @param {ProjectCreateArgs} args - Arguments to create a Project.
+     * Create a Base.
+     * @param {BaseCreateArgs} args - Arguments to create a Base.
      * @example
-     * // Create one Project
-     * const Project = await prisma.project.create({
+     * // Create one Base
+     * const Base = await prisma.base.create({
      *   data: {
-     *     // ... data to create a Project
+     *     // ... data to create a Base
      *   }
      * })
      * 
      */
-    create<T extends ProjectCreateArgs>(args: SelectSubset<T, ProjectCreateArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends BaseCreateArgs>(args: SelectSubset<T, BaseCreateArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Projects.
-     * @param {ProjectCreateManyArgs} args - Arguments to create many Projects.
+     * Create many Bases.
+     * @param {BaseCreateManyArgs} args - Arguments to create many Bases.
      * @example
-     * // Create many Projects
-     * const project = await prisma.project.createMany({
+     * // Create many Bases
+     * const base = await prisma.base.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends ProjectCreateManyArgs>(args?: SelectSubset<T, ProjectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends BaseCreateManyArgs>(args?: SelectSubset<T, BaseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Projects and returns the data saved in the database.
-     * @param {ProjectCreateManyAndReturnArgs} args - Arguments to create many Projects.
+     * Create many Bases and returns the data saved in the database.
+     * @param {BaseCreateManyAndReturnArgs} args - Arguments to create many Bases.
      * @example
-     * // Create many Projects
-     * const project = await prisma.project.createManyAndReturn({
+     * // Create many Bases
+     * const base = await prisma.base.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Projects and only return the `id`
-     * const projectWithIdOnly = await prisma.project.createManyAndReturn({
+     * // Create many Bases and only return the `id`
+     * const baseWithIdOnly = await prisma.base.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -1752,28 +1752,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends ProjectCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends BaseCreateManyAndReturnArgs>(args?: SelectSubset<T, BaseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Project.
-     * @param {ProjectDeleteArgs} args - Arguments to delete one Project.
+     * Delete a Base.
+     * @param {BaseDeleteArgs} args - Arguments to delete one Base.
      * @example
-     * // Delete one Project
-     * const Project = await prisma.project.delete({
+     * // Delete one Base
+     * const Base = await prisma.base.delete({
      *   where: {
-     *     // ... filter to delete one Project
+     *     // ... filter to delete one Base
      *   }
      * })
      * 
      */
-    delete<T extends ProjectDeleteArgs>(args: SelectSubset<T, ProjectDeleteArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends BaseDeleteArgs>(args: SelectSubset<T, BaseDeleteArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Project.
-     * @param {ProjectUpdateArgs} args - Arguments to update one Project.
+     * Update one Base.
+     * @param {BaseUpdateArgs} args - Arguments to update one Base.
      * @example
-     * // Update one Project
-     * const project = await prisma.project.update({
+     * // Update one Base
+     * const base = await prisma.base.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1783,30 +1783,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends ProjectUpdateArgs>(args: SelectSubset<T, ProjectUpdateArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends BaseUpdateArgs>(args: SelectSubset<T, BaseUpdateArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Projects.
-     * @param {ProjectDeleteManyArgs} args - Arguments to filter Projects to delete.
+     * Delete zero or more Bases.
+     * @param {BaseDeleteManyArgs} args - Arguments to filter Bases to delete.
      * @example
-     * // Delete a few Projects
-     * const { count } = await prisma.project.deleteMany({
+     * // Delete a few Bases
+     * const { count } = await prisma.base.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends ProjectDeleteManyArgs>(args?: SelectSubset<T, ProjectDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends BaseDeleteManyArgs>(args?: SelectSubset<T, BaseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Projects.
+     * Update zero or more Bases.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProjectUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {BaseUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Projects
-     * const project = await prisma.project.updateMany({
+     * // Update many Bases
+     * const base = await prisma.base.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1816,14 +1816,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends ProjectUpdateManyArgs>(args: SelectSubset<T, ProjectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends BaseUpdateManyArgs>(args: SelectSubset<T, BaseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Projects and returns the data updated in the database.
-     * @param {ProjectUpdateManyAndReturnArgs} args - Arguments to update many Projects.
+     * Update zero or more Bases and returns the data updated in the database.
+     * @param {BaseUpdateManyAndReturnArgs} args - Arguments to update many Bases.
      * @example
-     * // Update many Projects
-     * const project = await prisma.project.updateManyAndReturn({
+     * // Update many Bases
+     * const base = await prisma.base.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1832,8 +1832,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Projects and only return the `id`
-     * const projectWithIdOnly = await prisma.project.updateManyAndReturn({
+     * // Update zero or more Bases and only return the `id`
+     * const baseWithIdOnly = await prisma.base.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -1846,56 +1846,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends ProjectUpdateManyAndReturnArgs>(args: SelectSubset<T, ProjectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends BaseUpdateManyAndReturnArgs>(args: SelectSubset<T, BaseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Project.
-     * @param {ProjectUpsertArgs} args - Arguments to update or create a Project.
+     * Create or update one Base.
+     * @param {BaseUpsertArgs} args - Arguments to update or create a Base.
      * @example
-     * // Update or create a Project
-     * const project = await prisma.project.upsert({
+     * // Update or create a Base
+     * const base = await prisma.base.upsert({
      *   create: {
-     *     // ... data to create a Project
+     *     // ... data to create a Base
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Project we want to update
+     *     // ... the filter for the Base we want to update
      *   }
      * })
      */
-    upsert<T extends ProjectUpsertArgs>(args: SelectSubset<T, ProjectUpsertArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends BaseUpsertArgs>(args: SelectSubset<T, BaseUpsertArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Projects.
+     * Count the number of Bases.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProjectCountArgs} args - Arguments to filter Projects to count.
+     * @param {BaseCountArgs} args - Arguments to filter Bases to count.
      * @example
-     * // Count the number of Projects
-     * const count = await prisma.project.count({
+     * // Count the number of Bases
+     * const count = await prisma.base.count({
      *   where: {
-     *     // ... the filter for the Projects we want to count
+     *     // ... the filter for the Bases we want to count
      *   }
      * })
     **/
-    count<T extends ProjectCountArgs>(
-      args?: Subset<T, ProjectCountArgs>,
+    count<T extends BaseCountArgs>(
+      args?: Subset<T, BaseCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], ProjectCountAggregateOutputType>
+          : GetScalarType<T['select'], BaseCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Project.
+     * Allows you to perform aggregations operations on a Base.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProjectAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {BaseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -1915,13 +1915,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends ProjectAggregateArgs>(args: Subset<T, ProjectAggregateArgs>): Prisma.PrismaPromise<GetProjectAggregateType<T>>
+    aggregate<T extends BaseAggregateArgs>(args: Subset<T, BaseAggregateArgs>): Prisma.PrismaPromise<GetBaseAggregateType<T>>
 
     /**
-     * Group by Project.
+     * Group by Base.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProjectGroupByArgs} args - Group by arguments.
+     * @param {BaseGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -1936,14 +1936,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends ProjectGroupByArgs,
+      T extends BaseGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ProjectGroupByArgs['orderBy'] }
-        : { orderBy?: ProjectGroupByArgs['orderBy'] },
+        ? { orderBy: BaseGroupByArgs['orderBy'] }
+        : { orderBy?: BaseGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -1992,22 +1992,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ProjectGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, BaseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBaseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Project model
+   * Fields of the Base model
    */
-  readonly fields: ProjectFieldRefs;
+  readonly fields: BaseFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Project.
+   * The delegate class that acts as a "Promise-like" for Base.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__BaseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    tables<T extends Project$tablesArgs<ExtArgs> = {}>(args?: Subset<T, Project$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tables<T extends Base$tablesArgs<ExtArgs> = {}>(args?: Subset<T, Base$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2034,402 +2034,404 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Project model
+   * Fields of the Base model
    */
-  interface ProjectFieldRefs {
-    readonly id: FieldRef<"Project", 'Int'>
-    readonly name: FieldRef<"Project", 'String'>
-    readonly createdAt: FieldRef<"Project", 'DateTime'>
-    readonly updatedAt: FieldRef<"Project", 'DateTime'>
+  interface BaseFieldRefs {
+    readonly id: FieldRef<"Base", 'Int'>
+    readonly name: FieldRef<"Base", 'String'>
+    readonly createdAt: FieldRef<"Base", 'DateTime'>
+    readonly updatedAt: FieldRef<"Base", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * Project findUnique
+   * Base findUnique
    */
-  export type ProjectFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * Filter, which Project to fetch.
+     * Filter, which Base to fetch.
      */
-    where: ProjectWhereUniqueInput
+    where: BaseWhereUniqueInput
   }
 
   /**
-   * Project findUniqueOrThrow
+   * Base findUniqueOrThrow
    */
-  export type ProjectFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * Filter, which Project to fetch.
+     * Filter, which Base to fetch.
      */
-    where: ProjectWhereUniqueInput
+    where: BaseWhereUniqueInput
   }
 
   /**
-   * Project findFirst
+   * Base findFirst
    */
-  export type ProjectFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * Filter, which Project to fetch.
+     * Filter, which Base to fetch.
      */
-    where?: ProjectWhereInput
+    where?: BaseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Projects to fetch.
+     * Determine the order of Bases to fetch.
      */
-    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    orderBy?: BaseOrderByWithRelationInput | BaseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Projects.
+     * Sets the position for searching for Bases.
      */
-    cursor?: ProjectWhereUniqueInput
+    cursor?: BaseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Projects from the position of the cursor.
+     * Take `±n` Bases from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Projects.
+     * Skip the first `n` Bases.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Projects.
+     * Filter by unique combinations of Bases.
      */
-    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+    distinct?: BaseScalarFieldEnum | BaseScalarFieldEnum[]
   }
 
   /**
-   * Project findFirstOrThrow
+   * Base findFirstOrThrow
    */
-  export type ProjectFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * Filter, which Project to fetch.
+     * Filter, which Base to fetch.
      */
-    where?: ProjectWhereInput
+    where?: BaseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Projects to fetch.
+     * Determine the order of Bases to fetch.
      */
-    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    orderBy?: BaseOrderByWithRelationInput | BaseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Projects.
+     * Sets the position for searching for Bases.
      */
-    cursor?: ProjectWhereUniqueInput
+    cursor?: BaseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Projects from the position of the cursor.
+     * Take `±n` Bases from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Projects.
+     * Skip the first `n` Bases.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Projects.
+     * Filter by unique combinations of Bases.
      */
-    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+    distinct?: BaseScalarFieldEnum | BaseScalarFieldEnum[]
   }
 
   /**
-   * Project findMany
+   * Base findMany
    */
-  export type ProjectFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * Filter, which Projects to fetch.
+     * Filter, which Bases to fetch.
      */
-    where?: ProjectWhereInput
+    where?: BaseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Projects to fetch.
+     * Determine the order of Bases to fetch.
      */
-    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    orderBy?: BaseOrderByWithRelationInput | BaseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Projects.
+     * Sets the position for listing Bases.
      */
-    cursor?: ProjectWhereUniqueInput
+    cursor?: BaseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Projects from the position of the cursor.
+     * Take `±n` Bases from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Projects.
+     * Skip the first `n` Bases.
      */
     skip?: number
-    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+    distinct?: BaseScalarFieldEnum | BaseScalarFieldEnum[]
   }
 
   /**
-   * Project create
+   * Base create
    */
-  export type ProjectCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * The data needed to create a Project.
+     * The data needed to create a Base.
      */
-    data: XOR<ProjectCreateInput, ProjectUncheckedCreateInput>
+    data: XOR<BaseCreateInput, BaseUncheckedCreateInput>
   }
 
   /**
-   * Project createMany
+   * Base createMany
    */
-  export type ProjectCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Projects.
+     * The data used to create many Bases.
      */
-    data: ProjectCreateManyInput | ProjectCreateManyInput[]
+    data: BaseCreateManyInput | BaseCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
-   * Project createManyAndReturn
+   * Base createManyAndReturn
    */
-  export type ProjectCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelectCreateManyAndReturn<ExtArgs> | null
+    select?: BaseSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
-     * The data used to create many Projects.
+     * The data used to create many Bases.
      */
-    data: ProjectCreateManyInput | ProjectCreateManyInput[]
+    data: BaseCreateManyInput | BaseCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
-   * Project update
+   * Base update
    */
-  export type ProjectUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * The data needed to update a Project.
+     * The data needed to update a Base.
      */
-    data: XOR<ProjectUpdateInput, ProjectUncheckedUpdateInput>
+    data: XOR<BaseUpdateInput, BaseUncheckedUpdateInput>
     /**
-     * Choose, which Project to update.
+     * Choose, which Base to update.
      */
-    where: ProjectWhereUniqueInput
+    where: BaseWhereUniqueInput
   }
 
   /**
-   * Project updateMany
+   * Base updateMany
    */
-  export type ProjectUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Projects.
+     * The data used to update Bases.
      */
-    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyInput>
+    data: XOR<BaseUpdateManyMutationInput, BaseUncheckedUpdateManyInput>
     /**
-     * Filter which Projects to update
+     * Filter which Bases to update
      */
-    where?: ProjectWhereInput
+    where?: BaseWhereInput
     /**
-     * Limit how many Projects to update.
+     * Limit how many Bases to update.
      */
     limit?: number
   }
 
   /**
-   * Project updateManyAndReturn
+   * Base updateManyAndReturn
    */
-  export type ProjectUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: BaseSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
-     * The data used to update Projects.
+     * The data used to update Bases.
      */
-    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyInput>
+    data: XOR<BaseUpdateManyMutationInput, BaseUncheckedUpdateManyInput>
     /**
-     * Filter which Projects to update
+     * Filter which Bases to update
      */
-    where?: ProjectWhereInput
+    where?: BaseWhereInput
     /**
-     * Limit how many Projects to update.
+     * Limit how many Bases to update.
      */
     limit?: number
   }
 
   /**
-   * Project upsert
+   * Base upsert
    */
-  export type ProjectUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * The filter to search for the Project to update in case it exists.
+     * The filter to search for the Base to update in case it exists.
      */
-    where: ProjectWhereUniqueInput
+    where: BaseWhereUniqueInput
     /**
-     * In case the Project found by the `where` argument doesn't exist, create a new Project with this data.
+     * In case the Base found by the `where` argument doesn't exist, create a new Base with this data.
      */
-    create: XOR<ProjectCreateInput, ProjectUncheckedCreateInput>
+    create: XOR<BaseCreateInput, BaseUncheckedCreateInput>
     /**
-     * In case the Project was found with the provided `where` argument, update it with this data.
+     * In case the Base was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<ProjectUpdateInput, ProjectUncheckedUpdateInput>
+    update: XOR<BaseUpdateInput, BaseUncheckedUpdateInput>
   }
 
   /**
-   * Project delete
+   * Base delete
    */
-  export type ProjectDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
     /**
-     * Filter which Project to delete.
+     * Filter which Base to delete.
      */
-    where: ProjectWhereUniqueInput
+    where: BaseWhereUniqueInput
   }
 
   /**
-   * Project deleteMany
+   * Base deleteMany
    */
-  export type ProjectDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Projects to delete
+     * Filter which Bases to delete
      */
-    where?: ProjectWhereInput
+    where?: BaseWhereInput
     /**
-     * Limit how many Projects to delete.
+     * Limit how many Bases to delete.
      */
     limit?: number
   }
 
   /**
-   * Project.tables
+   * Base.tables
    */
-  export type Project$tablesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Base$tablesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Table
      */
@@ -2451,21 +2453,21 @@ export namespace Prisma {
   }
 
   /**
-   * Project without action
+   * Base without action
    */
-  export type ProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BaseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Project
+     * Select specific fields to fetch from the Base
      */
-    select?: ProjectSelect<ExtArgs> | null
+    select?: BaseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Project
+     * Omit specific fields from the Base
      */
-    omit?: ProjectOmit<ExtArgs> | null
+    omit?: BaseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProjectInclude<ExtArgs> | null
+    include?: BaseInclude<ExtArgs> | null
   }
 
 
@@ -2483,12 +2485,12 @@ export namespace Prisma {
 
   export type TableAvgAggregateOutputType = {
     id: number | null
-    projectId: number | null
+    baseId: number | null
   }
 
   export type TableSumAggregateOutputType = {
     id: number | null
-    projectId: number | null
+    baseId: number | null
   }
 
   export type TableMinAggregateOutputType = {
@@ -2496,7 +2498,7 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    projectId: number | null
+    baseId: number | null
   }
 
   export type TableMaxAggregateOutputType = {
@@ -2504,7 +2506,7 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    projectId: number | null
+    baseId: number | null
   }
 
   export type TableCountAggregateOutputType = {
@@ -2512,19 +2514,19 @@ export namespace Prisma {
     name: number
     createdAt: number
     updatedAt: number
-    projectId: number
+    baseId: number
     _all: number
   }
 
 
   export type TableAvgAggregateInputType = {
     id?: true
-    projectId?: true
+    baseId?: true
   }
 
   export type TableSumAggregateInputType = {
     id?: true
-    projectId?: true
+    baseId?: true
   }
 
   export type TableMinAggregateInputType = {
@@ -2532,7 +2534,7 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
-    projectId?: true
+    baseId?: true
   }
 
   export type TableMaxAggregateInputType = {
@@ -2540,7 +2542,7 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
-    projectId?: true
+    baseId?: true
   }
 
   export type TableCountAggregateInputType = {
@@ -2548,7 +2550,7 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
-    projectId?: true
+    baseId?: true
     _all?: true
   }
 
@@ -2643,7 +2645,7 @@ export namespace Prisma {
     name: string
     createdAt: Date
     updatedAt: Date
-    projectId: number
+    baseId: number
     _count: TableCountAggregateOutputType | null
     _avg: TableAvgAggregateOutputType | null
     _sum: TableSumAggregateOutputType | null
@@ -2670,9 +2672,9 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    projectId?: boolean
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-    fields?: boolean | Table$fieldsArgs<ExtArgs>
+    baseId?: boolean
+    base?: boolean | BaseDefaultArgs<ExtArgs>
+    columns?: boolean | Table$columnsArgs<ExtArgs>
     rows?: boolean | Table$rowsArgs<ExtArgs>
     _count?: boolean | TableCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["table"]>
@@ -2682,8 +2684,8 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    projectId?: boolean
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    baseId?: boolean
+    base?: boolean | BaseDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["table"]>
 
   export type TableSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2691,8 +2693,8 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    projectId?: boolean
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    baseId?: boolean
+    base?: boolean | BaseDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["table"]>
 
   export type TableSelectScalar = {
@@ -2700,28 +2702,28 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    projectId?: boolean
+    baseId?: boolean
   }
 
-  export type TableOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "projectId", ExtArgs["result"]["table"]>
+  export type TableOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "baseId", ExtArgs["result"]["table"]>
   export type TableInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-    fields?: boolean | Table$fieldsArgs<ExtArgs>
+    base?: boolean | BaseDefaultArgs<ExtArgs>
+    columns?: boolean | Table$columnsArgs<ExtArgs>
     rows?: boolean | Table$rowsArgs<ExtArgs>
     _count?: boolean | TableCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TableIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    base?: boolean | BaseDefaultArgs<ExtArgs>
   }
   export type TableIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    base?: boolean | BaseDefaultArgs<ExtArgs>
   }
 
   export type $TablePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Table"
     objects: {
-      project: Prisma.$ProjectPayload<ExtArgs>
-      fields: Prisma.$FieldPayload<ExtArgs>[]
+      base: Prisma.$BasePayload<ExtArgs>
+      columns: Prisma.$ColumnPayload<ExtArgs>[]
       rows: Prisma.$RowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2729,7 +2731,7 @@ export namespace Prisma {
       name: string
       createdAt: Date
       updatedAt: Date
-      projectId: number
+      baseId: number
     }, ExtArgs["result"]["table"]>
     composites: {}
   }
@@ -3124,8 +3126,8 @@ export namespace Prisma {
    */
   export interface Prisma__TableClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    fields<T extends Table$fieldsArgs<ExtArgs> = {}>(args?: Subset<T, Table$fieldsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    base<T extends BaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BaseDefaultArgs<ExtArgs>>): Prisma__BaseClient<$Result.GetResult<Prisma.$BasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    columns<T extends Table$columnsArgs<ExtArgs> = {}>(args?: Subset<T, Table$columnsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rows<T extends Table$rowsArgs<ExtArgs> = {}>(args?: Subset<T, Table$rowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3160,7 +3162,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Table", 'String'>
     readonly createdAt: FieldRef<"Table", 'DateTime'>
     readonly updatedAt: FieldRef<"Table", 'DateTime'>
-    readonly projectId: FieldRef<"Table", 'Int'>
+    readonly baseId: FieldRef<"Table", 'Int'>
   }
     
 
@@ -3390,6 +3392,7 @@ export namespace Prisma {
      * The data used to create many Tables.
      */
     data: TableCreateManyInput | TableCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -3408,6 +3411,7 @@ export namespace Prisma {
      * The data used to create many Tables.
      */
     data: TableCreateManyInput | TableCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -3555,27 +3559,27 @@ export namespace Prisma {
   }
 
   /**
-   * Table.fields
+   * Table.columns
    */
-  export type Table$fieldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Table$columnsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
-    where?: FieldWhereInput
-    orderBy?: FieldOrderByWithRelationInput | FieldOrderByWithRelationInput[]
-    cursor?: FieldWhereUniqueInput
+    include?: ColumnInclude<ExtArgs> | null
+    where?: ColumnWhereInput
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
+    cursor?: ColumnWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: FieldScalarFieldEnum | FieldScalarFieldEnum[]
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
   }
 
   /**
@@ -3622,50 +3626,50 @@ export namespace Prisma {
 
 
   /**
-   * Model Field
+   * Model Column
    */
 
-  export type AggregateField = {
-    _count: FieldCountAggregateOutputType | null
-    _avg: FieldAvgAggregateOutputType | null
-    _sum: FieldSumAggregateOutputType | null
-    _min: FieldMinAggregateOutputType | null
-    _max: FieldMaxAggregateOutputType | null
+  export type AggregateColumn = {
+    _count: ColumnCountAggregateOutputType | null
+    _avg: ColumnAvgAggregateOutputType | null
+    _sum: ColumnSumAggregateOutputType | null
+    _min: ColumnMinAggregateOutputType | null
+    _max: ColumnMaxAggregateOutputType | null
   }
 
-  export type FieldAvgAggregateOutputType = {
+  export type ColumnAvgAggregateOutputType = {
     id: number | null
     position: number | null
     tableId: number | null
   }
 
-  export type FieldSumAggregateOutputType = {
+  export type ColumnSumAggregateOutputType = {
     id: number | null
     position: number | null
     tableId: number | null
   }
 
-  export type FieldMinAggregateOutputType = {
+  export type ColumnMinAggregateOutputType = {
     id: number | null
     name: string | null
-    type: $Enums.FieldType | null
+    type: $Enums.ColumnType | null
     position: number | null
     createdAt: Date | null
     updatedAt: Date | null
     tableId: number | null
   }
 
-  export type FieldMaxAggregateOutputType = {
+  export type ColumnMaxAggregateOutputType = {
     id: number | null
     name: string | null
-    type: $Enums.FieldType | null
+    type: $Enums.ColumnType | null
     position: number | null
     createdAt: Date | null
     updatedAt: Date | null
     tableId: number | null
   }
 
-  export type FieldCountAggregateOutputType = {
+  export type ColumnCountAggregateOutputType = {
     id: number
     name: number
     type: number
@@ -3677,29 +3681,19 @@ export namespace Prisma {
   }
 
 
-  export type FieldAvgAggregateInputType = {
+  export type ColumnAvgAggregateInputType = {
     id?: true
     position?: true
     tableId?: true
   }
 
-  export type FieldSumAggregateInputType = {
+  export type ColumnSumAggregateInputType = {
     id?: true
     position?: true
     tableId?: true
   }
 
-  export type FieldMinAggregateInputType = {
-    id?: true
-    name?: true
-    type?: true
-    position?: true
-    createdAt?: true
-    updatedAt?: true
-    tableId?: true
-  }
-
-  export type FieldMaxAggregateInputType = {
+  export type ColumnMinAggregateInputType = {
     id?: true
     name?: true
     type?: true
@@ -3709,7 +3703,17 @@ export namespace Prisma {
     tableId?: true
   }
 
-  export type FieldCountAggregateInputType = {
+  export type ColumnMaxAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    position?: true
+    createdAt?: true
+    updatedAt?: true
+    tableId?: true
+  }
+
+  export type ColumnCountAggregateInputType = {
     id?: true
     name?: true
     type?: true
@@ -3720,122 +3724,122 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type FieldAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Field to aggregate.
+     * Filter which Column to aggregate.
      */
-    where?: FieldWhereInput
+    where?: ColumnWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Fields to fetch.
+     * Determine the order of Columns to fetch.
      */
-    orderBy?: FieldOrderByWithRelationInput | FieldOrderByWithRelationInput[]
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: FieldWhereUniqueInput
+    cursor?: ColumnWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Fields from the position of the cursor.
+     * Take `±n` Columns from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Fields.
+     * Skip the first `n` Columns.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Fields
+     * Count returned Columns
     **/
-    _count?: true | FieldCountAggregateInputType
+    _count?: true | ColumnCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: FieldAvgAggregateInputType
+    _avg?: ColumnAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: FieldSumAggregateInputType
+    _sum?: ColumnSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: FieldMinAggregateInputType
+    _min?: ColumnMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: FieldMaxAggregateInputType
+    _max?: ColumnMaxAggregateInputType
   }
 
-  export type GetFieldAggregateType<T extends FieldAggregateArgs> = {
-        [P in keyof T & keyof AggregateField]: P extends '_count' | 'count'
+  export type GetColumnAggregateType<T extends ColumnAggregateArgs> = {
+        [P in keyof T & keyof AggregateColumn]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateField[P]>
-      : GetScalarType<T[P], AggregateField[P]>
+        : GetScalarType<T[P], AggregateColumn[P]>
+      : GetScalarType<T[P], AggregateColumn[P]>
   }
 
 
 
 
-  export type FieldGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FieldWhereInput
-    orderBy?: FieldOrderByWithAggregationInput | FieldOrderByWithAggregationInput[]
-    by: FieldScalarFieldEnum[] | FieldScalarFieldEnum
-    having?: FieldScalarWhereWithAggregatesInput
+  export type ColumnGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ColumnWhereInput
+    orderBy?: ColumnOrderByWithAggregationInput | ColumnOrderByWithAggregationInput[]
+    by: ColumnScalarFieldEnum[] | ColumnScalarFieldEnum
+    having?: ColumnScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: FieldCountAggregateInputType | true
-    _avg?: FieldAvgAggregateInputType
-    _sum?: FieldSumAggregateInputType
-    _min?: FieldMinAggregateInputType
-    _max?: FieldMaxAggregateInputType
+    _count?: ColumnCountAggregateInputType | true
+    _avg?: ColumnAvgAggregateInputType
+    _sum?: ColumnSumAggregateInputType
+    _min?: ColumnMinAggregateInputType
+    _max?: ColumnMaxAggregateInputType
   }
 
-  export type FieldGroupByOutputType = {
+  export type ColumnGroupByOutputType = {
     id: number
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt: Date
     updatedAt: Date
     tableId: number
-    _count: FieldCountAggregateOutputType | null
-    _avg: FieldAvgAggregateOutputType | null
-    _sum: FieldSumAggregateOutputType | null
-    _min: FieldMinAggregateOutputType | null
-    _max: FieldMaxAggregateOutputType | null
+    _count: ColumnCountAggregateOutputType | null
+    _avg: ColumnAvgAggregateOutputType | null
+    _sum: ColumnSumAggregateOutputType | null
+    _min: ColumnMinAggregateOutputType | null
+    _max: ColumnMaxAggregateOutputType | null
   }
 
-  type GetFieldGroupByPayload<T extends FieldGroupByArgs> = Prisma.PrismaPromise<
+  type GetColumnGroupByPayload<T extends ColumnGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<FieldGroupByOutputType, T['by']> &
+      PickEnumerable<ColumnGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof FieldGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ColumnGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], FieldGroupByOutputType[P]>
-            : GetScalarType<T[P], FieldGroupByOutputType[P]>
+              : GetScalarType<T[P], ColumnGroupByOutputType[P]>
+            : GetScalarType<T[P], ColumnGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type FieldSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ColumnSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     type?: boolean
@@ -3844,11 +3848,11 @@ export namespace Prisma {
     updatedAt?: boolean
     tableId?: boolean
     table?: boolean | TableDefaultArgs<ExtArgs>
-    cells?: boolean | Field$cellsArgs<ExtArgs>
-    _count?: boolean | FieldCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["field"]>
+    cells?: boolean | Column$cellsArgs<ExtArgs>
+    _count?: boolean | ColumnCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["column"]>
 
-  export type FieldSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ColumnSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     type?: boolean
@@ -3857,9 +3861,9 @@ export namespace Prisma {
     updatedAt?: boolean
     tableId?: boolean
     table?: boolean | TableDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["field"]>
+  }, ExtArgs["result"]["column"]>
 
-  export type FieldSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ColumnSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     type?: boolean
@@ -3868,9 +3872,9 @@ export namespace Prisma {
     updatedAt?: boolean
     tableId?: boolean
     table?: boolean | TableDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["field"]>
+  }, ExtArgs["result"]["column"]>
 
-  export type FieldSelectScalar = {
+  export type ColumnSelectScalar = {
     id?: boolean
     name?: boolean
     type?: boolean
@@ -3880,21 +3884,21 @@ export namespace Prisma {
     tableId?: boolean
   }
 
-  export type FieldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "position" | "createdAt" | "updatedAt" | "tableId", ExtArgs["result"]["field"]>
-  export type FieldInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "position" | "createdAt" | "updatedAt" | "tableId", ExtArgs["result"]["column"]>
+  export type ColumnInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     table?: boolean | TableDefaultArgs<ExtArgs>
-    cells?: boolean | Field$cellsArgs<ExtArgs>
-    _count?: boolean | FieldCountOutputTypeDefaultArgs<ExtArgs>
+    cells?: boolean | Column$cellsArgs<ExtArgs>
+    _count?: boolean | ColumnCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type FieldIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     table?: boolean | TableDefaultArgs<ExtArgs>
   }
-  export type FieldIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     table?: boolean | TableDefaultArgs<ExtArgs>
   }
 
-  export type $FieldPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Field"
+  export type $ColumnPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Column"
     objects: {
       table: Prisma.$TablePayload<ExtArgs>
       cells: Prisma.$CellPayload<ExtArgs>[]
@@ -3902,141 +3906,141 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
-      type: $Enums.FieldType
+      type: $Enums.ColumnType
       position: number
       createdAt: Date
       updatedAt: Date
       tableId: number
-    }, ExtArgs["result"]["field"]>
+    }, ExtArgs["result"]["column"]>
     composites: {}
   }
 
-  type FieldGetPayload<S extends boolean | null | undefined | FieldDefaultArgs> = $Result.GetResult<Prisma.$FieldPayload, S>
+  type ColumnGetPayload<S extends boolean | null | undefined | ColumnDefaultArgs> = $Result.GetResult<Prisma.$ColumnPayload, S>
 
-  type FieldCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FieldFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: FieldCountAggregateInputType | true
+  type ColumnCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ColumnFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ColumnCountAggregateInputType | true
     }
 
-  export interface FieldDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Field'], meta: { name: 'Field' } }
+  export interface ColumnDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Column'], meta: { name: 'Column' } }
     /**
-     * Find zero or one Field that matches the filter.
-     * @param {FieldFindUniqueArgs} args - Arguments to find a Field
+     * Find zero or one Column that matches the filter.
+     * @param {ColumnFindUniqueArgs} args - Arguments to find a Column
      * @example
-     * // Get one Field
-     * const field = await prisma.field.findUnique({
+     * // Get one Column
+     * const column = await prisma.column.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends FieldFindUniqueArgs>(args: SelectSubset<T, FieldFindUniqueArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends ColumnFindUniqueArgs>(args: SelectSubset<T, ColumnFindUniqueArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Field that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Column that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {FieldFindUniqueOrThrowArgs} args - Arguments to find a Field
+     * @param {ColumnFindUniqueOrThrowArgs} args - Arguments to find a Column
      * @example
-     * // Get one Field
-     * const field = await prisma.field.findUniqueOrThrow({
+     * // Get one Column
+     * const column = await prisma.column.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends FieldFindUniqueOrThrowArgs>(args: SelectSubset<T, FieldFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends ColumnFindUniqueOrThrowArgs>(args: SelectSubset<T, ColumnFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Field that matches the filter.
+     * Find the first Column that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FieldFindFirstArgs} args - Arguments to find a Field
+     * @param {ColumnFindFirstArgs} args - Arguments to find a Column
      * @example
-     * // Get one Field
-     * const field = await prisma.field.findFirst({
+     * // Get one Column
+     * const column = await prisma.column.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends FieldFindFirstArgs>(args?: SelectSubset<T, FieldFindFirstArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends ColumnFindFirstArgs>(args?: SelectSubset<T, ColumnFindFirstArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Field that matches the filter or
+     * Find the first Column that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FieldFindFirstOrThrowArgs} args - Arguments to find a Field
+     * @param {ColumnFindFirstOrThrowArgs} args - Arguments to find a Column
      * @example
-     * // Get one Field
-     * const field = await prisma.field.findFirstOrThrow({
+     * // Get one Column
+     * const column = await prisma.column.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends FieldFindFirstOrThrowArgs>(args?: SelectSubset<T, FieldFindFirstOrThrowArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends ColumnFindFirstOrThrowArgs>(args?: SelectSubset<T, ColumnFindFirstOrThrowArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Fields that matches the filter.
+     * Find zero or more Columns that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FieldFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {ColumnFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Fields
-     * const fields = await prisma.field.findMany()
+     * // Get all Columns
+     * const columns = await prisma.column.findMany()
      * 
-     * // Get first 10 Fields
-     * const fields = await prisma.field.findMany({ take: 10 })
+     * // Get first 10 Columns
+     * const columns = await prisma.column.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const fieldWithIdOnly = await prisma.field.findMany({ select: { id: true } })
+     * const columnWithIdOnly = await prisma.column.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends FieldFindManyArgs>(args?: SelectSubset<T, FieldFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends ColumnFindManyArgs>(args?: SelectSubset<T, ColumnFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Field.
-     * @param {FieldCreateArgs} args - Arguments to create a Field.
+     * Create a Column.
+     * @param {ColumnCreateArgs} args - Arguments to create a Column.
      * @example
-     * // Create one Field
-     * const Field = await prisma.field.create({
+     * // Create one Column
+     * const Column = await prisma.column.create({
      *   data: {
-     *     // ... data to create a Field
+     *     // ... data to create a Column
      *   }
      * })
      * 
      */
-    create<T extends FieldCreateArgs>(args: SelectSubset<T, FieldCreateArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends ColumnCreateArgs>(args: SelectSubset<T, ColumnCreateArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Fields.
-     * @param {FieldCreateManyArgs} args - Arguments to create many Fields.
+     * Create many Columns.
+     * @param {ColumnCreateManyArgs} args - Arguments to create many Columns.
      * @example
-     * // Create many Fields
-     * const field = await prisma.field.createMany({
+     * // Create many Columns
+     * const column = await prisma.column.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends FieldCreateManyArgs>(args?: SelectSubset<T, FieldCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends ColumnCreateManyArgs>(args?: SelectSubset<T, ColumnCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Fields and returns the data saved in the database.
-     * @param {FieldCreateManyAndReturnArgs} args - Arguments to create many Fields.
+     * Create many Columns and returns the data saved in the database.
+     * @param {ColumnCreateManyAndReturnArgs} args - Arguments to create many Columns.
      * @example
-     * // Create many Fields
-     * const field = await prisma.field.createManyAndReturn({
+     * // Create many Columns
+     * const column = await prisma.column.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Fields and only return the `id`
-     * const fieldWithIdOnly = await prisma.field.createManyAndReturn({
+     * // Create many Columns and only return the `id`
+     * const columnWithIdOnly = await prisma.column.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -4046,28 +4050,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends FieldCreateManyAndReturnArgs>(args?: SelectSubset<T, FieldCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends ColumnCreateManyAndReturnArgs>(args?: SelectSubset<T, ColumnCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Field.
-     * @param {FieldDeleteArgs} args - Arguments to delete one Field.
+     * Delete a Column.
+     * @param {ColumnDeleteArgs} args - Arguments to delete one Column.
      * @example
-     * // Delete one Field
-     * const Field = await prisma.field.delete({
+     * // Delete one Column
+     * const Column = await prisma.column.delete({
      *   where: {
-     *     // ... filter to delete one Field
+     *     // ... filter to delete one Column
      *   }
      * })
      * 
      */
-    delete<T extends FieldDeleteArgs>(args: SelectSubset<T, FieldDeleteArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends ColumnDeleteArgs>(args: SelectSubset<T, ColumnDeleteArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Field.
-     * @param {FieldUpdateArgs} args - Arguments to update one Field.
+     * Update one Column.
+     * @param {ColumnUpdateArgs} args - Arguments to update one Column.
      * @example
-     * // Update one Field
-     * const field = await prisma.field.update({
+     * // Update one Column
+     * const column = await prisma.column.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -4077,30 +4081,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends FieldUpdateArgs>(args: SelectSubset<T, FieldUpdateArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends ColumnUpdateArgs>(args: SelectSubset<T, ColumnUpdateArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Fields.
-     * @param {FieldDeleteManyArgs} args - Arguments to filter Fields to delete.
+     * Delete zero or more Columns.
+     * @param {ColumnDeleteManyArgs} args - Arguments to filter Columns to delete.
      * @example
-     * // Delete a few Fields
-     * const { count } = await prisma.field.deleteMany({
+     * // Delete a few Columns
+     * const { count } = await prisma.column.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends FieldDeleteManyArgs>(args?: SelectSubset<T, FieldDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends ColumnDeleteManyArgs>(args?: SelectSubset<T, ColumnDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Fields.
+     * Update zero or more Columns.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FieldUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {ColumnUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Fields
-     * const field = await prisma.field.updateMany({
+     * // Update many Columns
+     * const column = await prisma.column.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -4110,14 +4114,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends FieldUpdateManyArgs>(args: SelectSubset<T, FieldUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends ColumnUpdateManyArgs>(args: SelectSubset<T, ColumnUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Fields and returns the data updated in the database.
-     * @param {FieldUpdateManyAndReturnArgs} args - Arguments to update many Fields.
+     * Update zero or more Columns and returns the data updated in the database.
+     * @param {ColumnUpdateManyAndReturnArgs} args - Arguments to update many Columns.
      * @example
-     * // Update many Fields
-     * const field = await prisma.field.updateManyAndReturn({
+     * // Update many Columns
+     * const column = await prisma.column.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -4126,8 +4130,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Fields and only return the `id`
-     * const fieldWithIdOnly = await prisma.field.updateManyAndReturn({
+     * // Update zero or more Columns and only return the `id`
+     * const columnWithIdOnly = await prisma.column.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -4140,56 +4144,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends FieldUpdateManyAndReturnArgs>(args: SelectSubset<T, FieldUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends ColumnUpdateManyAndReturnArgs>(args: SelectSubset<T, ColumnUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Field.
-     * @param {FieldUpsertArgs} args - Arguments to update or create a Field.
+     * Create or update one Column.
+     * @param {ColumnUpsertArgs} args - Arguments to update or create a Column.
      * @example
-     * // Update or create a Field
-     * const field = await prisma.field.upsert({
+     * // Update or create a Column
+     * const column = await prisma.column.upsert({
      *   create: {
-     *     // ... data to create a Field
+     *     // ... data to create a Column
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Field we want to update
+     *     // ... the filter for the Column we want to update
      *   }
      * })
      */
-    upsert<T extends FieldUpsertArgs>(args: SelectSubset<T, FieldUpsertArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends ColumnUpsertArgs>(args: SelectSubset<T, ColumnUpsertArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Fields.
+     * Count the number of Columns.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FieldCountArgs} args - Arguments to filter Fields to count.
+     * @param {ColumnCountArgs} args - Arguments to filter Columns to count.
      * @example
-     * // Count the number of Fields
-     * const count = await prisma.field.count({
+     * // Count the number of Columns
+     * const count = await prisma.column.count({
      *   where: {
-     *     // ... the filter for the Fields we want to count
+     *     // ... the filter for the Columns we want to count
      *   }
      * })
     **/
-    count<T extends FieldCountArgs>(
-      args?: Subset<T, FieldCountArgs>,
+    count<T extends ColumnCountArgs>(
+      args?: Subset<T, ColumnCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], FieldCountAggregateOutputType>
+          : GetScalarType<T['select'], ColumnCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Field.
+     * Allows you to perform aggregations operations on a Column.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FieldAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ColumnAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -4209,13 +4213,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends FieldAggregateArgs>(args: Subset<T, FieldAggregateArgs>): Prisma.PrismaPromise<GetFieldAggregateType<T>>
+    aggregate<T extends ColumnAggregateArgs>(args: Subset<T, ColumnAggregateArgs>): Prisma.PrismaPromise<GetColumnAggregateType<T>>
 
     /**
-     * Group by Field.
+     * Group by Column.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FieldGroupByArgs} args - Group by arguments.
+     * @param {ColumnGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -4230,14 +4234,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends FieldGroupByArgs,
+      T extends ColumnGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: FieldGroupByArgs['orderBy'] }
-        : { orderBy?: FieldGroupByArgs['orderBy'] },
+        ? { orderBy: ColumnGroupByArgs['orderBy'] }
+        : { orderBy?: ColumnGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -4286,23 +4290,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, FieldGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFieldGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ColumnGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetColumnGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Field model
+   * Fields of the Column model
    */
-  readonly fields: FieldFieldRefs;
+  readonly fields: ColumnFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Field.
+   * The delegate class that acts as a "Promise-like" for Column.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__FieldClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__ColumnClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     table<T extends TableDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TableDefaultArgs<ExtArgs>>): Prisma__TableClient<$Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    cells<T extends Field$cellsArgs<ExtArgs> = {}>(args?: Subset<T, Field$cellsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cells<T extends Column$cellsArgs<ExtArgs> = {}>(args?: Subset<T, Column$cellsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4329,413 +4333,415 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Field model
+   * Fields of the Column model
    */
-  interface FieldFieldRefs {
-    readonly id: FieldRef<"Field", 'Int'>
-    readonly name: FieldRef<"Field", 'String'>
-    readonly type: FieldRef<"Field", 'FieldType'>
-    readonly position: FieldRef<"Field", 'Int'>
-    readonly createdAt: FieldRef<"Field", 'DateTime'>
-    readonly updatedAt: FieldRef<"Field", 'DateTime'>
-    readonly tableId: FieldRef<"Field", 'Int'>
+  interface ColumnFieldRefs {
+    readonly id: FieldRef<"Column", 'Int'>
+    readonly name: FieldRef<"Column", 'String'>
+    readonly type: FieldRef<"Column", 'ColumnType'>
+    readonly position: FieldRef<"Column", 'Int'>
+    readonly createdAt: FieldRef<"Column", 'DateTime'>
+    readonly updatedAt: FieldRef<"Column", 'DateTime'>
+    readonly tableId: FieldRef<"Column", 'Int'>
   }
     
 
   // Custom InputTypes
   /**
-   * Field findUnique
+   * Column findUnique
    */
-  export type FieldFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * Filter, which Field to fetch.
+     * Filter, which Column to fetch.
      */
-    where: FieldWhereUniqueInput
+    where: ColumnWhereUniqueInput
   }
 
   /**
-   * Field findUniqueOrThrow
+   * Column findUniqueOrThrow
    */
-  export type FieldFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * Filter, which Field to fetch.
+     * Filter, which Column to fetch.
      */
-    where: FieldWhereUniqueInput
+    where: ColumnWhereUniqueInput
   }
 
   /**
-   * Field findFirst
+   * Column findFirst
    */
-  export type FieldFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * Filter, which Field to fetch.
+     * Filter, which Column to fetch.
      */
-    where?: FieldWhereInput
+    where?: ColumnWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Fields to fetch.
+     * Determine the order of Columns to fetch.
      */
-    orderBy?: FieldOrderByWithRelationInput | FieldOrderByWithRelationInput[]
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Fields.
+     * Sets the position for searching for Columns.
      */
-    cursor?: FieldWhereUniqueInput
+    cursor?: ColumnWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Fields from the position of the cursor.
+     * Take `±n` Columns from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Fields.
+     * Skip the first `n` Columns.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Fields.
+     * Filter by unique combinations of Columns.
      */
-    distinct?: FieldScalarFieldEnum | FieldScalarFieldEnum[]
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
   }
 
   /**
-   * Field findFirstOrThrow
+   * Column findFirstOrThrow
    */
-  export type FieldFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * Filter, which Field to fetch.
+     * Filter, which Column to fetch.
      */
-    where?: FieldWhereInput
+    where?: ColumnWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Fields to fetch.
+     * Determine the order of Columns to fetch.
      */
-    orderBy?: FieldOrderByWithRelationInput | FieldOrderByWithRelationInput[]
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Fields.
+     * Sets the position for searching for Columns.
      */
-    cursor?: FieldWhereUniqueInput
+    cursor?: ColumnWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Fields from the position of the cursor.
+     * Take `±n` Columns from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Fields.
+     * Skip the first `n` Columns.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Fields.
+     * Filter by unique combinations of Columns.
      */
-    distinct?: FieldScalarFieldEnum | FieldScalarFieldEnum[]
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
   }
 
   /**
-   * Field findMany
+   * Column findMany
    */
-  export type FieldFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * Filter, which Fields to fetch.
+     * Filter, which Columns to fetch.
      */
-    where?: FieldWhereInput
+    where?: ColumnWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Fields to fetch.
+     * Determine the order of Columns to fetch.
      */
-    orderBy?: FieldOrderByWithRelationInput | FieldOrderByWithRelationInput[]
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Fields.
+     * Sets the position for listing Columns.
      */
-    cursor?: FieldWhereUniqueInput
+    cursor?: ColumnWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Fields from the position of the cursor.
+     * Take `±n` Columns from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Fields.
+     * Skip the first `n` Columns.
      */
     skip?: number
-    distinct?: FieldScalarFieldEnum | FieldScalarFieldEnum[]
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
   }
 
   /**
-   * Field create
+   * Column create
    */
-  export type FieldCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * The data needed to create a Field.
+     * The data needed to create a Column.
      */
-    data: XOR<FieldCreateInput, FieldUncheckedCreateInput>
+    data: XOR<ColumnCreateInput, ColumnUncheckedCreateInput>
   }
 
   /**
-   * Field createMany
+   * Column createMany
    */
-  export type FieldCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Fields.
+     * The data used to create many Columns.
      */
-    data: FieldCreateManyInput | FieldCreateManyInput[]
+    data: ColumnCreateManyInput | ColumnCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
-   * Field createManyAndReturn
+   * Column createManyAndReturn
    */
-  export type FieldCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelectCreateManyAndReturn<ExtArgs> | null
+    select?: ColumnSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
-     * The data used to create many Fields.
+     * The data used to create many Columns.
      */
-    data: FieldCreateManyInput | FieldCreateManyInput[]
+    data: ColumnCreateManyInput | ColumnCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: ColumnIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Field update
+   * Column update
    */
-  export type FieldUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * The data needed to update a Field.
+     * The data needed to update a Column.
      */
-    data: XOR<FieldUpdateInput, FieldUncheckedUpdateInput>
+    data: XOR<ColumnUpdateInput, ColumnUncheckedUpdateInput>
     /**
-     * Choose, which Field to update.
+     * Choose, which Column to update.
      */
-    where: FieldWhereUniqueInput
+    where: ColumnWhereUniqueInput
   }
 
   /**
-   * Field updateMany
+   * Column updateMany
    */
-  export type FieldUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Fields.
+     * The data used to update Columns.
      */
-    data: XOR<FieldUpdateManyMutationInput, FieldUncheckedUpdateManyInput>
+    data: XOR<ColumnUpdateManyMutationInput, ColumnUncheckedUpdateManyInput>
     /**
-     * Filter which Fields to update
+     * Filter which Columns to update
      */
-    where?: FieldWhereInput
+    where?: ColumnWhereInput
     /**
-     * Limit how many Fields to update.
+     * Limit how many Columns to update.
      */
     limit?: number
   }
 
   /**
-   * Field updateManyAndReturn
+   * Column updateManyAndReturn
    */
-  export type FieldUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: ColumnSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
-     * The data used to update Fields.
+     * The data used to update Columns.
      */
-    data: XOR<FieldUpdateManyMutationInput, FieldUncheckedUpdateManyInput>
+    data: XOR<ColumnUpdateManyMutationInput, ColumnUncheckedUpdateManyInput>
     /**
-     * Filter which Fields to update
+     * Filter which Columns to update
      */
-    where?: FieldWhereInput
+    where?: ColumnWhereInput
     /**
-     * Limit how many Fields to update.
+     * Limit how many Columns to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: ColumnIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Field upsert
+   * Column upsert
    */
-  export type FieldUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * The filter to search for the Field to update in case it exists.
+     * The filter to search for the Column to update in case it exists.
      */
-    where: FieldWhereUniqueInput
+    where: ColumnWhereUniqueInput
     /**
-     * In case the Field found by the `where` argument doesn't exist, create a new Field with this data.
+     * In case the Column found by the `where` argument doesn't exist, create a new Column with this data.
      */
-    create: XOR<FieldCreateInput, FieldUncheckedCreateInput>
+    create: XOR<ColumnCreateInput, ColumnUncheckedCreateInput>
     /**
-     * In case the Field was found with the provided `where` argument, update it with this data.
+     * In case the Column was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<FieldUpdateInput, FieldUncheckedUpdateInput>
+    update: XOR<ColumnUpdateInput, ColumnUncheckedUpdateInput>
   }
 
   /**
-   * Field delete
+   * Column delete
    */
-  export type FieldDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
     /**
-     * Filter which Field to delete.
+     * Filter which Column to delete.
      */
-    where: FieldWhereUniqueInput
+    where: ColumnWhereUniqueInput
   }
 
   /**
-   * Field deleteMany
+   * Column deleteMany
    */
-  export type FieldDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Fields to delete
+     * Filter which Columns to delete
      */
-    where?: FieldWhereInput
+    where?: ColumnWhereInput
     /**
-     * Limit how many Fields to delete.
+     * Limit how many Columns to delete.
      */
     limit?: number
   }
 
   /**
-   * Field.cells
+   * Column.cells
    */
-  export type Field$cellsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Column$cellsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Cell
      */
@@ -4757,21 +4763,21 @@ export namespace Prisma {
   }
 
   /**
-   * Field without action
+   * Column without action
    */
-  export type FieldDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ColumnDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Field
+     * Select specific fields to fetch from the Column
      */
-    select?: FieldSelect<ExtArgs> | null
+    select?: ColumnSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Field
+     * Omit specific fields from the Column
      */
-    omit?: FieldOmit<ExtArgs> | null
+    omit?: ColumnOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FieldInclude<ExtArgs> | null
+    include?: ColumnInclude<ExtArgs> | null
   }
 
 
@@ -5679,6 +5685,7 @@ export namespace Prisma {
      * The data used to create many Rows.
      */
     data: RowCreateManyInput | RowCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -5697,6 +5704,7 @@ export namespace Prisma {
      * The data used to create many Rows.
      */
     data: RowCreateManyInput | RowCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -5901,34 +5909,34 @@ export namespace Prisma {
   export type CellAvgAggregateOutputType = {
     id: number | null
     rowId: number | null
-    fieldId: number | null
+    columnId: number | null
   }
 
   export type CellSumAggregateOutputType = {
     id: number | null
     rowId: number | null
-    fieldId: number | null
+    columnId: number | null
   }
 
   export type CellMinAggregateOutputType = {
     id: number | null
     value: string | null
     rowId: number | null
-    fieldId: number | null
+    columnId: number | null
   }
 
   export type CellMaxAggregateOutputType = {
     id: number | null
     value: string | null
     rowId: number | null
-    fieldId: number | null
+    columnId: number | null
   }
 
   export type CellCountAggregateOutputType = {
     id: number
     value: number
     rowId: number
-    fieldId: number
+    columnId: number
     _all: number
   }
 
@@ -5936,34 +5944,34 @@ export namespace Prisma {
   export type CellAvgAggregateInputType = {
     id?: true
     rowId?: true
-    fieldId?: true
+    columnId?: true
   }
 
   export type CellSumAggregateInputType = {
     id?: true
     rowId?: true
-    fieldId?: true
+    columnId?: true
   }
 
   export type CellMinAggregateInputType = {
     id?: true
     value?: true
     rowId?: true
-    fieldId?: true
+    columnId?: true
   }
 
   export type CellMaxAggregateInputType = {
     id?: true
     value?: true
     rowId?: true
-    fieldId?: true
+    columnId?: true
   }
 
   export type CellCountAggregateInputType = {
     id?: true
     value?: true
     rowId?: true
-    fieldId?: true
+    columnId?: true
     _all?: true
   }
 
@@ -6057,7 +6065,7 @@ export namespace Prisma {
     id: number
     value: string | null
     rowId: number
-    fieldId: number
+    columnId: number
     _count: CellCountAggregateOutputType | null
     _avg: CellAvgAggregateOutputType | null
     _sum: CellSumAggregateOutputType | null
@@ -6083,61 +6091,61 @@ export namespace Prisma {
     id?: boolean
     value?: boolean
     rowId?: boolean
-    fieldId?: boolean
+    columnId?: boolean
     row?: boolean | RowDefaultArgs<ExtArgs>
-    field?: boolean | FieldDefaultArgs<ExtArgs>
+    column?: boolean | ColumnDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cell"]>
 
   export type CellSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     value?: boolean
     rowId?: boolean
-    fieldId?: boolean
+    columnId?: boolean
     row?: boolean | RowDefaultArgs<ExtArgs>
-    field?: boolean | FieldDefaultArgs<ExtArgs>
+    column?: boolean | ColumnDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cell"]>
 
   export type CellSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     value?: boolean
     rowId?: boolean
-    fieldId?: boolean
+    columnId?: boolean
     row?: boolean | RowDefaultArgs<ExtArgs>
-    field?: boolean | FieldDefaultArgs<ExtArgs>
+    column?: boolean | ColumnDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cell"]>
 
   export type CellSelectScalar = {
     id?: boolean
     value?: boolean
     rowId?: boolean
-    fieldId?: boolean
+    columnId?: boolean
   }
 
-  export type CellOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "rowId" | "fieldId", ExtArgs["result"]["cell"]>
+  export type CellOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "rowId" | "columnId", ExtArgs["result"]["cell"]>
   export type CellInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     row?: boolean | RowDefaultArgs<ExtArgs>
-    field?: boolean | FieldDefaultArgs<ExtArgs>
+    column?: boolean | ColumnDefaultArgs<ExtArgs>
   }
   export type CellIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     row?: boolean | RowDefaultArgs<ExtArgs>
-    field?: boolean | FieldDefaultArgs<ExtArgs>
+    column?: boolean | ColumnDefaultArgs<ExtArgs>
   }
   export type CellIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     row?: boolean | RowDefaultArgs<ExtArgs>
-    field?: boolean | FieldDefaultArgs<ExtArgs>
+    column?: boolean | ColumnDefaultArgs<ExtArgs>
   }
 
   export type $CellPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Cell"
     objects: {
       row: Prisma.$RowPayload<ExtArgs>
-      field: Prisma.$FieldPayload<ExtArgs>
+      column: Prisma.$ColumnPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       value: string | null
       rowId: number
-      fieldId: number
+      columnId: number
     }, ExtArgs["result"]["cell"]>
     composites: {}
   }
@@ -6533,7 +6541,7 @@ export namespace Prisma {
   export interface Prisma__CellClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     row<T extends RowDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RowDefaultArgs<ExtArgs>>): Prisma__RowClient<$Result.GetResult<Prisma.$RowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    field<T extends FieldDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FieldDefaultArgs<ExtArgs>>): Prisma__FieldClient<$Result.GetResult<Prisma.$FieldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    column<T extends ColumnDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ColumnDefaultArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6566,7 +6574,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Cell", 'Int'>
     readonly value: FieldRef<"Cell", 'String'>
     readonly rowId: FieldRef<"Cell", 'Int'>
-    readonly fieldId: FieldRef<"Cell", 'Int'>
+    readonly columnId: FieldRef<"Cell", 'Int'>
   }
     
 
@@ -6796,6 +6804,7 @@ export namespace Prisma {
      * The data used to create many Cells.
      */
     data: CellCreateManyInput | CellCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -6814,6 +6823,7 @@ export namespace Prisma {
      * The data used to create many Cells.
      */
     data: CellCreateManyInput | CellCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -6984,20 +6994,23 @@ export namespace Prisma {
    */
 
   export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
   };
 
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const ProjectScalarFieldEnum: {
+  export const BaseScalarFieldEnum: {
     id: 'id',
     name: 'name',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
-  export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+  export type BaseScalarFieldEnum = (typeof BaseScalarFieldEnum)[keyof typeof BaseScalarFieldEnum]
 
 
   export const TableScalarFieldEnum: {
@@ -7005,13 +7018,13 @@ export namespace Prisma {
     name: 'name',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    projectId: 'projectId'
+    baseId: 'baseId'
   };
 
   export type TableScalarFieldEnum = (typeof TableScalarFieldEnum)[keyof typeof TableScalarFieldEnum]
 
 
-  export const FieldScalarFieldEnum: {
+  export const ColumnScalarFieldEnum: {
     id: 'id',
     name: 'name',
     type: 'type',
@@ -7021,7 +7034,7 @@ export namespace Prisma {
     tableId: 'tableId'
   };
 
-  export type FieldScalarFieldEnum = (typeof FieldScalarFieldEnum)[keyof typeof FieldScalarFieldEnum]
+  export type ColumnScalarFieldEnum = (typeof ColumnScalarFieldEnum)[keyof typeof ColumnScalarFieldEnum]
 
 
   export const RowScalarFieldEnum: {
@@ -7038,7 +7051,7 @@ export namespace Prisma {
     id: 'id',
     value: 'value',
     rowId: 'rowId',
-    fieldId: 'fieldId'
+    columnId: 'columnId'
   };
 
   export type CellScalarFieldEnum = (typeof CellScalarFieldEnum)[keyof typeof CellScalarFieldEnum]
@@ -7050,6 +7063,14 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
+  };
+
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
   export const NullsOrder: {
@@ -7073,9 +7094,23 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+  /**
+   * Reference to a field of type 'String[]'
+   */
+  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
     
 
 
@@ -7087,9 +7122,23 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'FieldType'
+   * Reference to a field of type 'DateTime[]'
    */
-  export type EnumFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FieldType'>
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ColumnType'
+   */
+  export type EnumColumnTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ColumnType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ColumnType[]'
+   */
+  export type ListEnumColumnTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ColumnType[]'>
     
 
 
@@ -7098,23 +7147,30 @@ export namespace Prisma {
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
   /**
    * Deep Input Types
    */
 
 
-  export type ProjectWhereInput = {
-    AND?: ProjectWhereInput | ProjectWhereInput[]
-    OR?: ProjectWhereInput[]
-    NOT?: ProjectWhereInput | ProjectWhereInput[]
-    id?: IntFilter<"Project"> | number
-    name?: StringFilter<"Project"> | string
-    createdAt?: DateTimeFilter<"Project"> | Date | string
-    updatedAt?: DateTimeFilter<"Project"> | Date | string
+  export type BaseWhereInput = {
+    AND?: BaseWhereInput | BaseWhereInput[]
+    OR?: BaseWhereInput[]
+    NOT?: BaseWhereInput | BaseWhereInput[]
+    id?: IntFilter<"Base"> | number
+    name?: StringFilter<"Base"> | string
+    createdAt?: DateTimeFilter<"Base"> | Date | string
+    updatedAt?: DateTimeFilter<"Base"> | Date | string
     tables?: TableListRelationFilter
   }
 
-  export type ProjectOrderByWithRelationInput = {
+  export type BaseOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
@@ -7122,37 +7178,37 @@ export namespace Prisma {
     tables?: TableOrderByRelationAggregateInput
   }
 
-  export type ProjectWhereUniqueInput = Prisma.AtLeast<{
+  export type BaseWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: ProjectWhereInput | ProjectWhereInput[]
-    OR?: ProjectWhereInput[]
-    NOT?: ProjectWhereInput | ProjectWhereInput[]
-    name?: StringFilter<"Project"> | string
-    createdAt?: DateTimeFilter<"Project"> | Date | string
-    updatedAt?: DateTimeFilter<"Project"> | Date | string
+    AND?: BaseWhereInput | BaseWhereInput[]
+    OR?: BaseWhereInput[]
+    NOT?: BaseWhereInput | BaseWhereInput[]
+    name?: StringFilter<"Base"> | string
+    createdAt?: DateTimeFilter<"Base"> | Date | string
+    updatedAt?: DateTimeFilter<"Base"> | Date | string
     tables?: TableListRelationFilter
   }, "id">
 
-  export type ProjectOrderByWithAggregationInput = {
+  export type BaseOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    _count?: ProjectCountOrderByAggregateInput
-    _avg?: ProjectAvgOrderByAggregateInput
-    _max?: ProjectMaxOrderByAggregateInput
-    _min?: ProjectMinOrderByAggregateInput
-    _sum?: ProjectSumOrderByAggregateInput
+    _count?: BaseCountOrderByAggregateInput
+    _avg?: BaseAvgOrderByAggregateInput
+    _max?: BaseMaxOrderByAggregateInput
+    _min?: BaseMinOrderByAggregateInput
+    _sum?: BaseSumOrderByAggregateInput
   }
 
-  export type ProjectScalarWhereWithAggregatesInput = {
-    AND?: ProjectScalarWhereWithAggregatesInput | ProjectScalarWhereWithAggregatesInput[]
-    OR?: ProjectScalarWhereWithAggregatesInput[]
-    NOT?: ProjectScalarWhereWithAggregatesInput | ProjectScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Project"> | number
-    name?: StringWithAggregatesFilter<"Project"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+  export type BaseScalarWhereWithAggregatesInput = {
+    AND?: BaseScalarWhereWithAggregatesInput | BaseScalarWhereWithAggregatesInput[]
+    OR?: BaseScalarWhereWithAggregatesInput[]
+    NOT?: BaseScalarWhereWithAggregatesInput | BaseScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Base"> | number
+    name?: StringWithAggregatesFilter<"Base"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Base"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Base"> | Date | string
   }
 
   export type TableWhereInput = {
@@ -7163,9 +7219,9 @@ export namespace Prisma {
     name?: StringFilter<"Table"> | string
     createdAt?: DateTimeFilter<"Table"> | Date | string
     updatedAt?: DateTimeFilter<"Table"> | Date | string
-    projectId?: IntFilter<"Table"> | number
-    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
-    fields?: FieldListRelationFilter
+    baseId?: IntFilter<"Table"> | number
+    base?: XOR<BaseScalarRelationFilter, BaseWhereInput>
+    columns?: ColumnListRelationFilter
     rows?: RowListRelationFilter
   }
 
@@ -7174,9 +7230,9 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    projectId?: SortOrder
-    project?: ProjectOrderByWithRelationInput
-    fields?: FieldOrderByRelationAggregateInput
+    baseId?: SortOrder
+    base?: BaseOrderByWithRelationInput
+    columns?: ColumnOrderByRelationAggregateInput
     rows?: RowOrderByRelationAggregateInput
   }
 
@@ -7188,9 +7244,9 @@ export namespace Prisma {
     name?: StringFilter<"Table"> | string
     createdAt?: DateTimeFilter<"Table"> | Date | string
     updatedAt?: DateTimeFilter<"Table"> | Date | string
-    projectId?: IntFilter<"Table"> | number
-    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
-    fields?: FieldListRelationFilter
+    baseId?: IntFilter<"Table"> | number
+    base?: XOR<BaseScalarRelationFilter, BaseWhereInput>
+    columns?: ColumnListRelationFilter
     rows?: RowListRelationFilter
   }, "id">
 
@@ -7199,7 +7255,7 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    projectId?: SortOrder
+    baseId?: SortOrder
     _count?: TableCountOrderByAggregateInput
     _avg?: TableAvgOrderByAggregateInput
     _max?: TableMaxOrderByAggregateInput
@@ -7215,25 +7271,25 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Table"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Table"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Table"> | Date | string
-    projectId?: IntWithAggregatesFilter<"Table"> | number
+    baseId?: IntWithAggregatesFilter<"Table"> | number
   }
 
-  export type FieldWhereInput = {
-    AND?: FieldWhereInput | FieldWhereInput[]
-    OR?: FieldWhereInput[]
-    NOT?: FieldWhereInput | FieldWhereInput[]
-    id?: IntFilter<"Field"> | number
-    name?: StringFilter<"Field"> | string
-    type?: EnumFieldTypeFilter<"Field"> | $Enums.FieldType
-    position?: IntFilter<"Field"> | number
-    createdAt?: DateTimeFilter<"Field"> | Date | string
-    updatedAt?: DateTimeFilter<"Field"> | Date | string
-    tableId?: IntFilter<"Field"> | number
+  export type ColumnWhereInput = {
+    AND?: ColumnWhereInput | ColumnWhereInput[]
+    OR?: ColumnWhereInput[]
+    NOT?: ColumnWhereInput | ColumnWhereInput[]
+    id?: IntFilter<"Column"> | number
+    name?: StringFilter<"Column"> | string
+    type?: EnumColumnTypeFilter<"Column"> | $Enums.ColumnType
+    position?: IntFilter<"Column"> | number
+    createdAt?: DateTimeFilter<"Column"> | Date | string
+    updatedAt?: DateTimeFilter<"Column"> | Date | string
+    tableId?: IntFilter<"Column"> | number
     table?: XOR<TableScalarRelationFilter, TableWhereInput>
     cells?: CellListRelationFilter
   }
 
-  export type FieldOrderByWithRelationInput = {
+  export type ColumnOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
@@ -7245,22 +7301,22 @@ export namespace Prisma {
     cells?: CellOrderByRelationAggregateInput
   }
 
-  export type FieldWhereUniqueInput = Prisma.AtLeast<{
+  export type ColumnWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: FieldWhereInput | FieldWhereInput[]
-    OR?: FieldWhereInput[]
-    NOT?: FieldWhereInput | FieldWhereInput[]
-    name?: StringFilter<"Field"> | string
-    type?: EnumFieldTypeFilter<"Field"> | $Enums.FieldType
-    position?: IntFilter<"Field"> | number
-    createdAt?: DateTimeFilter<"Field"> | Date | string
-    updatedAt?: DateTimeFilter<"Field"> | Date | string
-    tableId?: IntFilter<"Field"> | number
+    AND?: ColumnWhereInput | ColumnWhereInput[]
+    OR?: ColumnWhereInput[]
+    NOT?: ColumnWhereInput | ColumnWhereInput[]
+    name?: StringFilter<"Column"> | string
+    type?: EnumColumnTypeFilter<"Column"> | $Enums.ColumnType
+    position?: IntFilter<"Column"> | number
+    createdAt?: DateTimeFilter<"Column"> | Date | string
+    updatedAt?: DateTimeFilter<"Column"> | Date | string
+    tableId?: IntFilter<"Column"> | number
     table?: XOR<TableScalarRelationFilter, TableWhereInput>
     cells?: CellListRelationFilter
   }, "id">
 
-  export type FieldOrderByWithAggregationInput = {
+  export type ColumnOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
@@ -7268,24 +7324,24 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     tableId?: SortOrder
-    _count?: FieldCountOrderByAggregateInput
-    _avg?: FieldAvgOrderByAggregateInput
-    _max?: FieldMaxOrderByAggregateInput
-    _min?: FieldMinOrderByAggregateInput
-    _sum?: FieldSumOrderByAggregateInput
+    _count?: ColumnCountOrderByAggregateInput
+    _avg?: ColumnAvgOrderByAggregateInput
+    _max?: ColumnMaxOrderByAggregateInput
+    _min?: ColumnMinOrderByAggregateInput
+    _sum?: ColumnSumOrderByAggregateInput
   }
 
-  export type FieldScalarWhereWithAggregatesInput = {
-    AND?: FieldScalarWhereWithAggregatesInput | FieldScalarWhereWithAggregatesInput[]
-    OR?: FieldScalarWhereWithAggregatesInput[]
-    NOT?: FieldScalarWhereWithAggregatesInput | FieldScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Field"> | number
-    name?: StringWithAggregatesFilter<"Field"> | string
-    type?: EnumFieldTypeWithAggregatesFilter<"Field"> | $Enums.FieldType
-    position?: IntWithAggregatesFilter<"Field"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Field"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Field"> | Date | string
-    tableId?: IntWithAggregatesFilter<"Field"> | number
+  export type ColumnScalarWhereWithAggregatesInput = {
+    AND?: ColumnScalarWhereWithAggregatesInput | ColumnScalarWhereWithAggregatesInput[]
+    OR?: ColumnScalarWhereWithAggregatesInput[]
+    NOT?: ColumnScalarWhereWithAggregatesInput | ColumnScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Column"> | number
+    name?: StringWithAggregatesFilter<"Column"> | string
+    type?: EnumColumnTypeWithAggregatesFilter<"Column"> | $Enums.ColumnType
+    position?: IntWithAggregatesFilter<"Column"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Column"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Column"> | Date | string
+    tableId?: IntWithAggregatesFilter<"Column"> | number
   }
 
   export type RowWhereInput = {
@@ -7350,38 +7406,38 @@ export namespace Prisma {
     id?: IntFilter<"Cell"> | number
     value?: StringNullableFilter<"Cell"> | string | null
     rowId?: IntFilter<"Cell"> | number
-    fieldId?: IntFilter<"Cell"> | number
+    columnId?: IntFilter<"Cell"> | number
     row?: XOR<RowScalarRelationFilter, RowWhereInput>
-    field?: XOR<FieldScalarRelationFilter, FieldWhereInput>
+    column?: XOR<ColumnScalarRelationFilter, ColumnWhereInput>
   }
 
   export type CellOrderByWithRelationInput = {
     id?: SortOrder
     value?: SortOrderInput | SortOrder
     rowId?: SortOrder
-    fieldId?: SortOrder
+    columnId?: SortOrder
     row?: RowOrderByWithRelationInput
-    field?: FieldOrderByWithRelationInput
+    column?: ColumnOrderByWithRelationInput
   }
 
   export type CellWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    rowId_fieldId?: CellRowIdFieldIdCompoundUniqueInput
+    rowId_columnId?: CellRowIdColumnIdCompoundUniqueInput
     AND?: CellWhereInput | CellWhereInput[]
     OR?: CellWhereInput[]
     NOT?: CellWhereInput | CellWhereInput[]
     value?: StringNullableFilter<"Cell"> | string | null
     rowId?: IntFilter<"Cell"> | number
-    fieldId?: IntFilter<"Cell"> | number
+    columnId?: IntFilter<"Cell"> | number
     row?: XOR<RowScalarRelationFilter, RowWhereInput>
-    field?: XOR<FieldScalarRelationFilter, FieldWhereInput>
-  }, "id" | "rowId_fieldId">
+    column?: XOR<ColumnScalarRelationFilter, ColumnWhereInput>
+  }, "id" | "rowId_columnId">
 
   export type CellOrderByWithAggregationInput = {
     id?: SortOrder
     value?: SortOrderInput | SortOrder
     rowId?: SortOrder
-    fieldId?: SortOrder
+    columnId?: SortOrder
     _count?: CellCountOrderByAggregateInput
     _avg?: CellAvgOrderByAggregateInput
     _max?: CellMaxOrderByAggregateInput
@@ -7396,53 +7452,53 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Cell"> | number
     value?: StringNullableWithAggregatesFilter<"Cell"> | string | null
     rowId?: IntWithAggregatesFilter<"Cell"> | number
-    fieldId?: IntWithAggregatesFilter<"Cell"> | number
+    columnId?: IntWithAggregatesFilter<"Cell"> | number
   }
 
-  export type ProjectCreateInput = {
+  export type BaseCreateInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    tables?: TableCreateNestedManyWithoutProjectInput
+    tables?: TableCreateNestedManyWithoutBaseInput
   }
 
-  export type ProjectUncheckedCreateInput = {
+  export type BaseUncheckedCreateInput = {
     id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    tables?: TableUncheckedCreateNestedManyWithoutProjectInput
+    tables?: TableUncheckedCreateNestedManyWithoutBaseInput
   }
 
-  export type ProjectUpdateInput = {
+  export type BaseUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tables?: TableUpdateManyWithoutProjectNestedInput
+    tables?: TableUpdateManyWithoutBaseNestedInput
   }
 
-  export type ProjectUncheckedUpdateInput = {
+  export type BaseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tables?: TableUncheckedUpdateManyWithoutProjectNestedInput
+    tables?: TableUncheckedUpdateManyWithoutBaseNestedInput
   }
 
-  export type ProjectCreateManyInput = {
+  export type BaseCreateManyInput = {
     id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type ProjectUpdateManyMutationInput = {
+  export type BaseUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ProjectUncheckedUpdateManyInput = {
+  export type BaseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7453,8 +7509,8 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutTablesInput
-    fields?: FieldCreateNestedManyWithoutTableInput
+    base: BaseCreateNestedOneWithoutTablesInput
+    columns?: ColumnCreateNestedManyWithoutTableInput
     rows?: RowCreateNestedManyWithoutTableInput
   }
 
@@ -7463,8 +7519,8 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    projectId: number
-    fields?: FieldUncheckedCreateNestedManyWithoutTableInput
+    baseId: number
+    columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
     rows?: RowUncheckedCreateNestedManyWithoutTableInput
   }
 
@@ -7472,8 +7528,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutTablesNestedInput
-    fields?: FieldUpdateManyWithoutTableNestedInput
+    base?: BaseUpdateOneRequiredWithoutTablesNestedInput
+    columns?: ColumnUpdateManyWithoutTableNestedInput
     rows?: RowUpdateManyWithoutTableNestedInput
   }
 
@@ -7482,8 +7538,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    projectId?: IntFieldUpdateOperationsInput | number
-    fields?: FieldUncheckedUpdateManyWithoutTableNestedInput
+    baseId?: IntFieldUpdateOperationsInput | number
+    columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
     rows?: RowUncheckedUpdateManyWithoutTableNestedInput
   }
 
@@ -7492,7 +7548,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    projectId: number
+    baseId: number
   }
 
   export type TableUpdateManyMutationInput = {
@@ -7506,73 +7562,73 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    projectId?: IntFieldUpdateOperationsInput | number
+    baseId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type FieldCreateInput = {
+  export type ColumnCreateInput = {
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    table: TableCreateNestedOneWithoutFieldsInput
-    cells?: CellCreateNestedManyWithoutFieldInput
+    table: TableCreateNestedOneWithoutColumnsInput
+    cells?: CellCreateNestedManyWithoutColumnInput
   }
 
-  export type FieldUncheckedCreateInput = {
+  export type ColumnUncheckedCreateInput = {
     id?: number
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
     tableId: number
-    cells?: CellUncheckedCreateNestedManyWithoutFieldInput
+    cells?: CellUncheckedCreateNestedManyWithoutColumnInput
   }
 
-  export type FieldUpdateInput = {
+  export type ColumnUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    table?: TableUpdateOneRequiredWithoutFieldsNestedInput
-    cells?: CellUpdateManyWithoutFieldNestedInput
+    table?: TableUpdateOneRequiredWithoutColumnsNestedInput
+    cells?: CellUpdateManyWithoutColumnNestedInput
   }
 
-  export type FieldUncheckedUpdateInput = {
+  export type ColumnUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tableId?: IntFieldUpdateOperationsInput | number
-    cells?: CellUncheckedUpdateManyWithoutFieldNestedInput
+    cells?: CellUncheckedUpdateManyWithoutColumnNestedInput
   }
 
-  export type FieldCreateManyInput = {
+  export type ColumnCreateManyInput = {
     id?: number
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
     tableId: number
   }
 
-  export type FieldUpdateManyMutationInput = {
+  export type ColumnUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FieldUncheckedUpdateManyInput = {
+  export type ColumnUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7631,34 +7687,34 @@ export namespace Prisma {
   export type CellCreateInput = {
     value?: string | null
     row: RowCreateNestedOneWithoutCellsInput
-    field: FieldCreateNestedOneWithoutCellsInput
+    column: ColumnCreateNestedOneWithoutCellsInput
   }
 
   export type CellUncheckedCreateInput = {
     id?: number
     value?: string | null
     rowId: number
-    fieldId: number
+    columnId: number
   }
 
   export type CellUpdateInput = {
     value?: NullableStringFieldUpdateOperationsInput | string | null
     row?: RowUpdateOneRequiredWithoutCellsNestedInput
-    field?: FieldUpdateOneRequiredWithoutCellsNestedInput
+    column?: ColumnUpdateOneRequiredWithoutCellsNestedInput
   }
 
   export type CellUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: NullableStringFieldUpdateOperationsInput | string | null
     rowId?: IntFieldUpdateOperationsInput | number
-    fieldId?: IntFieldUpdateOperationsInput | number
+    columnId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CellCreateManyInput = {
     id?: number
     value?: string | null
     rowId: number
-    fieldId: number
+    columnId: number
   }
 
   export type CellUpdateManyMutationInput = {
@@ -7669,13 +7725,13 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     value?: NullableStringFieldUpdateOperationsInput | string | null
     rowId?: IntFieldUpdateOperationsInput | number
-    fieldId?: IntFieldUpdateOperationsInput | number
+    columnId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -7685,8 +7741,8 @@ export namespace Prisma {
 
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -7694,13 +7750,14 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -7718,39 +7775,39 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type ProjectCountOrderByAggregateInput = {
+  export type BaseCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type ProjectAvgOrderByAggregateInput = {
+  export type BaseAvgOrderByAggregateInput = {
     id?: SortOrder
   }
 
-  export type ProjectMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ProjectMinOrderByAggregateInput = {
+  export type BaseMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type ProjectSumOrderByAggregateInput = {
+  export type BaseMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BaseSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -7765,8 +7822,8 @@ export namespace Prisma {
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -7774,6 +7831,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
@@ -7782,8 +7840,8 @@ export namespace Prisma {
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -7794,15 +7852,15 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type ProjectScalarRelationFilter = {
-    is?: ProjectWhereInput
-    isNot?: ProjectWhereInput
+  export type BaseScalarRelationFilter = {
+    is?: BaseWhereInput
+    isNot?: BaseWhereInput
   }
 
-  export type FieldListRelationFilter = {
-    every?: FieldWhereInput
-    some?: FieldWhereInput
-    none?: FieldWhereInput
+  export type ColumnListRelationFilter = {
+    every?: ColumnWhereInput
+    some?: ColumnWhereInput
+    none?: ColumnWhereInput
   }
 
   export type RowListRelationFilter = {
@@ -7811,7 +7869,7 @@ export namespace Prisma {
     none?: RowWhereInput
   }
 
-  export type FieldOrderByRelationAggregateInput = {
+  export type ColumnOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -7824,12 +7882,12 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    projectId?: SortOrder
+    baseId?: SortOrder
   }
 
   export type TableAvgOrderByAggregateInput = {
     id?: SortOrder
-    projectId?: SortOrder
+    baseId?: SortOrder
   }
 
   export type TableMaxOrderByAggregateInput = {
@@ -7837,7 +7895,7 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    projectId?: SortOrder
+    baseId?: SortOrder
   }
 
   export type TableMinOrderByAggregateInput = {
@@ -7845,19 +7903,19 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    projectId?: SortOrder
+    baseId?: SortOrder
   }
 
   export type TableSumOrderByAggregateInput = {
     id?: SortOrder
-    projectId?: SortOrder
+    baseId?: SortOrder
   }
 
-  export type EnumFieldTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FieldType[]
-    notIn?: $Enums.FieldType[]
-    not?: NestedEnumFieldTypeFilter<$PrismaModel> | $Enums.FieldType
+  export type EnumColumnTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ColumnType | EnumColumnTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumColumnTypeFilter<$PrismaModel> | $Enums.ColumnType
   }
 
   export type TableScalarRelationFilter = {
@@ -7875,7 +7933,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type FieldCountOrderByAggregateInput = {
+  export type ColumnCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
@@ -7885,23 +7943,13 @@ export namespace Prisma {
     tableId?: SortOrder
   }
 
-  export type FieldAvgOrderByAggregateInput = {
+  export type ColumnAvgOrderByAggregateInput = {
     id?: SortOrder
     position?: SortOrder
     tableId?: SortOrder
   }
 
-  export type FieldMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    position?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    tableId?: SortOrder
-  }
-
-  export type FieldMinOrderByAggregateInput = {
+  export type ColumnMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
@@ -7911,20 +7959,30 @@ export namespace Prisma {
     tableId?: SortOrder
   }
 
-  export type FieldSumOrderByAggregateInput = {
+  export type ColumnMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    tableId?: SortOrder
+  }
+
+  export type ColumnSumOrderByAggregateInput = {
     id?: SortOrder
     position?: SortOrder
     tableId?: SortOrder
   }
 
-  export type EnumFieldTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FieldType[]
-    notIn?: $Enums.FieldType[]
-    not?: NestedEnumFieldTypeWithAggregatesFilter<$PrismaModel> | $Enums.FieldType
+  export type EnumColumnTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ColumnType | EnumColumnTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumColumnTypeWithAggregatesFilter<$PrismaModel> | $Enums.ColumnType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumFieldTypeFilter<$PrismaModel>
-    _max?: NestedEnumFieldTypeFilter<$PrismaModel>
+    _min?: NestedEnumColumnTypeFilter<$PrismaModel>
+    _max?: NestedEnumColumnTypeFilter<$PrismaModel>
   }
 
   export type RowCountOrderByAggregateInput = {
@@ -7960,8 +8018,8 @@ export namespace Prisma {
 
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -7969,6 +8027,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
@@ -7977,9 +8036,9 @@ export namespace Prisma {
     isNot?: RowWhereInput
   }
 
-  export type FieldScalarRelationFilter = {
-    is?: FieldWhereInput
-    isNot?: FieldWhereInput
+  export type ColumnScalarRelationFilter = {
+    is?: ColumnWhereInput
+    isNot?: ColumnWhereInput
   }
 
   export type SortOrderInput = {
@@ -7987,48 +8046,48 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type CellRowIdFieldIdCompoundUniqueInput = {
+  export type CellRowIdColumnIdCompoundUniqueInput = {
     rowId: number
-    fieldId: number
+    columnId: number
   }
 
   export type CellCountOrderByAggregateInput = {
     id?: SortOrder
     value?: SortOrder
     rowId?: SortOrder
-    fieldId?: SortOrder
+    columnId?: SortOrder
   }
 
   export type CellAvgOrderByAggregateInput = {
     id?: SortOrder
     rowId?: SortOrder
-    fieldId?: SortOrder
+    columnId?: SortOrder
   }
 
   export type CellMaxOrderByAggregateInput = {
     id?: SortOrder
     value?: SortOrder
     rowId?: SortOrder
-    fieldId?: SortOrder
+    columnId?: SortOrder
   }
 
   export type CellMinOrderByAggregateInput = {
     id?: SortOrder
     value?: SortOrder
     rowId?: SortOrder
-    fieldId?: SortOrder
+    columnId?: SortOrder
   }
 
   export type CellSumOrderByAggregateInput = {
     id?: SortOrder
     rowId?: SortOrder
-    fieldId?: SortOrder
+    columnId?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -8036,23 +8095,24 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type TableCreateNestedManyWithoutProjectInput = {
-    create?: XOR<TableCreateWithoutProjectInput, TableUncheckedCreateWithoutProjectInput> | TableCreateWithoutProjectInput[] | TableUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: TableCreateOrConnectWithoutProjectInput | TableCreateOrConnectWithoutProjectInput[]
-    createMany?: TableCreateManyProjectInputEnvelope
+  export type TableCreateNestedManyWithoutBaseInput = {
+    create?: XOR<TableCreateWithoutBaseInput, TableUncheckedCreateWithoutBaseInput> | TableCreateWithoutBaseInput[] | TableUncheckedCreateWithoutBaseInput[]
+    connectOrCreate?: TableCreateOrConnectWithoutBaseInput | TableCreateOrConnectWithoutBaseInput[]
+    createMany?: TableCreateManyBaseInputEnvelope
     connect?: TableWhereUniqueInput | TableWhereUniqueInput[]
   }
 
-  export type TableUncheckedCreateNestedManyWithoutProjectInput = {
-    create?: XOR<TableCreateWithoutProjectInput, TableUncheckedCreateWithoutProjectInput> | TableCreateWithoutProjectInput[] | TableUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: TableCreateOrConnectWithoutProjectInput | TableCreateOrConnectWithoutProjectInput[]
-    createMany?: TableCreateManyProjectInputEnvelope
+  export type TableUncheckedCreateNestedManyWithoutBaseInput = {
+    create?: XOR<TableCreateWithoutBaseInput, TableUncheckedCreateWithoutBaseInput> | TableCreateWithoutBaseInput[] | TableUncheckedCreateWithoutBaseInput[]
+    connectOrCreate?: TableCreateOrConnectWithoutBaseInput | TableCreateOrConnectWithoutBaseInput[]
+    createMany?: TableCreateManyBaseInputEnvelope
     connect?: TableWhereUniqueInput | TableWhereUniqueInput[]
   }
 
@@ -8064,17 +8124,17 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type TableUpdateManyWithoutProjectNestedInput = {
-    create?: XOR<TableCreateWithoutProjectInput, TableUncheckedCreateWithoutProjectInput> | TableCreateWithoutProjectInput[] | TableUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: TableCreateOrConnectWithoutProjectInput | TableCreateOrConnectWithoutProjectInput[]
-    upsert?: TableUpsertWithWhereUniqueWithoutProjectInput | TableUpsertWithWhereUniqueWithoutProjectInput[]
-    createMany?: TableCreateManyProjectInputEnvelope
+  export type TableUpdateManyWithoutBaseNestedInput = {
+    create?: XOR<TableCreateWithoutBaseInput, TableUncheckedCreateWithoutBaseInput> | TableCreateWithoutBaseInput[] | TableUncheckedCreateWithoutBaseInput[]
+    connectOrCreate?: TableCreateOrConnectWithoutBaseInput | TableCreateOrConnectWithoutBaseInput[]
+    upsert?: TableUpsertWithWhereUniqueWithoutBaseInput | TableUpsertWithWhereUniqueWithoutBaseInput[]
+    createMany?: TableCreateManyBaseInputEnvelope
     set?: TableWhereUniqueInput | TableWhereUniqueInput[]
     disconnect?: TableWhereUniqueInput | TableWhereUniqueInput[]
     delete?: TableWhereUniqueInput | TableWhereUniqueInput[]
     connect?: TableWhereUniqueInput | TableWhereUniqueInput[]
-    update?: TableUpdateWithWhereUniqueWithoutProjectInput | TableUpdateWithWhereUniqueWithoutProjectInput[]
-    updateMany?: TableUpdateManyWithWhereWithoutProjectInput | TableUpdateManyWithWhereWithoutProjectInput[]
+    update?: TableUpdateWithWhereUniqueWithoutBaseInput | TableUpdateWithWhereUniqueWithoutBaseInput[]
+    updateMany?: TableUpdateManyWithWhereWithoutBaseInput | TableUpdateManyWithWhereWithoutBaseInput[]
     deleteMany?: TableScalarWhereInput | TableScalarWhereInput[]
   }
 
@@ -8086,31 +8146,31 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type TableUncheckedUpdateManyWithoutProjectNestedInput = {
-    create?: XOR<TableCreateWithoutProjectInput, TableUncheckedCreateWithoutProjectInput> | TableCreateWithoutProjectInput[] | TableUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: TableCreateOrConnectWithoutProjectInput | TableCreateOrConnectWithoutProjectInput[]
-    upsert?: TableUpsertWithWhereUniqueWithoutProjectInput | TableUpsertWithWhereUniqueWithoutProjectInput[]
-    createMany?: TableCreateManyProjectInputEnvelope
+  export type TableUncheckedUpdateManyWithoutBaseNestedInput = {
+    create?: XOR<TableCreateWithoutBaseInput, TableUncheckedCreateWithoutBaseInput> | TableCreateWithoutBaseInput[] | TableUncheckedCreateWithoutBaseInput[]
+    connectOrCreate?: TableCreateOrConnectWithoutBaseInput | TableCreateOrConnectWithoutBaseInput[]
+    upsert?: TableUpsertWithWhereUniqueWithoutBaseInput | TableUpsertWithWhereUniqueWithoutBaseInput[]
+    createMany?: TableCreateManyBaseInputEnvelope
     set?: TableWhereUniqueInput | TableWhereUniqueInput[]
     disconnect?: TableWhereUniqueInput | TableWhereUniqueInput[]
     delete?: TableWhereUniqueInput | TableWhereUniqueInput[]
     connect?: TableWhereUniqueInput | TableWhereUniqueInput[]
-    update?: TableUpdateWithWhereUniqueWithoutProjectInput | TableUpdateWithWhereUniqueWithoutProjectInput[]
-    updateMany?: TableUpdateManyWithWhereWithoutProjectInput | TableUpdateManyWithWhereWithoutProjectInput[]
+    update?: TableUpdateWithWhereUniqueWithoutBaseInput | TableUpdateWithWhereUniqueWithoutBaseInput[]
+    updateMany?: TableUpdateManyWithWhereWithoutBaseInput | TableUpdateManyWithWhereWithoutBaseInput[]
     deleteMany?: TableScalarWhereInput | TableScalarWhereInput[]
   }
 
-  export type ProjectCreateNestedOneWithoutTablesInput = {
-    create?: XOR<ProjectCreateWithoutTablesInput, ProjectUncheckedCreateWithoutTablesInput>
-    connectOrCreate?: ProjectCreateOrConnectWithoutTablesInput
-    connect?: ProjectWhereUniqueInput
+  export type BaseCreateNestedOneWithoutTablesInput = {
+    create?: XOR<BaseCreateWithoutTablesInput, BaseUncheckedCreateWithoutTablesInput>
+    connectOrCreate?: BaseCreateOrConnectWithoutTablesInput
+    connect?: BaseWhereUniqueInput
   }
 
-  export type FieldCreateNestedManyWithoutTableInput = {
-    create?: XOR<FieldCreateWithoutTableInput, FieldUncheckedCreateWithoutTableInput> | FieldCreateWithoutTableInput[] | FieldUncheckedCreateWithoutTableInput[]
-    connectOrCreate?: FieldCreateOrConnectWithoutTableInput | FieldCreateOrConnectWithoutTableInput[]
-    createMany?: FieldCreateManyTableInputEnvelope
-    connect?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
+  export type ColumnCreateNestedManyWithoutTableInput = {
+    create?: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput> | ColumnCreateWithoutTableInput[] | ColumnUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutTableInput | ColumnCreateOrConnectWithoutTableInput[]
+    createMany?: ColumnCreateManyTableInputEnvelope
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
   }
 
   export type RowCreateNestedManyWithoutTableInput = {
@@ -8120,11 +8180,11 @@ export namespace Prisma {
     connect?: RowWhereUniqueInput | RowWhereUniqueInput[]
   }
 
-  export type FieldUncheckedCreateNestedManyWithoutTableInput = {
-    create?: XOR<FieldCreateWithoutTableInput, FieldUncheckedCreateWithoutTableInput> | FieldCreateWithoutTableInput[] | FieldUncheckedCreateWithoutTableInput[]
-    connectOrCreate?: FieldCreateOrConnectWithoutTableInput | FieldCreateOrConnectWithoutTableInput[]
-    createMany?: FieldCreateManyTableInputEnvelope
-    connect?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
+  export type ColumnUncheckedCreateNestedManyWithoutTableInput = {
+    create?: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput> | ColumnCreateWithoutTableInput[] | ColumnUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutTableInput | ColumnCreateOrConnectWithoutTableInput[]
+    createMany?: ColumnCreateManyTableInputEnvelope
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
   }
 
   export type RowUncheckedCreateNestedManyWithoutTableInput = {
@@ -8134,26 +8194,26 @@ export namespace Prisma {
     connect?: RowWhereUniqueInput | RowWhereUniqueInput[]
   }
 
-  export type ProjectUpdateOneRequiredWithoutTablesNestedInput = {
-    create?: XOR<ProjectCreateWithoutTablesInput, ProjectUncheckedCreateWithoutTablesInput>
-    connectOrCreate?: ProjectCreateOrConnectWithoutTablesInput
-    upsert?: ProjectUpsertWithoutTablesInput
-    connect?: ProjectWhereUniqueInput
-    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutTablesInput, ProjectUpdateWithoutTablesInput>, ProjectUncheckedUpdateWithoutTablesInput>
+  export type BaseUpdateOneRequiredWithoutTablesNestedInput = {
+    create?: XOR<BaseCreateWithoutTablesInput, BaseUncheckedCreateWithoutTablesInput>
+    connectOrCreate?: BaseCreateOrConnectWithoutTablesInput
+    upsert?: BaseUpsertWithoutTablesInput
+    connect?: BaseWhereUniqueInput
+    update?: XOR<XOR<BaseUpdateToOneWithWhereWithoutTablesInput, BaseUpdateWithoutTablesInput>, BaseUncheckedUpdateWithoutTablesInput>
   }
 
-  export type FieldUpdateManyWithoutTableNestedInput = {
-    create?: XOR<FieldCreateWithoutTableInput, FieldUncheckedCreateWithoutTableInput> | FieldCreateWithoutTableInput[] | FieldUncheckedCreateWithoutTableInput[]
-    connectOrCreate?: FieldCreateOrConnectWithoutTableInput | FieldCreateOrConnectWithoutTableInput[]
-    upsert?: FieldUpsertWithWhereUniqueWithoutTableInput | FieldUpsertWithWhereUniqueWithoutTableInput[]
-    createMany?: FieldCreateManyTableInputEnvelope
-    set?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    disconnect?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    delete?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    connect?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    update?: FieldUpdateWithWhereUniqueWithoutTableInput | FieldUpdateWithWhereUniqueWithoutTableInput[]
-    updateMany?: FieldUpdateManyWithWhereWithoutTableInput | FieldUpdateManyWithWhereWithoutTableInput[]
-    deleteMany?: FieldScalarWhereInput | FieldScalarWhereInput[]
+  export type ColumnUpdateManyWithoutTableNestedInput = {
+    create?: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput> | ColumnCreateWithoutTableInput[] | ColumnUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutTableInput | ColumnCreateOrConnectWithoutTableInput[]
+    upsert?: ColumnUpsertWithWhereUniqueWithoutTableInput | ColumnUpsertWithWhereUniqueWithoutTableInput[]
+    createMany?: ColumnCreateManyTableInputEnvelope
+    set?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    disconnect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    delete?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    update?: ColumnUpdateWithWhereUniqueWithoutTableInput | ColumnUpdateWithWhereUniqueWithoutTableInput[]
+    updateMany?: ColumnUpdateManyWithWhereWithoutTableInput | ColumnUpdateManyWithWhereWithoutTableInput[]
+    deleteMany?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
   }
 
   export type RowUpdateManyWithoutTableNestedInput = {
@@ -8170,18 +8230,18 @@ export namespace Prisma {
     deleteMany?: RowScalarWhereInput | RowScalarWhereInput[]
   }
 
-  export type FieldUncheckedUpdateManyWithoutTableNestedInput = {
-    create?: XOR<FieldCreateWithoutTableInput, FieldUncheckedCreateWithoutTableInput> | FieldCreateWithoutTableInput[] | FieldUncheckedCreateWithoutTableInput[]
-    connectOrCreate?: FieldCreateOrConnectWithoutTableInput | FieldCreateOrConnectWithoutTableInput[]
-    upsert?: FieldUpsertWithWhereUniqueWithoutTableInput | FieldUpsertWithWhereUniqueWithoutTableInput[]
-    createMany?: FieldCreateManyTableInputEnvelope
-    set?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    disconnect?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    delete?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    connect?: FieldWhereUniqueInput | FieldWhereUniqueInput[]
-    update?: FieldUpdateWithWhereUniqueWithoutTableInput | FieldUpdateWithWhereUniqueWithoutTableInput[]
-    updateMany?: FieldUpdateManyWithWhereWithoutTableInput | FieldUpdateManyWithWhereWithoutTableInput[]
-    deleteMany?: FieldScalarWhereInput | FieldScalarWhereInput[]
+  export type ColumnUncheckedUpdateManyWithoutTableNestedInput = {
+    create?: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput> | ColumnCreateWithoutTableInput[] | ColumnUncheckedCreateWithoutTableInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutTableInput | ColumnCreateOrConnectWithoutTableInput[]
+    upsert?: ColumnUpsertWithWhereUniqueWithoutTableInput | ColumnUpsertWithWhereUniqueWithoutTableInput[]
+    createMany?: ColumnCreateManyTableInputEnvelope
+    set?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    disconnect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    delete?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    update?: ColumnUpdateWithWhereUniqueWithoutTableInput | ColumnUpdateWithWhereUniqueWithoutTableInput[]
+    updateMany?: ColumnUpdateManyWithWhereWithoutTableInput | ColumnUpdateManyWithWhereWithoutTableInput[]
+    deleteMany?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
   }
 
   export type RowUncheckedUpdateManyWithoutTableNestedInput = {
@@ -8198,63 +8258,63 @@ export namespace Prisma {
     deleteMany?: RowScalarWhereInput | RowScalarWhereInput[]
   }
 
-  export type TableCreateNestedOneWithoutFieldsInput = {
-    create?: XOR<TableCreateWithoutFieldsInput, TableUncheckedCreateWithoutFieldsInput>
-    connectOrCreate?: TableCreateOrConnectWithoutFieldsInput
+  export type TableCreateNestedOneWithoutColumnsInput = {
+    create?: XOR<TableCreateWithoutColumnsInput, TableUncheckedCreateWithoutColumnsInput>
+    connectOrCreate?: TableCreateOrConnectWithoutColumnsInput
     connect?: TableWhereUniqueInput
   }
 
-  export type CellCreateNestedManyWithoutFieldInput = {
-    create?: XOR<CellCreateWithoutFieldInput, CellUncheckedCreateWithoutFieldInput> | CellCreateWithoutFieldInput[] | CellUncheckedCreateWithoutFieldInput[]
-    connectOrCreate?: CellCreateOrConnectWithoutFieldInput | CellCreateOrConnectWithoutFieldInput[]
-    createMany?: CellCreateManyFieldInputEnvelope
+  export type CellCreateNestedManyWithoutColumnInput = {
+    create?: XOR<CellCreateWithoutColumnInput, CellUncheckedCreateWithoutColumnInput> | CellCreateWithoutColumnInput[] | CellUncheckedCreateWithoutColumnInput[]
+    connectOrCreate?: CellCreateOrConnectWithoutColumnInput | CellCreateOrConnectWithoutColumnInput[]
+    createMany?: CellCreateManyColumnInputEnvelope
     connect?: CellWhereUniqueInput | CellWhereUniqueInput[]
   }
 
-  export type CellUncheckedCreateNestedManyWithoutFieldInput = {
-    create?: XOR<CellCreateWithoutFieldInput, CellUncheckedCreateWithoutFieldInput> | CellCreateWithoutFieldInput[] | CellUncheckedCreateWithoutFieldInput[]
-    connectOrCreate?: CellCreateOrConnectWithoutFieldInput | CellCreateOrConnectWithoutFieldInput[]
-    createMany?: CellCreateManyFieldInputEnvelope
+  export type CellUncheckedCreateNestedManyWithoutColumnInput = {
+    create?: XOR<CellCreateWithoutColumnInput, CellUncheckedCreateWithoutColumnInput> | CellCreateWithoutColumnInput[] | CellUncheckedCreateWithoutColumnInput[]
+    connectOrCreate?: CellCreateOrConnectWithoutColumnInput | CellCreateOrConnectWithoutColumnInput[]
+    createMany?: CellCreateManyColumnInputEnvelope
     connect?: CellWhereUniqueInput | CellWhereUniqueInput[]
   }
 
-  export type EnumFieldTypeFieldUpdateOperationsInput = {
-    set?: $Enums.FieldType
+  export type EnumColumnTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ColumnType
   }
 
-  export type TableUpdateOneRequiredWithoutFieldsNestedInput = {
-    create?: XOR<TableCreateWithoutFieldsInput, TableUncheckedCreateWithoutFieldsInput>
-    connectOrCreate?: TableCreateOrConnectWithoutFieldsInput
-    upsert?: TableUpsertWithoutFieldsInput
+  export type TableUpdateOneRequiredWithoutColumnsNestedInput = {
+    create?: XOR<TableCreateWithoutColumnsInput, TableUncheckedCreateWithoutColumnsInput>
+    connectOrCreate?: TableCreateOrConnectWithoutColumnsInput
+    upsert?: TableUpsertWithoutColumnsInput
     connect?: TableWhereUniqueInput
-    update?: XOR<XOR<TableUpdateToOneWithWhereWithoutFieldsInput, TableUpdateWithoutFieldsInput>, TableUncheckedUpdateWithoutFieldsInput>
+    update?: XOR<XOR<TableUpdateToOneWithWhereWithoutColumnsInput, TableUpdateWithoutColumnsInput>, TableUncheckedUpdateWithoutColumnsInput>
   }
 
-  export type CellUpdateManyWithoutFieldNestedInput = {
-    create?: XOR<CellCreateWithoutFieldInput, CellUncheckedCreateWithoutFieldInput> | CellCreateWithoutFieldInput[] | CellUncheckedCreateWithoutFieldInput[]
-    connectOrCreate?: CellCreateOrConnectWithoutFieldInput | CellCreateOrConnectWithoutFieldInput[]
-    upsert?: CellUpsertWithWhereUniqueWithoutFieldInput | CellUpsertWithWhereUniqueWithoutFieldInput[]
-    createMany?: CellCreateManyFieldInputEnvelope
+  export type CellUpdateManyWithoutColumnNestedInput = {
+    create?: XOR<CellCreateWithoutColumnInput, CellUncheckedCreateWithoutColumnInput> | CellCreateWithoutColumnInput[] | CellUncheckedCreateWithoutColumnInput[]
+    connectOrCreate?: CellCreateOrConnectWithoutColumnInput | CellCreateOrConnectWithoutColumnInput[]
+    upsert?: CellUpsertWithWhereUniqueWithoutColumnInput | CellUpsertWithWhereUniqueWithoutColumnInput[]
+    createMany?: CellCreateManyColumnInputEnvelope
     set?: CellWhereUniqueInput | CellWhereUniqueInput[]
     disconnect?: CellWhereUniqueInput | CellWhereUniqueInput[]
     delete?: CellWhereUniqueInput | CellWhereUniqueInput[]
     connect?: CellWhereUniqueInput | CellWhereUniqueInput[]
-    update?: CellUpdateWithWhereUniqueWithoutFieldInput | CellUpdateWithWhereUniqueWithoutFieldInput[]
-    updateMany?: CellUpdateManyWithWhereWithoutFieldInput | CellUpdateManyWithWhereWithoutFieldInput[]
+    update?: CellUpdateWithWhereUniqueWithoutColumnInput | CellUpdateWithWhereUniqueWithoutColumnInput[]
+    updateMany?: CellUpdateManyWithWhereWithoutColumnInput | CellUpdateManyWithWhereWithoutColumnInput[]
     deleteMany?: CellScalarWhereInput | CellScalarWhereInput[]
   }
 
-  export type CellUncheckedUpdateManyWithoutFieldNestedInput = {
-    create?: XOR<CellCreateWithoutFieldInput, CellUncheckedCreateWithoutFieldInput> | CellCreateWithoutFieldInput[] | CellUncheckedCreateWithoutFieldInput[]
-    connectOrCreate?: CellCreateOrConnectWithoutFieldInput | CellCreateOrConnectWithoutFieldInput[]
-    upsert?: CellUpsertWithWhereUniqueWithoutFieldInput | CellUpsertWithWhereUniqueWithoutFieldInput[]
-    createMany?: CellCreateManyFieldInputEnvelope
+  export type CellUncheckedUpdateManyWithoutColumnNestedInput = {
+    create?: XOR<CellCreateWithoutColumnInput, CellUncheckedCreateWithoutColumnInput> | CellCreateWithoutColumnInput[] | CellUncheckedCreateWithoutColumnInput[]
+    connectOrCreate?: CellCreateOrConnectWithoutColumnInput | CellCreateOrConnectWithoutColumnInput[]
+    upsert?: CellUpsertWithWhereUniqueWithoutColumnInput | CellUpsertWithWhereUniqueWithoutColumnInput[]
+    createMany?: CellCreateManyColumnInputEnvelope
     set?: CellWhereUniqueInput | CellWhereUniqueInput[]
     disconnect?: CellWhereUniqueInput | CellWhereUniqueInput[]
     delete?: CellWhereUniqueInput | CellWhereUniqueInput[]
     connect?: CellWhereUniqueInput | CellWhereUniqueInput[]
-    update?: CellUpdateWithWhereUniqueWithoutFieldInput | CellUpdateWithWhereUniqueWithoutFieldInput[]
-    updateMany?: CellUpdateManyWithWhereWithoutFieldInput | CellUpdateManyWithWhereWithoutFieldInput[]
+    update?: CellUpdateWithWhereUniqueWithoutColumnInput | CellUpdateWithWhereUniqueWithoutColumnInput[]
+    updateMany?: CellUpdateManyWithWhereWithoutColumnInput | CellUpdateManyWithWhereWithoutColumnInput[]
     deleteMany?: CellScalarWhereInput | CellScalarWhereInput[]
   }
 
@@ -8320,10 +8380,10 @@ export namespace Prisma {
     connect?: RowWhereUniqueInput
   }
 
-  export type FieldCreateNestedOneWithoutCellsInput = {
-    create?: XOR<FieldCreateWithoutCellsInput, FieldUncheckedCreateWithoutCellsInput>
-    connectOrCreate?: FieldCreateOrConnectWithoutCellsInput
-    connect?: FieldWhereUniqueInput
+  export type ColumnCreateNestedOneWithoutCellsInput = {
+    create?: XOR<ColumnCreateWithoutCellsInput, ColumnUncheckedCreateWithoutCellsInput>
+    connectOrCreate?: ColumnCreateOrConnectWithoutCellsInput
+    connect?: ColumnWhereUniqueInput
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -8338,18 +8398,18 @@ export namespace Prisma {
     update?: XOR<XOR<RowUpdateToOneWithWhereWithoutCellsInput, RowUpdateWithoutCellsInput>, RowUncheckedUpdateWithoutCellsInput>
   }
 
-  export type FieldUpdateOneRequiredWithoutCellsNestedInput = {
-    create?: XOR<FieldCreateWithoutCellsInput, FieldUncheckedCreateWithoutCellsInput>
-    connectOrCreate?: FieldCreateOrConnectWithoutCellsInput
-    upsert?: FieldUpsertWithoutCellsInput
-    connect?: FieldWhereUniqueInput
-    update?: XOR<XOR<FieldUpdateToOneWithWhereWithoutCellsInput, FieldUpdateWithoutCellsInput>, FieldUncheckedUpdateWithoutCellsInput>
+  export type ColumnUpdateOneRequiredWithoutCellsNestedInput = {
+    create?: XOR<ColumnCreateWithoutCellsInput, ColumnUncheckedCreateWithoutCellsInput>
+    connectOrCreate?: ColumnCreateOrConnectWithoutCellsInput
+    upsert?: ColumnUpsertWithoutCellsInput
+    connect?: ColumnWhereUniqueInput
+    update?: XOR<XOR<ColumnUpdateToOneWithWhereWithoutCellsInput, ColumnUpdateWithoutCellsInput>, ColumnUncheckedUpdateWithoutCellsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -8359,8 +8419,8 @@ export namespace Prisma {
 
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -8373,8 +8433,8 @@ export namespace Prisma {
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -8384,8 +8444,8 @@ export namespace Prisma {
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -8400,8 +8460,8 @@ export namespace Prisma {
 
   export type NestedFloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -8411,8 +8471,8 @@ export namespace Prisma {
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -8428,8 +8488,8 @@ export namespace Prisma {
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -8440,27 +8500,27 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumFieldTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FieldType[]
-    notIn?: $Enums.FieldType[]
-    not?: NestedEnumFieldTypeFilter<$PrismaModel> | $Enums.FieldType
+  export type NestedEnumColumnTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ColumnType | EnumColumnTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumColumnTypeFilter<$PrismaModel> | $Enums.ColumnType
   }
 
-  export type NestedEnumFieldTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FieldType | EnumFieldTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.FieldType[]
-    notIn?: $Enums.FieldType[]
-    not?: NestedEnumFieldTypeWithAggregatesFilter<$PrismaModel> | $Enums.FieldType
+  export type NestedEnumColumnTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ColumnType | EnumColumnTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ColumnType[] | ListEnumColumnTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumColumnTypeWithAggregatesFilter<$PrismaModel> | $Enums.ColumnType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumFieldTypeFilter<$PrismaModel>
-    _max?: NestedEnumFieldTypeFilter<$PrismaModel>
+    _min?: NestedEnumColumnTypeFilter<$PrismaModel>
+    _max?: NestedEnumColumnTypeFilter<$PrismaModel>
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -8473,8 +8533,8 @@ export namespace Prisma {
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -8490,8 +8550,8 @@ export namespace Prisma {
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -8499,46 +8559,47 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type TableCreateWithoutProjectInput = {
+  export type TableCreateWithoutBaseInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fields?: FieldCreateNestedManyWithoutTableInput
+    columns?: ColumnCreateNestedManyWithoutTableInput
     rows?: RowCreateNestedManyWithoutTableInput
   }
 
-  export type TableUncheckedCreateWithoutProjectInput = {
+  export type TableUncheckedCreateWithoutBaseInput = {
     id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fields?: FieldUncheckedCreateNestedManyWithoutTableInput
+    columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
     rows?: RowUncheckedCreateNestedManyWithoutTableInput
   }
 
-  export type TableCreateOrConnectWithoutProjectInput = {
+  export type TableCreateOrConnectWithoutBaseInput = {
     where: TableWhereUniqueInput
-    create: XOR<TableCreateWithoutProjectInput, TableUncheckedCreateWithoutProjectInput>
+    create: XOR<TableCreateWithoutBaseInput, TableUncheckedCreateWithoutBaseInput>
   }
 
-  export type TableCreateManyProjectInputEnvelope = {
-    data: TableCreateManyProjectInput | TableCreateManyProjectInput[]
+  export type TableCreateManyBaseInputEnvelope = {
+    data: TableCreateManyBaseInput | TableCreateManyBaseInput[]
+    skipDuplicates?: boolean
   }
 
-  export type TableUpsertWithWhereUniqueWithoutProjectInput = {
+  export type TableUpsertWithWhereUniqueWithoutBaseInput = {
     where: TableWhereUniqueInput
-    update: XOR<TableUpdateWithoutProjectInput, TableUncheckedUpdateWithoutProjectInput>
-    create: XOR<TableCreateWithoutProjectInput, TableUncheckedCreateWithoutProjectInput>
+    update: XOR<TableUpdateWithoutBaseInput, TableUncheckedUpdateWithoutBaseInput>
+    create: XOR<TableCreateWithoutBaseInput, TableUncheckedCreateWithoutBaseInput>
   }
 
-  export type TableUpdateWithWhereUniqueWithoutProjectInput = {
+  export type TableUpdateWithWhereUniqueWithoutBaseInput = {
     where: TableWhereUniqueInput
-    data: XOR<TableUpdateWithoutProjectInput, TableUncheckedUpdateWithoutProjectInput>
+    data: XOR<TableUpdateWithoutBaseInput, TableUncheckedUpdateWithoutBaseInput>
   }
 
-  export type TableUpdateManyWithWhereWithoutProjectInput = {
+  export type TableUpdateManyWithWhereWithoutBaseInput = {
     where: TableScalarWhereInput
-    data: XOR<TableUpdateManyMutationInput, TableUncheckedUpdateManyWithoutProjectInput>
+    data: XOR<TableUpdateManyMutationInput, TableUncheckedUpdateManyWithoutBaseInput>
   }
 
   export type TableScalarWhereInput = {
@@ -8549,53 +8610,54 @@ export namespace Prisma {
     name?: StringFilter<"Table"> | string
     createdAt?: DateTimeFilter<"Table"> | Date | string
     updatedAt?: DateTimeFilter<"Table"> | Date | string
-    projectId?: IntFilter<"Table"> | number
+    baseId?: IntFilter<"Table"> | number
   }
 
-  export type ProjectCreateWithoutTablesInput = {
+  export type BaseCreateWithoutTablesInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type ProjectUncheckedCreateWithoutTablesInput = {
+  export type BaseUncheckedCreateWithoutTablesInput = {
     id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type ProjectCreateOrConnectWithoutTablesInput = {
-    where: ProjectWhereUniqueInput
-    create: XOR<ProjectCreateWithoutTablesInput, ProjectUncheckedCreateWithoutTablesInput>
+  export type BaseCreateOrConnectWithoutTablesInput = {
+    where: BaseWhereUniqueInput
+    create: XOR<BaseCreateWithoutTablesInput, BaseUncheckedCreateWithoutTablesInput>
   }
 
-  export type FieldCreateWithoutTableInput = {
+  export type ColumnCreateWithoutTableInput = {
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    cells?: CellCreateNestedManyWithoutFieldInput
+    cells?: CellCreateNestedManyWithoutColumnInput
   }
 
-  export type FieldUncheckedCreateWithoutTableInput = {
+  export type ColumnUncheckedCreateWithoutTableInput = {
     id?: number
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    cells?: CellUncheckedCreateNestedManyWithoutFieldInput
+    cells?: CellUncheckedCreateNestedManyWithoutColumnInput
   }
 
-  export type FieldCreateOrConnectWithoutTableInput = {
-    where: FieldWhereUniqueInput
-    create: XOR<FieldCreateWithoutTableInput, FieldUncheckedCreateWithoutTableInput>
+  export type ColumnCreateOrConnectWithoutTableInput = {
+    where: ColumnWhereUniqueInput
+    create: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput>
   }
 
-  export type FieldCreateManyTableInputEnvelope = {
-    data: FieldCreateManyTableInput | FieldCreateManyTableInput[]
+  export type ColumnCreateManyTableInputEnvelope = {
+    data: ColumnCreateManyTableInput | ColumnCreateManyTableInput[]
+    skipDuplicates?: boolean
   }
 
   export type RowCreateWithoutTableInput = {
@@ -8618,59 +8680,60 @@ export namespace Prisma {
 
   export type RowCreateManyTableInputEnvelope = {
     data: RowCreateManyTableInput | RowCreateManyTableInput[]
+    skipDuplicates?: boolean
   }
 
-  export type ProjectUpsertWithoutTablesInput = {
-    update: XOR<ProjectUpdateWithoutTablesInput, ProjectUncheckedUpdateWithoutTablesInput>
-    create: XOR<ProjectCreateWithoutTablesInput, ProjectUncheckedCreateWithoutTablesInput>
-    where?: ProjectWhereInput
+  export type BaseUpsertWithoutTablesInput = {
+    update: XOR<BaseUpdateWithoutTablesInput, BaseUncheckedUpdateWithoutTablesInput>
+    create: XOR<BaseCreateWithoutTablesInput, BaseUncheckedCreateWithoutTablesInput>
+    where?: BaseWhereInput
   }
 
-  export type ProjectUpdateToOneWithWhereWithoutTablesInput = {
-    where?: ProjectWhereInput
-    data: XOR<ProjectUpdateWithoutTablesInput, ProjectUncheckedUpdateWithoutTablesInput>
+  export type BaseUpdateToOneWithWhereWithoutTablesInput = {
+    where?: BaseWhereInput
+    data: XOR<BaseUpdateWithoutTablesInput, BaseUncheckedUpdateWithoutTablesInput>
   }
 
-  export type ProjectUpdateWithoutTablesInput = {
+  export type BaseUpdateWithoutTablesInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ProjectUncheckedUpdateWithoutTablesInput = {
+  export type BaseUncheckedUpdateWithoutTablesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FieldUpsertWithWhereUniqueWithoutTableInput = {
-    where: FieldWhereUniqueInput
-    update: XOR<FieldUpdateWithoutTableInput, FieldUncheckedUpdateWithoutTableInput>
-    create: XOR<FieldCreateWithoutTableInput, FieldUncheckedCreateWithoutTableInput>
+  export type ColumnUpsertWithWhereUniqueWithoutTableInput = {
+    where: ColumnWhereUniqueInput
+    update: XOR<ColumnUpdateWithoutTableInput, ColumnUncheckedUpdateWithoutTableInput>
+    create: XOR<ColumnCreateWithoutTableInput, ColumnUncheckedCreateWithoutTableInput>
   }
 
-  export type FieldUpdateWithWhereUniqueWithoutTableInput = {
-    where: FieldWhereUniqueInput
-    data: XOR<FieldUpdateWithoutTableInput, FieldUncheckedUpdateWithoutTableInput>
+  export type ColumnUpdateWithWhereUniqueWithoutTableInput = {
+    where: ColumnWhereUniqueInput
+    data: XOR<ColumnUpdateWithoutTableInput, ColumnUncheckedUpdateWithoutTableInput>
   }
 
-  export type FieldUpdateManyWithWhereWithoutTableInput = {
-    where: FieldScalarWhereInput
-    data: XOR<FieldUpdateManyMutationInput, FieldUncheckedUpdateManyWithoutTableInput>
+  export type ColumnUpdateManyWithWhereWithoutTableInput = {
+    where: ColumnScalarWhereInput
+    data: XOR<ColumnUpdateManyMutationInput, ColumnUncheckedUpdateManyWithoutTableInput>
   }
 
-  export type FieldScalarWhereInput = {
-    AND?: FieldScalarWhereInput | FieldScalarWhereInput[]
-    OR?: FieldScalarWhereInput[]
-    NOT?: FieldScalarWhereInput | FieldScalarWhereInput[]
-    id?: IntFilter<"Field"> | number
-    name?: StringFilter<"Field"> | string
-    type?: EnumFieldTypeFilter<"Field"> | $Enums.FieldType
-    position?: IntFilter<"Field"> | number
-    createdAt?: DateTimeFilter<"Field"> | Date | string
-    updatedAt?: DateTimeFilter<"Field"> | Date | string
-    tableId?: IntFilter<"Field"> | number
+  export type ColumnScalarWhereInput = {
+    AND?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
+    OR?: ColumnScalarWhereInput[]
+    NOT?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
+    id?: IntFilter<"Column"> | number
+    name?: StringFilter<"Column"> | string
+    type?: EnumColumnTypeFilter<"Column"> | $Enums.ColumnType
+    position?: IntFilter<"Column"> | number
+    createdAt?: DateTimeFilter<"Column"> | Date | string
+    updatedAt?: DateTimeFilter<"Column"> | Date | string
+    tableId?: IntFilter<"Column"> | number
   }
 
   export type RowUpsertWithWhereUniqueWithoutTableInput = {
@@ -8699,90 +8762,91 @@ export namespace Prisma {
     tableId?: IntFilter<"Row"> | number
   }
 
-  export type TableCreateWithoutFieldsInput = {
+  export type TableCreateWithoutColumnsInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutTablesInput
+    base: BaseCreateNestedOneWithoutTablesInput
     rows?: RowCreateNestedManyWithoutTableInput
   }
 
-  export type TableUncheckedCreateWithoutFieldsInput = {
+  export type TableUncheckedCreateWithoutColumnsInput = {
     id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    projectId: number
+    baseId: number
     rows?: RowUncheckedCreateNestedManyWithoutTableInput
   }
 
-  export type TableCreateOrConnectWithoutFieldsInput = {
+  export type TableCreateOrConnectWithoutColumnsInput = {
     where: TableWhereUniqueInput
-    create: XOR<TableCreateWithoutFieldsInput, TableUncheckedCreateWithoutFieldsInput>
+    create: XOR<TableCreateWithoutColumnsInput, TableUncheckedCreateWithoutColumnsInput>
   }
 
-  export type CellCreateWithoutFieldInput = {
+  export type CellCreateWithoutColumnInput = {
     value?: string | null
     row: RowCreateNestedOneWithoutCellsInput
   }
 
-  export type CellUncheckedCreateWithoutFieldInput = {
+  export type CellUncheckedCreateWithoutColumnInput = {
     id?: number
     value?: string | null
     rowId: number
   }
 
-  export type CellCreateOrConnectWithoutFieldInput = {
+  export type CellCreateOrConnectWithoutColumnInput = {
     where: CellWhereUniqueInput
-    create: XOR<CellCreateWithoutFieldInput, CellUncheckedCreateWithoutFieldInput>
+    create: XOR<CellCreateWithoutColumnInput, CellUncheckedCreateWithoutColumnInput>
   }
 
-  export type CellCreateManyFieldInputEnvelope = {
-    data: CellCreateManyFieldInput | CellCreateManyFieldInput[]
+  export type CellCreateManyColumnInputEnvelope = {
+    data: CellCreateManyColumnInput | CellCreateManyColumnInput[]
+    skipDuplicates?: boolean
   }
 
-  export type TableUpsertWithoutFieldsInput = {
-    update: XOR<TableUpdateWithoutFieldsInput, TableUncheckedUpdateWithoutFieldsInput>
-    create: XOR<TableCreateWithoutFieldsInput, TableUncheckedCreateWithoutFieldsInput>
+  export type TableUpsertWithoutColumnsInput = {
+    update: XOR<TableUpdateWithoutColumnsInput, TableUncheckedUpdateWithoutColumnsInput>
+    create: XOR<TableCreateWithoutColumnsInput, TableUncheckedCreateWithoutColumnsInput>
     where?: TableWhereInput
   }
 
-  export type TableUpdateToOneWithWhereWithoutFieldsInput = {
+  export type TableUpdateToOneWithWhereWithoutColumnsInput = {
     where?: TableWhereInput
-    data: XOR<TableUpdateWithoutFieldsInput, TableUncheckedUpdateWithoutFieldsInput>
+    data: XOR<TableUpdateWithoutColumnsInput, TableUncheckedUpdateWithoutColumnsInput>
   }
 
-  export type TableUpdateWithoutFieldsInput = {
+  export type TableUpdateWithoutColumnsInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutTablesNestedInput
+    base?: BaseUpdateOneRequiredWithoutTablesNestedInput
     rows?: RowUpdateManyWithoutTableNestedInput
   }
 
-  export type TableUncheckedUpdateWithoutFieldsInput = {
+  export type TableUncheckedUpdateWithoutColumnsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    projectId?: IntFieldUpdateOperationsInput | number
+    baseId?: IntFieldUpdateOperationsInput | number
     rows?: RowUncheckedUpdateManyWithoutTableNestedInput
   }
 
-  export type CellUpsertWithWhereUniqueWithoutFieldInput = {
+  export type CellUpsertWithWhereUniqueWithoutColumnInput = {
     where: CellWhereUniqueInput
-    update: XOR<CellUpdateWithoutFieldInput, CellUncheckedUpdateWithoutFieldInput>
-    create: XOR<CellCreateWithoutFieldInput, CellUncheckedCreateWithoutFieldInput>
+    update: XOR<CellUpdateWithoutColumnInput, CellUncheckedUpdateWithoutColumnInput>
+    create: XOR<CellCreateWithoutColumnInput, CellUncheckedCreateWithoutColumnInput>
   }
 
-  export type CellUpdateWithWhereUniqueWithoutFieldInput = {
+  export type CellUpdateWithWhereUniqueWithoutColumnInput = {
     where: CellWhereUniqueInput
-    data: XOR<CellUpdateWithoutFieldInput, CellUncheckedUpdateWithoutFieldInput>
+    data: XOR<CellUpdateWithoutColumnInput, CellUncheckedUpdateWithoutColumnInput>
   }
 
-  export type CellUpdateManyWithWhereWithoutFieldInput = {
+  export type CellUpdateManyWithWhereWithoutColumnInput = {
     where: CellScalarWhereInput
-    data: XOR<CellUpdateManyMutationInput, CellUncheckedUpdateManyWithoutFieldInput>
+    data: XOR<CellUpdateManyMutationInput, CellUncheckedUpdateManyWithoutColumnInput>
   }
 
   export type CellScalarWhereInput = {
@@ -8792,15 +8856,15 @@ export namespace Prisma {
     id?: IntFilter<"Cell"> | number
     value?: StringNullableFilter<"Cell"> | string | null
     rowId?: IntFilter<"Cell"> | number
-    fieldId?: IntFilter<"Cell"> | number
+    columnId?: IntFilter<"Cell"> | number
   }
 
   export type TableCreateWithoutRowsInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutTablesInput
-    fields?: FieldCreateNestedManyWithoutTableInput
+    base: BaseCreateNestedOneWithoutTablesInput
+    columns?: ColumnCreateNestedManyWithoutTableInput
   }
 
   export type TableUncheckedCreateWithoutRowsInput = {
@@ -8808,8 +8872,8 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    projectId: number
-    fields?: FieldUncheckedCreateNestedManyWithoutTableInput
+    baseId: number
+    columns?: ColumnUncheckedCreateNestedManyWithoutTableInput
   }
 
   export type TableCreateOrConnectWithoutRowsInput = {
@@ -8819,13 +8883,13 @@ export namespace Prisma {
 
   export type CellCreateWithoutRowInput = {
     value?: string | null
-    field: FieldCreateNestedOneWithoutCellsInput
+    column: ColumnCreateNestedOneWithoutCellsInput
   }
 
   export type CellUncheckedCreateWithoutRowInput = {
     id?: number
     value?: string | null
-    fieldId: number
+    columnId: number
   }
 
   export type CellCreateOrConnectWithoutRowInput = {
@@ -8835,6 +8899,7 @@ export namespace Prisma {
 
   export type CellCreateManyRowInputEnvelope = {
     data: CellCreateManyRowInput | CellCreateManyRowInput[]
+    skipDuplicates?: boolean
   }
 
   export type TableUpsertWithoutRowsInput = {
@@ -8852,8 +8917,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutTablesNestedInput
-    fields?: FieldUpdateManyWithoutTableNestedInput
+    base?: BaseUpdateOneRequiredWithoutTablesNestedInput
+    columns?: ColumnUpdateManyWithoutTableNestedInput
   }
 
   export type TableUncheckedUpdateWithoutRowsInput = {
@@ -8861,8 +8926,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    projectId?: IntFieldUpdateOperationsInput | number
-    fields?: FieldUncheckedUpdateManyWithoutTableNestedInput
+    baseId?: IntFieldUpdateOperationsInput | number
+    columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
   }
 
   export type CellUpsertWithWhereUniqueWithoutRowInput = {
@@ -8899,28 +8964,28 @@ export namespace Prisma {
     create: XOR<RowCreateWithoutCellsInput, RowUncheckedCreateWithoutCellsInput>
   }
 
-  export type FieldCreateWithoutCellsInput = {
+  export type ColumnCreateWithoutCellsInput = {
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    table: TableCreateNestedOneWithoutFieldsInput
+    table: TableCreateNestedOneWithoutColumnsInput
   }
 
-  export type FieldUncheckedCreateWithoutCellsInput = {
+  export type ColumnUncheckedCreateWithoutCellsInput = {
     id?: number
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
     tableId: number
   }
 
-  export type FieldCreateOrConnectWithoutCellsInput = {
-    where: FieldWhereUniqueInput
-    create: XOR<FieldCreateWithoutCellsInput, FieldUncheckedCreateWithoutCellsInput>
+  export type ColumnCreateOrConnectWithoutCellsInput = {
+    where: ColumnWhereUniqueInput
+    create: XOR<ColumnCreateWithoutCellsInput, ColumnUncheckedCreateWithoutCellsInput>
   }
 
   export type RowUpsertWithoutCellsInput = {
@@ -8947,71 +9012,71 @@ export namespace Prisma {
     tableId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type FieldUpsertWithoutCellsInput = {
-    update: XOR<FieldUpdateWithoutCellsInput, FieldUncheckedUpdateWithoutCellsInput>
-    create: XOR<FieldCreateWithoutCellsInput, FieldUncheckedCreateWithoutCellsInput>
-    where?: FieldWhereInput
+  export type ColumnUpsertWithoutCellsInput = {
+    update: XOR<ColumnUpdateWithoutCellsInput, ColumnUncheckedUpdateWithoutCellsInput>
+    create: XOR<ColumnCreateWithoutCellsInput, ColumnUncheckedCreateWithoutCellsInput>
+    where?: ColumnWhereInput
   }
 
-  export type FieldUpdateToOneWithWhereWithoutCellsInput = {
-    where?: FieldWhereInput
-    data: XOR<FieldUpdateWithoutCellsInput, FieldUncheckedUpdateWithoutCellsInput>
+  export type ColumnUpdateToOneWithWhereWithoutCellsInput = {
+    where?: ColumnWhereInput
+    data: XOR<ColumnUpdateWithoutCellsInput, ColumnUncheckedUpdateWithoutCellsInput>
   }
 
-  export type FieldUpdateWithoutCellsInput = {
+  export type ColumnUpdateWithoutCellsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    table?: TableUpdateOneRequiredWithoutFieldsNestedInput
+    table?: TableUpdateOneRequiredWithoutColumnsNestedInput
   }
 
-  export type FieldUncheckedUpdateWithoutCellsInput = {
+  export type ColumnUncheckedUpdateWithoutCellsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tableId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type TableCreateManyProjectInput = {
+  export type TableCreateManyBaseInput = {
     id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type TableUpdateWithoutProjectInput = {
+  export type TableUpdateWithoutBaseInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fields?: FieldUpdateManyWithoutTableNestedInput
+    columns?: ColumnUpdateManyWithoutTableNestedInput
     rows?: RowUpdateManyWithoutTableNestedInput
   }
 
-  export type TableUncheckedUpdateWithoutProjectInput = {
+  export type TableUncheckedUpdateWithoutBaseInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fields?: FieldUncheckedUpdateManyWithoutTableNestedInput
+    columns?: ColumnUncheckedUpdateManyWithoutTableNestedInput
     rows?: RowUncheckedUpdateManyWithoutTableNestedInput
   }
 
-  export type TableUncheckedUpdateManyWithoutProjectInput = {
+  export type TableUncheckedUpdateManyWithoutBaseInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FieldCreateManyTableInput = {
+  export type ColumnCreateManyTableInput = {
     id?: number
     name: string
-    type: $Enums.FieldType
+    type: $Enums.ColumnType
     position: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9023,29 +9088,29 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type FieldUpdateWithoutTableInput = {
+  export type ColumnUpdateWithoutTableInput = {
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    cells?: CellUpdateManyWithoutFieldNestedInput
+    cells?: CellUpdateManyWithoutColumnNestedInput
   }
 
-  export type FieldUncheckedUpdateWithoutTableInput = {
+  export type ColumnUncheckedUpdateWithoutTableInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    cells?: CellUncheckedUpdateManyWithoutFieldNestedInput
+    cells?: CellUncheckedUpdateManyWithoutColumnNestedInput
   }
 
-  export type FieldUncheckedUpdateManyWithoutTableInput = {
+  export type ColumnUncheckedUpdateManyWithoutTableInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
+    type?: EnumColumnTypeFieldUpdateOperationsInput | $Enums.ColumnType
     position?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9070,24 +9135,24 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CellCreateManyFieldInput = {
+  export type CellCreateManyColumnInput = {
     id?: number
     value?: string | null
     rowId: number
   }
 
-  export type CellUpdateWithoutFieldInput = {
+  export type CellUpdateWithoutColumnInput = {
     value?: NullableStringFieldUpdateOperationsInput | string | null
     row?: RowUpdateOneRequiredWithoutCellsNestedInput
   }
 
-  export type CellUncheckedUpdateWithoutFieldInput = {
+  export type CellUncheckedUpdateWithoutColumnInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: NullableStringFieldUpdateOperationsInput | string | null
     rowId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type CellUncheckedUpdateManyWithoutFieldInput = {
+  export type CellUncheckedUpdateManyWithoutColumnInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: NullableStringFieldUpdateOperationsInput | string | null
     rowId?: IntFieldUpdateOperationsInput | number
@@ -9096,24 +9161,24 @@ export namespace Prisma {
   export type CellCreateManyRowInput = {
     id?: number
     value?: string | null
-    fieldId: number
+    columnId: number
   }
 
   export type CellUpdateWithoutRowInput = {
     value?: NullableStringFieldUpdateOperationsInput | string | null
-    field?: FieldUpdateOneRequiredWithoutCellsNestedInput
+    column?: ColumnUpdateOneRequiredWithoutCellsNestedInput
   }
 
   export type CellUncheckedUpdateWithoutRowInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: NullableStringFieldUpdateOperationsInput | string | null
-    fieldId?: IntFieldUpdateOperationsInput | number
+    columnId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CellUncheckedUpdateManyWithoutRowInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: NullableStringFieldUpdateOperationsInput | string | null
-    fieldId?: IntFieldUpdateOperationsInput | number
+    columnId?: IntFieldUpdateOperationsInput | number
   }
 
 
