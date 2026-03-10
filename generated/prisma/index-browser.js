@@ -146,6 +146,41 @@ exports.Prisma.ColumnScalarFieldEnum = {
   tableId: 'tableId'
 };
 
+exports.Prisma.ViewScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  tableId: 'tableId',
+  isDefault: 'isDefault',
+  searchQuery: 'searchQuery',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ViewFilterScalarFieldEnum = {
+  id: 'id',
+  viewId: 'viewId',
+  columnId: 'columnId',
+  operator: 'operator',
+  value: 'value',
+  position: 'position'
+};
+
+exports.Prisma.ViewSortScalarFieldEnum = {
+  id: 'id',
+  viewId: 'viewId',
+  columnId: 'columnId',
+  direction: 'direction',
+  position: 'position'
+};
+
+exports.Prisma.ViewColumnVisibilityScalarFieldEnum = {
+  id: 'id',
+  viewId: 'viewId',
+  columnId: 'columnId',
+  isVisible: 'isVisible'
+};
+
 exports.Prisma.RowScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -185,10 +220,34 @@ exports.ColumnType = exports.$Enums.ColumnType = {
   email: 'email'
 };
 
+exports.ViewType = exports.$Enums.ViewType = {
+  grid: 'grid',
+  kanban: 'kanban'
+};
+
+exports.ViewFilterOperator = exports.$Enums.ViewFilterOperator = {
+  equals: 'equals',
+  contains: 'contains',
+  notContains: 'notContains',
+  isEmpty: 'isEmpty',
+  isNotEmpty: 'isNotEmpty',
+  greaterThan: 'greaterThan',
+  lessThan: 'lessThan'
+};
+
+exports.ViewSortDirection = exports.$Enums.ViewSortDirection = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
 exports.Prisma.ModelName = {
   Base: 'Base',
   Table: 'Table',
   Column: 'Column',
+  View: 'View',
+  ViewFilter: 'ViewFilter',
+  ViewSort: 'ViewSort',
+  ViewColumnVisibility: 'ViewColumnVisibility',
   Row: 'Row',
   Cell: 'Cell'
 };

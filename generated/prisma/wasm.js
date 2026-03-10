@@ -118,6 +118,41 @@ exports.Prisma.ColumnScalarFieldEnum = {
   tableId: 'tableId'
 };
 
+exports.Prisma.ViewScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  tableId: 'tableId',
+  isDefault: 'isDefault',
+  searchQuery: 'searchQuery',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ViewFilterScalarFieldEnum = {
+  id: 'id',
+  viewId: 'viewId',
+  columnId: 'columnId',
+  operator: 'operator',
+  value: 'value',
+  position: 'position'
+};
+
+exports.Prisma.ViewSortScalarFieldEnum = {
+  id: 'id',
+  viewId: 'viewId',
+  columnId: 'columnId',
+  direction: 'direction',
+  position: 'position'
+};
+
+exports.Prisma.ViewColumnVisibilityScalarFieldEnum = {
+  id: 'id',
+  viewId: 'viewId',
+  columnId: 'columnId',
+  isVisible: 'isVisible'
+};
+
 exports.Prisma.RowScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -157,10 +192,34 @@ exports.ColumnType = exports.$Enums.ColumnType = {
   email: 'email'
 };
 
+exports.ViewType = exports.$Enums.ViewType = {
+  grid: 'grid',
+  kanban: 'kanban'
+};
+
+exports.ViewFilterOperator = exports.$Enums.ViewFilterOperator = {
+  equals: 'equals',
+  contains: 'contains',
+  notContains: 'notContains',
+  isEmpty: 'isEmpty',
+  isNotEmpty: 'isNotEmpty',
+  greaterThan: 'greaterThan',
+  lessThan: 'lessThan'
+};
+
+exports.ViewSortDirection = exports.$Enums.ViewSortDirection = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
 exports.Prisma.ModelName = {
   Base: 'Base',
   Table: 'Table',
   Column: 'Column',
+  View: 'View',
+  ViewFilter: 'ViewFilter',
+  ViewSort: 'ViewSort',
+  ViewColumnVisibility: 'ViewColumnVisibility',
   Row: 'Row',
   Cell: 'Cell'
 };
@@ -193,7 +252,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
@@ -203,6 +262,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -211,13 +271,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum ColumnType {\n  text\n  number\n  date\n  singleSelect\n  multiSelect\n  checkbox\n  url\n  email\n}\n\nmodel Base {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  tables    Table[]\n\n  @@index([name])\n}\n\nmodel Table {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  baseId    Int\n  base      Base     @relation(fields: [baseId], references: [id])\n  columns   Column[]\n  rows      Row[]\n\n  @@index([name])\n}\n\nmodel Column {\n  id        Int        @id @default(autoincrement())\n  name      String\n  type      ColumnType\n  position  Int\n  createdAt DateTime   @default(now())\n  updatedAt DateTime   @updatedAt\n  tableId   Int\n  table     Table      @relation(fields: [tableId], references: [id])\n  cells     Cell[]\n\n  @@index([tableId])\n}\n\nmodel Row {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  tableId   Int\n  table     Table    @relation(fields: [tableId], references: [id])\n  cells     Cell[]\n\n  @@index([tableId])\n}\n\nmodel Cell {\n  id       Int     @id @default(autoincrement())\n  value    String? // stored as string; parse based on Field.type\n  rowId    Int\n  columnId Int\n  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)\n  column   Column  @relation(fields: [columnId], references: [id], onDelete: Cascade)\n\n  @@unique([rowId, columnId])\n  @@index([rowId])\n  @@index([columnId])\n}\n",
-  "inlineSchemaHash": "65acba931263b4f86d00e3f0ba6b9a0a45eaa4eeac94e7cff7011bfc13e1a700",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum ColumnType {\n  text\n  number\n  date\n  singleSelect\n  multiSelect\n  checkbox\n  url\n  email\n}\n\nenum ViewType {\n  grid\n  kanban\n}\n\nenum ViewFilterOperator {\n  equals\n  contains\n  notContains\n  isEmpty\n  isNotEmpty\n  greaterThan\n  lessThan\n}\n\nenum ViewSortDirection {\n  asc\n  desc\n}\n\nmodel Base {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  tables    Table[]\n\n  @@index([name])\n}\n\nmodel Table {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  baseId    Int\n  base      Base     @relation(fields: [baseId], references: [id])\n  columns   Column[]\n  rows      Row[]\n  views     View[]\n\n  @@index([name])\n}\n\nmodel Column {\n  id                     Int                    @id @default(autoincrement())\n  name                   String\n  type                   ColumnType\n  position               Int\n  createdAt              DateTime               @default(now())\n  updatedAt              DateTime               @updatedAt\n  tableId                Int\n  table                  Table                  @relation(fields: [tableId], references: [id])\n  cells                  Cell[]\n  viewFilters            ViewFilter[]\n  viewSorts              ViewSort[]\n  viewColumnVisibilities ViewColumnVisibility[]\n\n  @@index([tableId])\n}\n\nmodel View {\n  id                 Int                    @id @default(autoincrement())\n  name               String\n  type               ViewType               @default(grid)\n  tableId            Int\n  table              Table                  @relation(fields: [tableId], references: [id])\n  isDefault          Boolean                @default(false)\n  searchQuery        String?\n  createdAt          DateTime               @default(now())\n  updatedAt          DateTime               @updatedAt\n  filters            ViewFilter[]\n  sorts              ViewSort[]\n  columnVisibilities ViewColumnVisibility[]\n\n  @@index([tableId])\n}\n\nmodel ViewFilter {\n  id       Int                @id @default(autoincrement())\n  viewId   Int\n  view     View               @relation(fields: [viewId], references: [id])\n  columnId Int\n  column   Column             @relation(fields: [columnId], references: [id])\n  operator ViewFilterOperator\n  value    String?\n  position Int                @default(0)\n\n  @@index([viewId])\n  @@index([columnId])\n}\n\nmodel ViewSort {\n  id        Int               @id @default(autoincrement())\n  viewId    Int\n  view      View              @relation(fields: [viewId], references: [id])\n  columnId  Int\n  column    Column            @relation(fields: [columnId], references: [id])\n  direction ViewSortDirection\n  position  Int               @default(0)\n\n  @@index([viewId])\n  @@index([columnId])\n}\n\nmodel ViewColumnVisibility {\n  id        Int     @id @default(autoincrement())\n  viewId    Int\n  view      View    @relation(fields: [viewId], references: [id])\n  columnId  Int\n  column    Column  @relation(fields: [columnId], references: [id])\n  isVisible Boolean @default(true)\n\n  @@unique([viewId, columnId])\n  @@index([viewId])\n  @@index([columnId])\n}\n\nmodel Row {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  tableId   Int\n  table     Table    @relation(fields: [tableId], references: [id])\n  cells     Cell[]\n\n  @@index([tableId])\n}\n\nmodel Cell {\n  id       Int     @id @default(autoincrement())\n  value    String? // stored as string; parse based on Field.type\n  rowId    Int\n  columnId Int\n  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)\n  column   Column  @relation(fields: [columnId], references: [id], onDelete: Cascade)\n\n  @@unique([rowId, columnId])\n  @@index([rowId])\n  @@index([columnId])\n}\n",
+  "inlineSchemaHash": "6fc99c15231c9e4ae1f8dd44eaa545833442399f50c01af82c6b383a4e1cc8d4",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Base\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tables\",\"kind\":\"object\",\"type\":\"Table\",\"relationName\":\"BaseToTable\"}],\"dbName\":null},\"Table\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"baseId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"base\",\"kind\":\"object\",\"type\":\"Base\",\"relationName\":\"BaseToTable\"},{\"name\":\"columns\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"ColumnToTable\"},{\"name\":\"rows\",\"kind\":\"object\",\"type\":\"Row\",\"relationName\":\"RowToTable\"}],\"dbName\":null},\"Column\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ColumnType\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tableId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"table\",\"kind\":\"object\",\"type\":\"Table\",\"relationName\":\"ColumnToTable\"},{\"name\":\"cells\",\"kind\":\"object\",\"type\":\"Cell\",\"relationName\":\"CellToColumn\"}],\"dbName\":null},\"Row\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tableId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"table\",\"kind\":\"object\",\"type\":\"Table\",\"relationName\":\"RowToTable\"},{\"name\":\"cells\",\"kind\":\"object\",\"type\":\"Cell\",\"relationName\":\"CellToRow\"}],\"dbName\":null},\"Cell\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"rowId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"columnId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"row\",\"kind\":\"object\",\"type\":\"Row\",\"relationName\":\"CellToRow\"},{\"name\":\"column\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"CellToColumn\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Base\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tables\",\"kind\":\"object\",\"type\":\"Table\",\"relationName\":\"BaseToTable\"}],\"dbName\":null},\"Table\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"baseId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"base\",\"kind\":\"object\",\"type\":\"Base\",\"relationName\":\"BaseToTable\"},{\"name\":\"columns\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"ColumnToTable\"},{\"name\":\"rows\",\"kind\":\"object\",\"type\":\"Row\",\"relationName\":\"RowToTable\"},{\"name\":\"views\",\"kind\":\"object\",\"type\":\"View\",\"relationName\":\"TableToView\"}],\"dbName\":null},\"Column\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ColumnType\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tableId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"table\",\"kind\":\"object\",\"type\":\"Table\",\"relationName\":\"ColumnToTable\"},{\"name\":\"cells\",\"kind\":\"object\",\"type\":\"Cell\",\"relationName\":\"CellToColumn\"},{\"name\":\"viewFilters\",\"kind\":\"object\",\"type\":\"ViewFilter\",\"relationName\":\"ColumnToViewFilter\"},{\"name\":\"viewSorts\",\"kind\":\"object\",\"type\":\"ViewSort\",\"relationName\":\"ColumnToViewSort\"},{\"name\":\"viewColumnVisibilities\",\"kind\":\"object\",\"type\":\"ViewColumnVisibility\",\"relationName\":\"ColumnToViewColumnVisibility\"}],\"dbName\":null},\"View\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ViewType\"},{\"name\":\"tableId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"table\",\"kind\":\"object\",\"type\":\"Table\",\"relationName\":\"TableToView\"},{\"name\":\"isDefault\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"searchQuery\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"filters\",\"kind\":\"object\",\"type\":\"ViewFilter\",\"relationName\":\"ViewToViewFilter\"},{\"name\":\"sorts\",\"kind\":\"object\",\"type\":\"ViewSort\",\"relationName\":\"ViewToViewSort\"},{\"name\":\"columnVisibilities\",\"kind\":\"object\",\"type\":\"ViewColumnVisibility\",\"relationName\":\"ViewToViewColumnVisibility\"}],\"dbName\":null},\"ViewFilter\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"viewId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"view\",\"kind\":\"object\",\"type\":\"View\",\"relationName\":\"ViewToViewFilter\"},{\"name\":\"columnId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"column\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"ColumnToViewFilter\"},{\"name\":\"operator\",\"kind\":\"enum\",\"type\":\"ViewFilterOperator\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"ViewSort\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"viewId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"view\",\"kind\":\"object\",\"type\":\"View\",\"relationName\":\"ViewToViewSort\"},{\"name\":\"columnId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"column\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"ColumnToViewSort\"},{\"name\":\"direction\",\"kind\":\"enum\",\"type\":\"ViewSortDirection\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"ViewColumnVisibility\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"viewId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"view\",\"kind\":\"object\",\"type\":\"View\",\"relationName\":\"ViewToViewColumnVisibility\"},{\"name\":\"columnId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"column\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"ColumnToViewColumnVisibility\"},{\"name\":\"isVisible\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":null},\"Row\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tableId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"table\",\"kind\":\"object\",\"type\":\"Table\",\"relationName\":\"RowToTable\"},{\"name\":\"cells\",\"kind\":\"object\",\"type\":\"Cell\",\"relationName\":\"CellToRow\"}],\"dbName\":null},\"Cell\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"rowId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"columnId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"row\",\"kind\":\"object\",\"type\":\"Row\",\"relationName\":\"CellToRow\"},{\"name\":\"column\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"CellToColumn\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

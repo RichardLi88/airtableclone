@@ -22,6 +22,26 @@ enum ColumnType {
   email
 }
 
+enum ViewType {
+  grid
+  kanban
+}
+
+enum ViewFilterOperator {
+  equals
+  contains
+  notContains
+  isEmpty
+  isNotEmpty
+  greaterThan
+  lessThan
+}
+
+enum ViewSortDirection {
+  asc
+  desc
+}
+
 model Base {
   id        Int      @id @default(autoincrement())
   name      String
@@ -41,22 +61,83 @@ model Table {
   base      Base     @relation(fields: [baseId], references: [id])
   columns   Column[]
   rows      Row[]
+  views     View[]
 
   @@index([name])
 }
 
 model Column {
-  id        Int        @id @default(autoincrement())
-  name      String
-  type      ColumnType
-  position  Int
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  tableId   Int
-  table     Table      @relation(fields: [tableId], references: [id])
-  cells     Cell[]
+  id                     Int                    @id @default(autoincrement())
+  name                   String
+  type                   ColumnType
+  position               Int
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  tableId                Int
+  table                  Table                  @relation(fields: [tableId], references: [id])
+  cells                  Cell[]
+  viewFilters            ViewFilter[]
+  viewSorts              ViewSort[]
+  viewColumnVisibilities ViewColumnVisibility[]
 
   @@index([tableId])
+}
+
+model View {
+  id                 Int                    @id @default(autoincrement())
+  name               String
+  type               ViewType               @default(grid)
+  tableId            Int
+  table              Table                  @relation(fields: [tableId], references: [id])
+  isDefault          Boolean                @default(false)
+  searchQuery        String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  filters            ViewFilter[]
+  sorts              ViewSort[]
+  columnVisibilities ViewColumnVisibility[]
+
+  @@index([tableId])
+}
+
+model ViewFilter {
+  id       Int                @id @default(autoincrement())
+  viewId   Int
+  view     View               @relation(fields: [viewId], references: [id])
+  columnId Int
+  column   Column             @relation(fields: [columnId], references: [id])
+  operator ViewFilterOperator
+  value    String?
+  position Int                @default(0)
+
+  @@index([viewId])
+  @@index([columnId])
+}
+
+model ViewSort {
+  id        Int               @id @default(autoincrement())
+  viewId    Int
+  view      View              @relation(fields: [viewId], references: [id])
+  columnId  Int
+  column    Column            @relation(fields: [columnId], references: [id])
+  direction ViewSortDirection
+  position  Int               @default(0)
+
+  @@index([viewId])
+  @@index([columnId])
+}
+
+model ViewColumnVisibility {
+  id        Int     @id @default(autoincrement())
+  viewId    Int
+  view      View    @relation(fields: [viewId], references: [id])
+  columnId  Int
+  column    Column  @relation(fields: [columnId], references: [id])
+  isVisible Boolean @default(true)
+
+  @@unique([viewId, columnId])
+  @@index([viewId])
+  @@index([columnId])
 }
 
 model Row {
