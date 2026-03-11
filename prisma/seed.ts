@@ -44,8 +44,6 @@ const cities = [
   "Portland",
 ];
 const teams = ["Engineering", "Design", "Sales", "Support", "Marketing", "Operations"];
-const statuses = ["Active", "Onboarding", "Paused", "Archived"];
-const tags = ["Urgent", "Customer", "Internal", "Follow-up", "High-value", "Expansion"];
 
 function pick<T>(arr: readonly T[], index: number): T {
   if (arr.length === 0) {
@@ -60,18 +58,12 @@ function createRowValues(rowIndex: number, tableName: string) {
   const personName = `${firstName} ${lastName}`;
   const city = pick(cities, rowIndex * 2);
   const team = pick(teams, rowIndex * 5);
-  const status = pick(statuses, rowIndex * 7);
   const amount = 500 + ((rowIndex * 173) % 50000);
-  const websiteSlug = `${firstName}.${lastName}.${rowIndex}`.toLowerCase();
-  const selectedTags = [pick(tags, rowIndex), pick(tags, rowIndex + 2)];
 
   return {
     name: `${personName} - ${tableName} #${rowIndex + 1}`,
     metric: String(amount),
     details: `${team} in ${city}`,
-    tags: JSON.stringify(selectedTags),
-    website: `https://${websiteSlug}.lyra.dev`,
-    status,
   };
 }
 
@@ -105,18 +97,9 @@ async function seedTable(baseId: string, tableName: string, rowCount: number) {
     prisma.column.create({
       data: { name: "Details", type: ColumnType.text, position: 2, tableId: table.id },
     }),
-    prisma.column.create({
-      data: { name: "Tags", type: ColumnType.multiSelect, position: 3, tableId: table.id },
-    }),
-    prisma.column.create({
-      data: { name: "Website", type: ColumnType.url, position: 4, tableId: table.id },
-    }),
-    prisma.column.create({
-      data: { name: "Status", type: ColumnType.singleSelect, position: 5, tableId: table.id },
-    }),
   ]);
 
-  const [nameColumn, metricColumn, detailsColumn, tagsColumn, websiteColumn, statusColumn] = createdColumns;
+  const [nameColumn, metricColumn, detailsColumn] = createdColumns;
 
   await prisma.row.createMany({
     data: Array.from({ length: rowCount }, () => ({ tableId: table.id })),
@@ -134,9 +117,6 @@ async function seedTable(baseId: string, tableName: string, rowCount: number) {
       { rowId: row.id, columnId: nameColumn.id, value: values.name },
       { rowId: row.id, columnId: metricColumn.id, value: values.metric },
       { rowId: row.id, columnId: detailsColumn.id, value: values.details },
-      { rowId: row.id, columnId: tagsColumn.id, value: values.tags },
-      { rowId: row.id, columnId: websiteColumn.id, value: values.website },
-      { rowId: row.id, columnId: statusColumn.id, value: values.status },
     ];
   });
 

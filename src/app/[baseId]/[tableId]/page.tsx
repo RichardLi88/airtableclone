@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 
 import { TablePanel } from "~/components/TablePanel";
-import { TablePanelLoading } from "~/components/TablePanelLoading";
 import { TableTabsBar } from "~/components/TableTabsBar";
 import { TableWorkspaceChrome } from "~/components/TableWorkspaceChrome";
 import type { RouterOutputs } from "~/trpc/react";
@@ -42,7 +40,13 @@ export default async function BaseTablePage({ params, searchParams }: BaseTableP
     }
   }
 
-  const currentViewId = requestedViewId ?? firstViewId;
+  const currentViewId =
+    requestedViewId && views.some((view) => view.id === requestedViewId) ? requestedViewId : firstViewId;
+
+  if (!currentViewId) {
+    throw new Error("Expected at least one view for this table.");
+  }
+
   const currentViewName = views.find((view) => view.id === currentViewId)?.name ?? "Grid view";
 
   return (
@@ -55,9 +59,7 @@ export default async function BaseTablePage({ params, searchParams }: BaseTableP
         currentViewId={currentViewId}
         currentViewName={currentViewName}
       >
-        <Suspense key={tableId} fallback={<TablePanelLoading />}>
-          <TablePanel tableId={tableId} />
-        </Suspense>
+        <TablePanel viewId={currentViewId} />
       </TableWorkspaceChrome>
     </main>
   );

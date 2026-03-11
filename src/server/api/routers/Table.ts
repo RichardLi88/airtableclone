@@ -1,8 +1,8 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
+  TableGetColumnsInputSchema,
+  TableGetColumnsOutputSchema,
   TableGetByBaseInputSchema,
-  TableGetAllRowsInputSchema,
-  TableGetAllRowsOutputSchema,
   TableGetByBaseOutputSchema,
   TableCreateInputSchema,
   TableCreateOutputSchema,
@@ -62,36 +62,19 @@ export const tableRouter = createTRPCRouter({
         },
       });
     }),
-  getAllRows: publicProcedure
-    .input(TableGetAllRowsInputSchema)
-    .output(TableGetAllRowsOutputSchema)
+  getColumns: publicProcedure
+    .input(TableGetColumnsInputSchema)
+    .output(TableGetColumnsOutputSchema)
     .query(async ({ ctx, input }) => {
-      return await ctx.db.row.findMany({
+      return await ctx.db.column.findMany({
         where: { tableId: input.tableId },
-        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+        orderBy: [{ position: "asc" }, { id: "asc" }],
         select: {
           id: true,
-          createdAt: true,
-          updatedAt: true,
+          name: true,
+          type: true,
+          position: true,
           tableId: true,
-          cells: {
-            orderBy: [{ column: { position: "asc" } }, { id: "asc" }],
-            select: {
-              id: true,
-              rowId: true,
-              columnId: true,
-              value: true,
-              column: {
-                select: {
-                  id: true,
-                  name: true,
-                  type: true,
-                  position: true,
-                  tableId: true,
-                },
-              },
-            },
-          },
         },
       });
     }),

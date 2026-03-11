@@ -65,13 +65,7 @@ export type ViewColumnVisibility = $Result.DefaultSelection<Prisma.$ViewColumnVi
 export namespace $Enums {
   export const ColumnType: {
   text: 'text',
-  number: 'number',
-  date: 'date',
-  singleSelect: 'singleSelect',
-  multiSelect: 'multiSelect',
-  checkbox: 'checkbox',
-  url: 'url',
-  email: 'email'
+  number: 'number'
 };
 
 export type ColumnType = (typeof ColumnType)[keyof typeof ColumnType]
@@ -105,6 +99,14 @@ export const ViewSortDirection: {
 
 export type ViewSortDirection = (typeof ViewSortDirection)[keyof typeof ViewSortDirection]
 
+
+export const ViewFilterConjunction: {
+  and: 'and',
+  or: 'or'
+};
+
+export type ViewFilterConjunction = (typeof ViewFilterConjunction)[keyof typeof ViewFilterConjunction]
+
 }
 
 export type ColumnType = $Enums.ColumnType
@@ -122,6 +124,10 @@ export const ViewFilterOperator: typeof $Enums.ViewFilterOperator
 export type ViewSortDirection = $Enums.ViewSortDirection
 
 export const ViewSortDirection: typeof $Enums.ViewSortDirection
+
+export type ViewFilterConjunction = $Enums.ViewFilterConjunction
+
+export const ViewFilterConjunction: typeof $Enums.ViewFilterConjunction
 
 /**
  * ##  Prisma Client ʲˢ
@@ -8651,6 +8657,7 @@ export namespace Prisma {
     id: string | null
     viewId: string | null
     columnId: string | null
+    conjunction: $Enums.ViewFilterConjunction | null
     operator: $Enums.ViewFilterOperator | null
     value: string | null
     position: number | null
@@ -8660,6 +8667,7 @@ export namespace Prisma {
     id: string | null
     viewId: string | null
     columnId: string | null
+    conjunction: $Enums.ViewFilterConjunction | null
     operator: $Enums.ViewFilterOperator | null
     value: string | null
     position: number | null
@@ -8669,6 +8677,7 @@ export namespace Prisma {
     id: number
     viewId: number
     columnId: number
+    conjunction: number
     operator: number
     value: number
     position: number
@@ -8688,6 +8697,7 @@ export namespace Prisma {
     id?: true
     viewId?: true
     columnId?: true
+    conjunction?: true
     operator?: true
     value?: true
     position?: true
@@ -8697,6 +8707,7 @@ export namespace Prisma {
     id?: true
     viewId?: true
     columnId?: true
+    conjunction?: true
     operator?: true
     value?: true
     position?: true
@@ -8706,6 +8717,7 @@ export namespace Prisma {
     id?: true
     viewId?: true
     columnId?: true
+    conjunction?: true
     operator?: true
     value?: true
     position?: true
@@ -8802,6 +8814,7 @@ export namespace Prisma {
     id: string
     viewId: string
     columnId: string
+    conjunction: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value: string | null
     position: number
@@ -8830,6 +8843,7 @@ export namespace Prisma {
     id?: boolean
     viewId?: boolean
     columnId?: boolean
+    conjunction?: boolean
     operator?: boolean
     value?: boolean
     position?: boolean
@@ -8841,6 +8855,7 @@ export namespace Prisma {
     id?: boolean
     viewId?: boolean
     columnId?: boolean
+    conjunction?: boolean
     operator?: boolean
     value?: boolean
     position?: boolean
@@ -8852,6 +8867,7 @@ export namespace Prisma {
     id?: boolean
     viewId?: boolean
     columnId?: boolean
+    conjunction?: boolean
     operator?: boolean
     value?: boolean
     position?: boolean
@@ -8863,12 +8879,13 @@ export namespace Prisma {
     id?: boolean
     viewId?: boolean
     columnId?: boolean
+    conjunction?: boolean
     operator?: boolean
     value?: boolean
     position?: boolean
   }
 
-  export type ViewFilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "viewId" | "columnId" | "operator" | "value" | "position", ExtArgs["result"]["viewFilter"]>
+  export type ViewFilterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "viewId" | "columnId" | "conjunction" | "operator" | "value" | "position", ExtArgs["result"]["viewFilter"]>
   export type ViewFilterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     view?: boolean | ViewDefaultArgs<ExtArgs>
     column?: boolean | ColumnDefaultArgs<ExtArgs>
@@ -8892,6 +8909,7 @@ export namespace Prisma {
       id: string
       viewId: string
       columnId: string
+      conjunction: $Enums.ViewFilterConjunction
       operator: $Enums.ViewFilterOperator
       value: string | null
       position: number
@@ -9323,6 +9341,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ViewFilter", 'String'>
     readonly viewId: FieldRef<"ViewFilter", 'String'>
     readonly columnId: FieldRef<"ViewFilter", 'String'>
+    readonly conjunction: FieldRef<"ViewFilter", 'ViewFilterConjunction'>
     readonly operator: FieldRef<"ViewFilter", 'ViewFilterOperator'>
     readonly value: FieldRef<"ViewFilter", 'String'>
     readonly position: FieldRef<"ViewFilter", 'Int'>
@@ -11980,6 +11999,7 @@ export namespace Prisma {
     id: 'id',
     viewId: 'viewId',
     columnId: 'columnId',
+    conjunction: 'conjunction',
     operator: 'operator',
     value: 'value',
     position: 'position'
@@ -12112,6 +12132,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'ViewFilterConjunction'
+   */
+  export type EnumViewFilterConjunctionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ViewFilterConjunction'>
+    
+
+
+  /**
+   * Reference to a field of type 'ViewFilterConjunction[]'
+   */
+  export type ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ViewFilterConjunction[]'>
     
 
 
@@ -12551,6 +12585,7 @@ export namespace Prisma {
     id?: UuidFilter<"ViewFilter"> | string
     viewId?: UuidFilter<"ViewFilter"> | string
     columnId?: UuidFilter<"ViewFilter"> | string
+    conjunction?: EnumViewFilterConjunctionFilter<"ViewFilter"> | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFilter<"ViewFilter"> | $Enums.ViewFilterOperator
     value?: StringNullableFilter<"ViewFilter"> | string | null
     position?: IntFilter<"ViewFilter"> | number
@@ -12562,6 +12597,7 @@ export namespace Prisma {
     id?: SortOrder
     viewId?: SortOrder
     columnId?: SortOrder
+    conjunction?: SortOrder
     operator?: SortOrder
     value?: SortOrderInput | SortOrder
     position?: SortOrder
@@ -12576,6 +12612,7 @@ export namespace Prisma {
     NOT?: ViewFilterWhereInput | ViewFilterWhereInput[]
     viewId?: UuidFilter<"ViewFilter"> | string
     columnId?: UuidFilter<"ViewFilter"> | string
+    conjunction?: EnumViewFilterConjunctionFilter<"ViewFilter"> | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFilter<"ViewFilter"> | $Enums.ViewFilterOperator
     value?: StringNullableFilter<"ViewFilter"> | string | null
     position?: IntFilter<"ViewFilter"> | number
@@ -12587,6 +12624,7 @@ export namespace Prisma {
     id?: SortOrder
     viewId?: SortOrder
     columnId?: SortOrder
+    conjunction?: SortOrder
     operator?: SortOrder
     value?: SortOrderInput | SortOrder
     position?: SortOrder
@@ -12604,6 +12642,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"ViewFilter"> | string
     viewId?: UuidWithAggregatesFilter<"ViewFilter"> | string
     columnId?: UuidWithAggregatesFilter<"ViewFilter"> | string
+    conjunction?: EnumViewFilterConjunctionWithAggregatesFilter<"ViewFilter"> | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorWithAggregatesFilter<"ViewFilter"> | $Enums.ViewFilterOperator
     value?: StringNullableWithAggregatesFilter<"ViewFilter"> | string | null
     position?: IntWithAggregatesFilter<"ViewFilter"> | number
@@ -13124,6 +13163,7 @@ export namespace Prisma {
 
   export type ViewFilterCreateInput = {
     id?: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -13135,6 +13175,7 @@ export namespace Prisma {
     id?: string
     viewId: string
     columnId: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -13142,6 +13183,7 @@ export namespace Prisma {
 
   export type ViewFilterUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -13153,6 +13195,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     viewId?: StringFieldUpdateOperationsInput | string
     columnId?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -13162,6 +13205,7 @@ export namespace Prisma {
     id?: string
     viewId: string
     columnId: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -13169,6 +13213,7 @@ export namespace Prisma {
 
   export type ViewFilterUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -13178,6 +13223,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     viewId?: StringFieldUpdateOperationsInput | string
     columnId?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -13772,6 +13818,13 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type EnumViewFilterConjunctionFilter<$PrismaModel = never> = {
+    equals?: $Enums.ViewFilterConjunction | EnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    in?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    not?: NestedEnumViewFilterConjunctionFilter<$PrismaModel> | $Enums.ViewFilterConjunction
+  }
+
   export type EnumViewFilterOperatorFilter<$PrismaModel = never> = {
     equals?: $Enums.ViewFilterOperator | EnumViewFilterOperatorFieldRefInput<$PrismaModel>
     in?: $Enums.ViewFilterOperator[] | ListEnumViewFilterOperatorFieldRefInput<$PrismaModel>
@@ -13788,6 +13841,7 @@ export namespace Prisma {
     id?: SortOrder
     viewId?: SortOrder
     columnId?: SortOrder
+    conjunction?: SortOrder
     operator?: SortOrder
     value?: SortOrder
     position?: SortOrder
@@ -13801,6 +13855,7 @@ export namespace Prisma {
     id?: SortOrder
     viewId?: SortOrder
     columnId?: SortOrder
+    conjunction?: SortOrder
     operator?: SortOrder
     value?: SortOrder
     position?: SortOrder
@@ -13810,6 +13865,7 @@ export namespace Prisma {
     id?: SortOrder
     viewId?: SortOrder
     columnId?: SortOrder
+    conjunction?: SortOrder
     operator?: SortOrder
     value?: SortOrder
     position?: SortOrder
@@ -13817,6 +13873,16 @@ export namespace Prisma {
 
   export type ViewFilterSumOrderByAggregateInput = {
     position?: SortOrder
+  }
+
+  export type EnumViewFilterConjunctionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ViewFilterConjunction | EnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    in?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    not?: NestedEnumViewFilterConjunctionWithAggregatesFilter<$PrismaModel> | $Enums.ViewFilterConjunction
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumViewFilterConjunctionFilter<$PrismaModel>
+    _max?: NestedEnumViewFilterConjunctionFilter<$PrismaModel>
   }
 
   export type EnumViewFilterOperatorWithAggregatesFilter<$PrismaModel = never> = {
@@ -14540,6 +14606,10 @@ export namespace Prisma {
     connect?: ColumnWhereUniqueInput
   }
 
+  export type EnumViewFilterConjunctionFieldUpdateOperationsInput = {
+    set?: $Enums.ViewFilterConjunction
+  }
+
   export type EnumViewFilterOperatorFieldUpdateOperationsInput = {
     set?: $Enums.ViewFilterOperator
   }
@@ -14853,11 +14923,28 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumViewFilterConjunctionFilter<$PrismaModel = never> = {
+    equals?: $Enums.ViewFilterConjunction | EnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    in?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    not?: NestedEnumViewFilterConjunctionFilter<$PrismaModel> | $Enums.ViewFilterConjunction
+  }
+
   export type NestedEnumViewFilterOperatorFilter<$PrismaModel = never> = {
     equals?: $Enums.ViewFilterOperator | EnumViewFilterOperatorFieldRefInput<$PrismaModel>
     in?: $Enums.ViewFilterOperator[] | ListEnumViewFilterOperatorFieldRefInput<$PrismaModel>
     notIn?: $Enums.ViewFilterOperator[] | ListEnumViewFilterOperatorFieldRefInput<$PrismaModel>
     not?: NestedEnumViewFilterOperatorFilter<$PrismaModel> | $Enums.ViewFilterOperator
+  }
+
+  export type NestedEnumViewFilterConjunctionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ViewFilterConjunction | EnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    in?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ViewFilterConjunction[] | ListEnumViewFilterConjunctionFieldRefInput<$PrismaModel>
+    not?: NestedEnumViewFilterConjunctionWithAggregatesFilter<$PrismaModel> | $Enums.ViewFilterConjunction
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumViewFilterConjunctionFilter<$PrismaModel>
+    _max?: NestedEnumViewFilterConjunctionFilter<$PrismaModel>
   }
 
   export type NestedEnumViewFilterOperatorWithAggregatesFilter<$PrismaModel = never> = {
@@ -15222,6 +15309,7 @@ export namespace Prisma {
 
   export type ViewFilterCreateWithoutColumnInput = {
     id?: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -15231,6 +15319,7 @@ export namespace Prisma {
   export type ViewFilterUncheckedCreateWithoutColumnInput = {
     id?: string
     viewId: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -15372,6 +15461,7 @@ export namespace Prisma {
     id?: UuidFilter<"ViewFilter"> | string
     viewId?: UuidFilter<"ViewFilter"> | string
     columnId?: UuidFilter<"ViewFilter"> | string
+    conjunction?: EnumViewFilterConjunctionFilter<"ViewFilter"> | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFilter<"ViewFilter"> | $Enums.ViewFilterOperator
     value?: StringNullableFilter<"ViewFilter"> | string | null
     position?: IntFilter<"ViewFilter"> | number
@@ -15663,6 +15753,7 @@ export namespace Prisma {
 
   export type ViewFilterCreateWithoutViewInput = {
     id?: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -15672,6 +15763,7 @@ export namespace Prisma {
   export type ViewFilterUncheckedCreateWithoutViewInput = {
     id?: string
     columnId: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -16379,6 +16471,7 @@ export namespace Prisma {
   export type ViewFilterCreateManyColumnInput = {
     id?: string
     viewId: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -16417,6 +16510,7 @@ export namespace Prisma {
 
   export type ViewFilterUpdateWithoutColumnInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -16426,6 +16520,7 @@ export namespace Prisma {
   export type ViewFilterUncheckedUpdateWithoutColumnInput = {
     id?: StringFieldUpdateOperationsInput | string
     viewId?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -16434,6 +16529,7 @@ export namespace Prisma {
   export type ViewFilterUncheckedUpdateManyWithoutColumnInput = {
     id?: StringFieldUpdateOperationsInput | string
     viewId?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -16505,6 +16601,7 @@ export namespace Prisma {
   export type ViewFilterCreateManyViewInput = {
     id?: string
     columnId: string
+    conjunction?: $Enums.ViewFilterConjunction
     operator: $Enums.ViewFilterOperator
     value?: string | null
     position?: number
@@ -16525,6 +16622,7 @@ export namespace Prisma {
 
   export type ViewFilterUpdateWithoutViewInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -16534,6 +16632,7 @@ export namespace Prisma {
   export type ViewFilterUncheckedUpdateWithoutViewInput = {
     id?: StringFieldUpdateOperationsInput | string
     columnId?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number
@@ -16542,6 +16641,7 @@ export namespace Prisma {
   export type ViewFilterUncheckedUpdateManyWithoutViewInput = {
     id?: StringFieldUpdateOperationsInput | string
     columnId?: StringFieldUpdateOperationsInput | string
+    conjunction?: EnumViewFilterConjunctionFieldUpdateOperationsInput | $Enums.ViewFilterConjunction
     operator?: EnumViewFilterOperatorFieldUpdateOperationsInput | $Enums.ViewFilterOperator
     value?: NullableStringFieldUpdateOperationsInput | string | null
     position?: IntFieldUpdateOperationsInput | number

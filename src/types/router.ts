@@ -6,6 +6,8 @@ import {
   ColumnModelSchema,
   RowModelSchema,
   TableModelSchema,
+  ViewFilterModelSchema,
+  ViewSortModelSchema,
   ViewModelSchema,
 } from "./models";
 
@@ -42,11 +44,25 @@ export const TableGetByBaseOutputSchema = z.array(
   }),
 );
 
-export const TableGetAllRowsInputSchema = z.object({
+export const TableGetColumnsInputSchema = z.object({
   tableId: TableModelSchema.shape.id,
 });
 
-export const TableGetAllRowsOutputSchema = z.array(
+export const TableGetColumnsOutputSchema = z.array(
+  ColumnModelSchema.pick({
+    id: true,
+    name: true,
+    type: true,
+    position: true,
+    tableId: true,
+  }),
+);
+
+export const ViewGetAllRowsInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+});
+
+export const ViewGetAllRowsOutputSchema = z.array(
   RowModelSchema.extend({
     cells: z.array(
       CellModelSchema.extend({
@@ -105,6 +121,64 @@ export const ViewCreateOutputSchema = ViewModelSchema.pick({
   createdAt: true,
   updatedAt: true,
 });
+
+export const ViewFilterInputSchema = z.object({
+  columnId: ViewFilterModelSchema.shape.columnId,
+  conjunction: ViewFilterModelSchema.shape.conjunction,
+  operator: ViewFilterModelSchema.shape.operator,
+  value: ViewFilterModelSchema.shape.value,
+  position: ViewFilterModelSchema.shape.position,
+});
+
+export const ViewSetFiltersInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+  filters: z.array(ViewFilterInputSchema),
+});
+
+export const ViewSetFiltersOutputSchema = z.array(
+  ViewFilterModelSchema.pick({
+    id: true,
+    viewId: true,
+    columnId: true,
+    conjunction: true,
+    operator: true,
+    value: true,
+    position: true,
+  }),
+);
+
+export const ViewGetFiltersInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+});
+
+export const ViewGetFiltersOutputSchema = ViewSetFiltersOutputSchema;
+
+export const ViewSortInputSchema = z.object({
+  columnId: ViewSortModelSchema.shape.columnId,
+  direction: ViewSortModelSchema.shape.direction,
+  position: ViewSortModelSchema.shape.position,
+});
+
+export const ViewSetSortsInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+  sorts: z.array(ViewSortInputSchema),
+});
+
+export const ViewSetSortsOutputSchema = z.array(
+  ViewSortModelSchema.pick({
+    id: true,
+    viewId: true,
+    columnId: true,
+    direction: true,
+    position: true,
+  }),
+);
+
+export const ViewGetSortsInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+});
+
+export const ViewGetSortsOutputSchema = ViewSetSortsOutputSchema;
 
 export const CellUpdateValueInputSchema = CellModelSchema.pick({
   rowId: true,

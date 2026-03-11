@@ -3,12 +3,6 @@ import { z } from "zod";
 export const columnTypeSchema = z.enum([
   "text",
   "number",
-  "date",
-  "singleSelect",
-  "multiSelect",
-  "checkbox",
-  "url",
-  "email",
 ]);
 
 export const viewTypeSchema = z.enum(["grid", "kanban"]);
@@ -22,6 +16,7 @@ export const viewFilterOperatorSchema = z.enum([
   "greaterThan",
   "lessThan",
 ]);
+export const viewFilterConjunctionSchema = z.enum(["and", "or"]);
 
 export const viewSortDirectionSchema = z.enum(["asc", "desc"]);
 const uuidSchema = z.string().uuid();
@@ -81,6 +76,7 @@ export const ViewFilterModelSchema = z.object({
   id: uuidSchema,
   viewId: uuidSchema,
   columnId: uuidSchema,
+  conjunction: viewFilterConjunctionSchema,
   operator: viewFilterOperatorSchema,
   value: z.string().nullable(),
   position: z.number().int().nonnegative(),

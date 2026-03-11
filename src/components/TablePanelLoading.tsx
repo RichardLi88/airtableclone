@@ -1,3 +1,5 @@
+"use client";
+
 import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
 
 export function TablePanelLoading() {

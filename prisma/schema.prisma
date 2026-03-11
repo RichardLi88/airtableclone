@@ -14,12 +14,6 @@ datasource db {
 enum ColumnType {
     text
     number
-    date
-    singleSelect
-    multiSelect
-    checkbox
-    url
-    email
 }
 
 enum ViewType {
@@ -40,6 +34,11 @@ enum ViewFilterOperator {
 enum ViewSortDirection {
     asc
     desc
+}
+
+enum ViewFilterConjunction {
+    and
+    or
 }
 
 model Base {
@@ -131,6 +130,7 @@ model ViewFilter {
     view      View              @relation(fields: [viewId], references: [id])
     columnId  String            @db.Uuid
     column    Column            @relation(fields: [columnId], references: [id])
+    conjunction ViewFilterConjunction @default(and)
     operator  ViewFilterOperator
     value     String?
     position  Int               @default(0)

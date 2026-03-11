@@ -176,6 +176,7 @@ exports.Prisma.ViewFilterScalarFieldEnum = {
   id: 'id',
   viewId: 'viewId',
   columnId: 'columnId',
+  conjunction: 'conjunction',
   operator: 'operator',
   value: 'value',
   position: 'position'
@@ -212,18 +213,17 @@ exports.Prisma.NullsOrder = {
 };
 exports.ColumnType = exports.$Enums.ColumnType = {
   text: 'text',
-  number: 'number',
-  date: 'date',
-  singleSelect: 'singleSelect',
-  multiSelect: 'multiSelect',
-  checkbox: 'checkbox',
-  url: 'url',
-  email: 'email'
+  number: 'number'
 };
 
 exports.ViewType = exports.$Enums.ViewType = {
   grid: 'grid',
   kanban: 'kanban'
+};
+
+exports.ViewFilterConjunction = exports.$Enums.ViewFilterConjunction = {
+  and: 'and',
+  or: 'or'
 };
 
 exports.ViewFilterOperator = exports.$Enums.ViewFilterOperator = {

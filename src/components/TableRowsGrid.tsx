@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 import type { RouterOutputs } from "~/trpc/react";
 
-type TableRow = RouterOutputs["table"]["getAllRows"][number];
+type TableRow = RouterOutputs["view"]["getAllRows"][number];
 
 type TableRowsGridProps = {
   rows: TableRow[];
