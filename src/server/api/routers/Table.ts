@@ -1,12 +1,15 @@
-import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  TableGetByBaseInputSchema,
+  TableGetByBaseOutputSchema,
+} from "~/types/router";
 
 export const tableRouter = createTRPCRouter({
   getByBase: publicProcedure
-    .input(z.object({ baseId: z.number().int().positive() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.table.findMany({
+    .input(TableGetByBaseInputSchema)
+    .output(TableGetByBaseOutputSchema)
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.table.findMany({
         where: { baseId: input.baseId },
         orderBy: [{ updatedAt: "desc" }, { id: "asc" }],
         select: {

@@ -1,17 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  CellUpdateValueInputSchema,
+  CellUpdateValueOutputSchema,
+} from "~/types/router";
 
 export const cellRouter = createTRPCRouter({
   updateValue: publicProcedure
-    .input(
-      z.object({
-        rowId: z.number().int().positive(),
-        columnId: z.number().int().positive(),
-        value: z.string().nullable(),
-      }),
-    )
+    .input(CellUpdateValueInputSchema)
+    .output(CellUpdateValueOutputSchema)
     .mutation(async ({ ctx, input }) => {
       const [row, column] = await Promise.all([
         ctx.db.row.findUnique({
@@ -39,7 +37,7 @@ export const cellRouter = createTRPCRouter({
         });
       }
 
-      return ctx.db.cell.upsert({
+      return await ctx.db.cell.upsert({
         where: {
           rowId_columnId: {
             rowId: input.rowId,
