@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
+import { Prisma } from "../../../../generated/prisma";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { type createTRPCContext, createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
   ViewCreateInputSchema,
   ViewCreateOutputSchema,
@@ -17,6 +18,242 @@ import {
   ViewSetSortsInputSchema,
   ViewSetSortsOutputSchema,
 } from "~/types/router";
+
+type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
+
+type ViewDefinition = {
+  id: string;
+  tableId: string;
+  filters: Array<{
+    id: string;
+    columnId: string;
+    conjunction: "and" | "or";
+    operator: "equals" | "contains" | "notContains" | "isEmpty" | "isNotEmpty" | "greaterThan" | "lessThan";
+    value: string | null;
+    position: number;
+    column: {
+      id: string;
+      type: "text" | "number";
+    };
+  }>;
+};
+
+const rowSelect = {
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  tableId: true,
+  cells: {
+    orderBy: [{ column: { position: "asc" } }, { id: "asc" }],
+    select: {
+      id: true,
+      rowId: true,
+      columnId: true,
+      value: true,
+      column: {
+        select: {
+          id: true,
+          name: true,
+          type: true,
+          position: true,
+          tableId: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.RowSelect;
+
+async function getViewDefinition(ctx: TRPCContext, viewId: string): Promise<ViewDefinition> {
+  const view = await ctx.db.view.findUnique({
+    where: { id: viewId },
+    select: {
+      id: true,
+      tableId: true,
+      filters: {
+        orderBy: [{ position: "asc" }, { id: "asc" }],
+        select: {
+          id: true,
+          columnId: true,
+          conjunction: true,
+          operator: true,
+          value: true,
+          position: true,
+          column: {
+            select: {
+              id: true,
+              type: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!view) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "View not found." });
+  }
+
+  return view;
+}
+
+function buildFiltersWhereClause(view: ViewDefinition): Prisma.RowWhereInput | undefined {
+  const impossibleFilter: Prisma.RowWhereInput = { id: { equals: "__invalid_row_id__" } };
+  const buildFilterWhereClause = (filter: ViewDefinition["filters"][number]): Prisma.RowWhereInput => {
+    const filterValue = filter.value?.trim() ?? "";
+
+    if (filter.column.type === "text") {
+      switch (filter.operator) {
+        case "equals":
+          return {
+            cells: {
+              some: {
+                columnId: filter.columnId,
+                value: { equals: filterValue, mode: "insensitive" as const },
+              },
+            },
+          };
+        case "contains":
+          return {
+            cells: {
+              some: {
+                columnId: filter.columnId,
+                value: { contains: filterValue, mode: "insensitive" as const },
+              },
+            },
+          };
+        case "notContains":
+          return {
+            OR: [
+              {
+                cells: {
+                  none: {
+                    columnId: filter.columnId,
+                  },
+                },
+              },
+              {
+                cells: {
+                  some: {
+                    columnId: filter.columnId,
+                    value: null,
+                  },
+                },
+              },
+              {
+                NOT: {
+                  cells: {
+                    some: {
+                      columnId: filter.columnId,
+                      value: { contains: filterValue, mode: "insensitive" as const },
+                    },
+                  },
+                },
+              },
+            ],
+          };
+        case "isEmpty":
+          return {
+            OR: [
+              {
+                cells: {
+                  none: {
+                    columnId: filter.columnId,
+                  },
+                },
+              },
+              {
+                cells: {
+                  some: {
+                    columnId: filter.columnId,
+                    value: null,
+                  },
+                },
+              },
+              {
+                cells: {
+                  some: {
+                    columnId: filter.columnId,
+                    value: "",
+                  },
+                },
+              },
+            ],
+          };
+        case "isNotEmpty":
+          return {
+            cells: {
+              some: {
+                columnId: filter.columnId,
+                NOT: [{ value: null }, { value: "" }],
+              },
+            },
+          };
+        default:
+          return {};
+      }
+    }
+
+    if (filter.column.type === "number") {
+      const numericFilterValue = Number(filterValue);
+      if (!Number.isFinite(numericFilterValue)) {
+        return impossibleFilter;
+      }
+
+      switch (filter.operator) {
+        case "greaterThan":
+          return {
+            cells: {
+              some: {
+                columnId: filter.columnId,
+                value: { gt: String(numericFilterValue) },
+              },
+            },
+          };
+        case "lessThan":
+          return {
+            cells: {
+              some: {
+                columnId: filter.columnId,
+                value: { lt: String(numericFilterValue) },
+              },
+            },
+          };
+        default:
+          return {};
+      }
+    }
+
+    return {};
+  };
+
+  let filtersWhereClause: Prisma.RowWhereInput | undefined;
+  if (view.filters.length > 0) {
+    filtersWhereClause = buildFilterWhereClause(view.filters[0]!);
+    for (let index = 1; index < view.filters.length; index += 1) {
+      const filter = view.filters[index]!;
+      const currentClause = buildFilterWhereClause(filter);
+      filtersWhereClause =
+        filter.conjunction === "or"
+          ? { OR: [filtersWhereClause, currentClause] }
+          : { AND: [filtersWhereClause, currentClause] };
+    }
+  }
+
+  return filtersWhereClause;
+}
+
+async function getRowsForView(ctx: TRPCContext, viewId: string) {
+  const view = await getViewDefinition(ctx, viewId);
+  const filtersWhereClause = buildFiltersWhereClause(view);
+  return await ctx.db.row.findMany({
+    where: {
+      tableId: view.tableId,
+      ...(filtersWhereClause ? { AND: [filtersWhereClause] } : {}),
+    },
+    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+    select: rowSelect,
+  });
+}
 
 export const viewRouter = createTRPCRouter({
   getByTable: publicProcedure
@@ -101,270 +338,12 @@ export const viewRouter = createTRPCRouter({
         },
       });
     }),
+
   getAllRows: publicProcedure
     .input(ViewGetAllRowsInputSchema)
     .output(ViewGetAllRowsOutputSchema)
-    .query(async ({ ctx, input }) => {
-      const view = await ctx.db.view.findUnique({
-        where: { id: input.viewId },
-        select: {
-          id: true,
-          tableId: true,
-          filters: {
-            orderBy: [{ position: "asc" }, { id: "asc" }],
-            select: {
-              id: true,
-              columnId: true,
-              conjunction: true,
-              operator: true,
-              value: true,
-              position: true,
-              column: {
-                select: {
-                  id: true,
-                  type: true,
-                },
-              },
-            },
-          },
-          sorts: {
-            orderBy: [{ position: "asc" }, { id: "asc" }],
-            select: {
-              id: true,
-              columnId: true,
-              direction: true,
-              position: true,
-              column: {
-                select: {
-                  id: true,
-                  type: true,
-                },
-              },
-            },
-          },
-        },
-      });
+    .query(async ({ ctx, input }) => getRowsForView(ctx, input.viewId)),
 
-      if (!view) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "View not found." });
-      }
-
-      type FilterWhereClause = Record<string, unknown>;
-
-      const impossibleFilter: FilterWhereClause = { id: { equals: "__invalid_row_id__" } };
-      const buildFilterWhereClause = (
-        filter: (typeof view.filters)[number],
-      ): FilterWhereClause => {
-        const filterValue = filter.value?.trim() ?? "";
-
-        if (filter.column.type === "text") {
-          switch (filter.operator) {
-            case "equals":
-              return {
-                cells: {
-                  some: {
-                    columnId: filter.columnId,
-                    value: { equals: filterValue, mode: "insensitive" as const },
-                  },
-                },
-              };
-            case "contains":
-              return {
-                cells: {
-                  some: {
-                    columnId: filter.columnId,
-                    value: { contains: filterValue, mode: "insensitive" as const },
-                  },
-                },
-              };
-            case "notContains":
-              return {
-                OR: [
-                  {
-                    cells: {
-                      none: {
-                        columnId: filter.columnId,
-                      },
-                    },
-                  },
-                  {
-                    cells: {
-                      some: {
-                        columnId: filter.columnId,
-                        value: null,
-                      },
-                    },
-                  },
-                  {
-                    cells: {
-                      some: {
-                        columnId: filter.columnId,
-                        value: { not: { contains: filterValue, mode: "insensitive" as const } },
-                      },
-                    },
-                  },
-                ],
-              };
-            case "isEmpty":
-              return {
-                OR: [
-                  {
-                    cells: {
-                      none: {
-                        columnId: filter.columnId,
-                      },
-                    },
-                  },
-                  {
-                    cells: {
-                      some: {
-                        columnId: filter.columnId,
-                        value: null,
-                      },
-                    },
-                  },
-                  {
-                    cells: {
-                      some: {
-                        columnId: filter.columnId,
-                        value: "",
-                      },
-                    },
-                  },
-                ],
-              };
-            case "isNotEmpty":
-              return {
-                cells: {
-                  some: {
-                    columnId: filter.columnId,
-                    NOT: [{ value: null }, { value: "" }],
-                  },
-                },
-              };
-            default:
-              return {};
-          }
-        }
-
-        if (filter.column.type === "number") {
-          const numericFilterValue = Number(filterValue);
-          if (!Number.isFinite(numericFilterValue)) {
-            return impossibleFilter;
-          }
-
-          switch (filter.operator) {
-            case "greaterThan":
-              return {
-                cells: {
-                  some: {
-                    columnId: filter.columnId,
-                    value: { gt: String(numericFilterValue) },
-                  },
-                },
-              };
-            case "lessThan":
-              return {
-                cells: {
-                  some: {
-                    columnId: filter.columnId,
-                    value: { lt: String(numericFilterValue) },
-                  },
-                },
-              };
-            default:
-              return {};
-          }
-        }
-
-        return {};
-      };
-
-      let filtersWhereClause: FilterWhereClause | undefined;
-      if (view.filters.length > 0) {
-        filtersWhereClause = buildFilterWhereClause(view.filters[0]!);
-        for (let index = 1; index < view.filters.length; index += 1) {
-          const filter = view.filters[index]!;
-          const currentClause = buildFilterWhereClause(filter);
-          filtersWhereClause =
-            filter.conjunction === "or"
-              ? { OR: [filtersWhereClause, currentClause] }
-              : { AND: [filtersWhereClause, currentClause] };
-        }
-      }
-
-      const rows = await ctx.db.row.findMany({
-        where: {
-          tableId: view.tableId,
-          ...(filtersWhereClause ? { AND: [filtersWhereClause] } : {}),
-        },
-        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
-        select: {
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          tableId: true,
-          cells: {
-            orderBy: [{ column: { position: "asc" } }, { id: "asc" }],
-            select: {
-              id: true,
-              rowId: true,
-              columnId: true,
-              value: true,
-              column: {
-                select: {
-                  id: true,
-                  name: true,
-                  type: true,
-                  position: true,
-                  tableId: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (view.sorts.length === 0) {
-        return rows;
-      }
-
-      return [...rows].sort((leftRow, rightRow) => {
-        for (const sort of view.sorts) {
-          const leftValue = leftRow.cells.find((cell) => cell.columnId === sort.columnId)?.value ?? "";
-          const rightValue = rightRow.cells.find((cell) => cell.columnId === sort.columnId)?.value ?? "";
-          let comparison = 0;
-
-          if (sort.column.type === "number") {
-            const leftNumeric = Number(leftValue);
-            const rightNumeric = Number(rightValue);
-            const leftIsNumeric = Number.isFinite(leftNumeric);
-            const rightIsNumeric = Number.isFinite(rightNumeric);
-
-            if (leftIsNumeric && rightIsNumeric) {
-              comparison = leftNumeric - rightNumeric;
-            } else if (leftIsNumeric && !rightIsNumeric) {
-              comparison = 1;
-            } else if (!leftIsNumeric && rightIsNumeric) {
-              comparison = -1;
-            }
-          } else {
-            comparison = leftValue.localeCompare(rightValue, undefined, { sensitivity: "base" });
-          }
-
-          if (comparison !== 0) {
-            return sort.direction === "asc" ? comparison : -comparison;
-          }
-        }
-
-        const createdAtDelta = leftRow.createdAt.getTime() - rightRow.createdAt.getTime();
-        if (createdAtDelta !== 0) {
-          return createdAtDelta;
-        }
-
-        return leftRow.id.localeCompare(rightRow.id);
-      });
-    }),
   getFilters: publicProcedure
     .input(ViewGetFiltersInputSchema)
     .output(ViewGetFiltersOutputSchema)

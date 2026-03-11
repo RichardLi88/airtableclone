@@ -1,5 +1,6 @@
 "use client";
 
+import debounce from "lodash/debounce";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   LuChevronDown,
@@ -12,10 +13,10 @@ import {
   LuPlus,
   LuSearch,
   LuTrash2,
-  LuGripVertical,
   LuArrowUpDown,
 } from "react-icons/lu";
 
+import { TableFilterPanel } from "~/components/TableFilterPanel";
 import { TableViewsSidebar } from "~/components/TableViewsSidebar";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
@@ -48,10 +49,6 @@ const textOperatorOptions: Array<{ value: ViewFilterInput["operator"]; label: st
 const numberOperatorOptions: Array<{ value: ViewFilterInput["operator"]; label: string }> = [
   { value: "greaterThan", label: "Greater than" },
   { value: "lessThan", label: "Less than" },
-];
-const conjunctionOptions: Array<{ value: ViewFilterInput["conjunction"]; label: string }> = [
-  { value: "and", label: "and" },
-  { value: "or", label: "or" },
 ];
 const textSortDirectionOptions: Array<{ value: ViewSortInput["direction"]; label: string }> = [
   { value: "asc", label: "A -> Z" },
@@ -227,20 +224,44 @@ export function TableWorkspaceChrome({
     setFilters(nextFilters);
   }, [canUseViewFilters, columnsById, createDefaultFilter, supportedColumns, viewFiltersQuery.data]);
 
+  const persistFilters = useCallback(
+    (candidateFilters: ViewFilterInput[]) => {
+      if (!canUseViewFilters || !currentViewId) {
+        return;
+      }
+
+      const filtersForPersistence = toPersistedFilters(candidateFilters);
+      const serializedFilters = JSON.stringify(filtersForPersistence);
+      if (serializedFilters === lastSavedFiltersRef.current) {
+        return;
+      }
+
+      lastSavedFiltersRef.current = serializedFilters;
+      setFiltersMutation.mutate({ viewId: currentViewId, filters: filtersForPersistence });
+    },
+    [canUseViewFilters, currentViewId, setFiltersMutation, toPersistedFilters],
+  );
+
+  const debouncedPersistFilters = useMemo(
+    () => debounce((candidateFilters: ViewFilterInput[]) => persistFilters(candidateFilters), 300),
+    [persistFilters],
+  );
+
   useEffect(() => {
-    if (!canUseViewFilters || !currentViewId) {
-      return;
-    }
+    debouncedPersistFilters(filters);
+  }, [debouncedPersistFilters, filters]);
 
-    const filtersForPersistence = toPersistedFilters(filters);
-    const serializedFilters = JSON.stringify(filtersForPersistence);
-    if (serializedFilters === lastSavedFiltersRef.current) {
-      return;
-    }
+  useEffect(
+    () => () => {
+      debouncedPersistFilters.cancel();
+    },
+    [debouncedPersistFilters],
+  );
 
-    lastSavedFiltersRef.current = serializedFilters;
-    setFiltersMutation.mutate({ viewId: currentViewId, filters: filtersForPersistence });
-  }, [canUseViewFilters, currentViewId, filters, setFiltersMutation, toPersistedFilters]);
+  const commitFiltersNow = useCallback(() => {
+    debouncedPersistFilters.cancel();
+    persistFilters(filters);
+  }, [debouncedPersistFilters, filters, persistFilters]);
 
   const upsertFilter = (index: number, patch: Partial<ViewFilterInput>) => {
     setFilters((current) =>
@@ -396,130 +417,19 @@ export function TableWorkspaceChrome({
             <LuFilter className={toolbarIconClass} />
             Filter
           </Button>
-          {isFilterPanelOpen ? (
-            <div className="absolute right-0 top-10 z-30 w-[980px] max-w-[calc(100vw-1rem)] rounded-md border border-[#d7dbe3] bg-[#f6f7f9] p-3 shadow-lg">
-              <p className="mb-3 text-[14px] font-medium text-[#374151]">Filter</p>
-              <p className="mb-3 text-[13px] text-[#4b5563]">In this view, show records</p>
-              {supportedColumns.length === 0 ? (
-                <p className="text-[12px] text-[#6b7280]">No text or number columns available.</p>
-              ) : filters.length === 0 ? (
-                <p className="text-[12px] text-[#6b7280]">No filters applied.</p>
-              ) : (
-                <div className="space-y-2">
-                  {filters.map((filter, index) => {
-                    const filterColumn = columnsById.get(filter.columnId);
-                    const operatorOptions =
-                      filterColumn?.type === "number" ? numberOperatorOptions : textOperatorOptions;
-                    const needsValue =
-                      filter.operator !== "isEmpty" && filter.operator !== "isNotEmpty";
-
-                    return (
-                      <div
-                        key={`${filter.columnId}-${index}`}
-                        className="grid grid-cols-[120px_1fr_1fr_1fr_auto_auto] gap-1.5"
-                      >
-                        {index === 0 ? (
-                          <div className="flex h-12 items-center rounded border border-[#d0d5de] bg-background px-3 text-[12px] font-medium text-[#374151]">
-                            Where
-                          </div>
-                        ) : (
-                          <select
-                            className="h-12 rounded border border-[#d0d5de] bg-background px-3 text-[12px] text-[#334155] outline-none"
-                            value={filter.conjunction}
-                            onChange={(event) =>
-                              upsertFilter(index, {
-                                conjunction: event.target.value as ViewFilterInput["conjunction"],
-                              })
-                            }
-                          >
-                            {conjunctionOptions.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                        <select
-                          className="h-12 rounded border border-[#d0d5de] bg-background px-3 text-[12px] text-[#334155] outline-none"
-                          value={filter.columnId}
-                          onChange={(event) => {
-                            const nextColumn = columnsById.get(event.target.value);
-                            const nextOperator = getDefaultOperator(nextColumn?.type ?? "text");
-                            upsertFilter(index, {
-                              columnId: event.target.value,
-                              operator: nextOperator,
-                              value: getDefaultValue(nextOperator),
-                            });
-                          }}
-                        >
-                          {supportedColumns.map((column) => (
-                            <option key={column.id} value={column.id}>
-                              {column.name}
-                            </option>
-                          ))}
-                        </select>
-                        <select
-                          className="h-12 rounded border border-[#d0d5de] bg-background px-3 text-[12px] text-[#334155] outline-none"
-                          value={filter.operator}
-                          onChange={(event) =>
-                            upsertFilter(index, {
-                              operator: event.target.value as ViewFilterInput["operator"],
-                            })
-                          }
-                        >
-                          {operatorOptions.map((operatorOption) => (
-                            <option key={operatorOption.value} value={operatorOption.value}>
-                              {operatorOption.label}
-                            </option>
-                          ))}
-                        </select>
-                        <input
-                          className="h-12 rounded border border-[#d0d5de] bg-background px-3 text-[12px] text-[#334155] outline-none disabled:bg-[#f8fafc]"
-                          value={filter.value ?? ""}
-                          disabled={!needsValue}
-                          placeholder={needsValue ? "Enter a value" : "No value needed"}
-                          onChange={(event) => upsertFilter(index, { value: event.target.value })}
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-12 border-[#d0d5de] bg-background px-3 text-[11px] text-[#4b5563]"
-                          onClick={() => removeFilter(index)}
-                          disabled={index === 0}
-                          aria-label="Delete filter condition"
-                        >
-                          <LuTrash2 className="h-4 w-4" />
-                        </Button>
-                        <button
-                          type="button"
-                          className="flex h-12 items-center justify-center rounded border border-[#d0d5de] bg-background px-3 text-[#6b7280]"
-                          aria-label="Reorder filter condition"
-                        >
-                          <LuGripVertical className="h-4 w-4" />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-              <div className="mt-3 flex items-center justify-between">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-10 border-[#d0d5de] bg-background px-3 text-[18px] font-normal text-[#4b5563]"
-                  onClick={addFilter}
-                  disabled={supportedColumns.length === 0}
-                >
-                  <LuPlus className="mr-1 h-4 w-4" />
-                  Add condition
-                </Button>
-                <span className="text-[13px] text-[#6b7280]">Copy from another view</span>
-              </div>
-              {setFiltersMutation.error ? (
-                <p className="mt-2 text-[11px] text-red-600">{setFiltersMutation.error.message}</p>
-              ) : null}
-            </div>
-          ) : null}
+          <TableFilterPanel
+            isOpen={isFilterPanelOpen}
+            supportedColumns={supportedColumns}
+            filters={filters}
+            columnsById={columnsById}
+            errorMessage={setFiltersMutation.error?.message}
+            onAddFilter={addFilter}
+            onRemoveFilter={removeFilter}
+            onUpsertFilter={upsertFilter}
+            onCommitFilters={commitFiltersNow}
+            getDefaultOperator={getDefaultOperator}
+            getDefaultValue={getDefaultValue}
+          />
           <Button variant="ghost" size="sm" className={toolbarButtonClass}>
             <LuGroup className={toolbarIconClass} />
             Group

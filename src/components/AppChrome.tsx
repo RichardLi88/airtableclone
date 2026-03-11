@@ -1,15 +1,15 @@
 "use client";
 
 import {
-  BookOpen,
-  GlobeHemisphereWest,
-  House,
-  List,
-  Plus,
-  Star,
-  Tray,
-  UsersThree,
-} from "@phosphor-icons/react";
+  LuBookOpen,
+  LuGlobe,
+  LuHouse,
+  LuList,
+  LuPlus,
+  LuStar,
+  LuInbox,
+  LuUsers,
+} from "react-icons/lu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -34,32 +34,32 @@ function HomeRail() {
     <aside className="flex w-11 shrink-0 flex-col border-r border-[#d8dde6] bg-[#f6f7f9]">
       <div className="flex flex-col items-center gap-3 py-3">
         <button className="grid h-6 w-6 place-items-center rounded text-[#222733] hover:bg-[#e9edf3]">
-          <House size={15} weight="regular" />
+          <LuHouse size={15} />
         </button>
         <button className="grid h-6 w-6 place-items-center rounded text-[#222733] hover:bg-[#e9edf3]">
-          <Star size={15} weight="regular" />
+          <LuStar size={15} />
         </button>
         <button className="grid h-6 w-6 place-items-center rounded text-[#222733] hover:bg-[#e9edf3]">
-          <List size={15} weight="regular" />
+          <LuList size={15} />
         </button>
         <button className="grid h-6 w-6 place-items-center rounded text-[#222733] hover:bg-[#e9edf3]">
-          <UsersThree size={15} weight="regular" />
+          <LuUsers size={15} />
         </button>
         <div className="my-1 h-px w-6 bg-[#dbe0e8]" />
       </div>
       <div className="mt-auto flex flex-col items-center gap-3 py-3">
         <div className="h-px w-6 bg-[#dbe0e8]" />
         <button className="grid h-6 w-6 place-items-center rounded text-[#5e6777] hover:bg-[#e9edf3]">
-          <BookOpen size={15} weight="regular" />
+          <LuBookOpen size={15} />
         </button>
         <button className="grid h-6 w-6 place-items-center rounded text-[#5e6777] hover:bg-[#e9edf3]">
-          <Tray size={15} weight="regular" />
+          <LuInbox size={15} />
         </button>
         <button className="grid h-6 w-6 place-items-center rounded text-[#5e6777] hover:bg-[#e9edf3]">
-          <GlobeHemisphereWest size={15} weight="regular" />
+          <LuGlobe size={15} />
         </button>
         <button className="grid h-7 w-7 place-items-center rounded-md border border-[#d8dde6] text-[#5e6777] hover:bg-[#eef1f6]">
-          <Plus size={15} weight="regular" />
+          <LuPlus size={15} />
         </button>
       </div>
     </aside>
