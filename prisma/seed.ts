@@ -2,32 +2,149 @@ import { PrismaClient, ColumnType } from "../generated/prisma";
 
 const prisma = new PrismaClient();
 
-async function main() {
-  // Clean up any previous demo data for idempotent runs.
-  // Delete children first to avoid FK issues (and be explicit about scope).
-  const existingBase = await prisma.base.findFirst({
-    where: { name: "Lyra" },
+const TABLE_CONFIG = [
+  { name: "Lyra Employees", rows: 300 },
+  { name: "Lyra Projects", rows: 260 },
+  { name: "Lyra Sales", rows: 320 },
+  { name: "Lyra Support Tickets", rows: 280 },
+];
+
+const firstNames = [
+  "Alice",
+  "Brian",
+  "Carla",
+  "Diego",
+  "Emma",
+  "Farah",
+  "Gavin",
+  "Hana",
+  "Iris",
+  "Julian",
+];
+const lastNames = [
+  "Johnson",
+  "Lee",
+  "Patel",
+  "Khan",
+  "Martinez",
+  "Nguyen",
+  "Brown",
+  "Taylor",
+  "Davis",
+  "Miller",
+];
+const cities = [
+  "San Francisco",
+  "New York",
+  "Austin",
+  "Seattle",
+  "Chicago",
+  "Denver",
+  "Boston",
+  "Portland",
+];
+const teams = ["Engineering", "Design", "Sales", "Support", "Marketing", "Operations"];
+const statuses = ["Active", "Onboarding", "Paused", "Archived"];
+const tags = ["Urgent", "Customer", "Internal", "Follow-up", "High-value", "Expansion"];
+
+function pick<T>(arr: readonly T[], index: number): T {
+  if (arr.length === 0) {
+    throw new Error("Cannot pick from an empty array");
+  }
+  return arr[index % arr.length]!;
+}
+
+function createRowValues(rowIndex: number, tableName: string) {
+  const firstName = pick(firstNames, rowIndex);
+  const lastName = pick(lastNames, rowIndex * 3);
+  const personName = `${firstName} ${lastName}`;
+  const city = pick(cities, rowIndex * 2);
+  const team = pick(teams, rowIndex * 5);
+  const status = pick(statuses, rowIndex * 7);
+  const amount = 500 + ((rowIndex * 173) % 50000);
+  const websiteSlug = `${firstName}.${lastName}.${rowIndex}`.toLowerCase();
+  const selectedTags = [pick(tags, rowIndex), pick(tags, rowIndex + 2)];
+
+  return {
+    name: `${personName} - ${tableName} #${rowIndex + 1}`,
+    metric: String(amount),
+    details: `${team} in ${city}`,
+    tags: JSON.stringify(selectedTags),
+    website: `https://${websiteSlug}.lyra.dev`,
+    status,
+  };
+}
+
+async function clearDatabase() {
+  await prisma.viewColumnVisibility.deleteMany();
+  await prisma.viewSort.deleteMany();
+  await prisma.viewFilter.deleteMany();
+  await prisma.view.deleteMany();
+  await prisma.cell.deleteMany();
+  await prisma.row.deleteMany();
+  await prisma.column.deleteMany();
+  await prisma.table.deleteMany();
+  await prisma.base.deleteMany();
+}
+
+async function seedTable(baseId: string, tableName: string, rowCount: number) {
+  const table = await prisma.table.create({
+    data: {
+      name: tableName,
+      baseId,
+    },
+  });
+
+  const createdColumns = await Promise.all([
+    prisma.column.create({
+      data: { name: "Name", type: ColumnType.text, position: 0, tableId: table.id },
+    }),
+    prisma.column.create({
+      data: { name: "Metric", type: ColumnType.number, position: 1, tableId: table.id },
+    }),
+    prisma.column.create({
+      data: { name: "Details", type: ColumnType.text, position: 2, tableId: table.id },
+    }),
+    prisma.column.create({
+      data: { name: "Tags", type: ColumnType.multiSelect, position: 3, tableId: table.id },
+    }),
+    prisma.column.create({
+      data: { name: "Website", type: ColumnType.url, position: 4, tableId: table.id },
+    }),
+    prisma.column.create({
+      data: { name: "Status", type: ColumnType.singleSelect, position: 5, tableId: table.id },
+    }),
+  ]);
+
+  const [nameColumn, metricColumn, detailsColumn, tagsColumn, websiteColumn, statusColumn] = createdColumns;
+
+  await prisma.row.createMany({
+    data: Array.from({ length: rowCount }, () => ({ tableId: table.id })),
+  });
+
+  const rows = await prisma.row.findMany({
+    where: { tableId: table.id },
+    orderBy: { id: "asc" },
     select: { id: true },
   });
 
-  if (existingBase) {
-    const tables = await prisma.table.findMany({
-      where: { baseId: existingBase.id },
-      select: { id: true },
-    });
-    const tableIds = tables.map((t) => t.id);
+  const cells = rows.flatMap((row, index) => {
+    const values = createRowValues(index, tableName);
+    return [
+      { rowId: row.id, columnId: nameColumn.id, value: values.name },
+      { rowId: row.id, columnId: metricColumn.id, value: values.metric },
+      { rowId: row.id, columnId: detailsColumn.id, value: values.details },
+      { rowId: row.id, columnId: tagsColumn.id, value: values.tags },
+      { rowId: row.id, columnId: websiteColumn.id, value: values.website },
+      { rowId: row.id, columnId: statusColumn.id, value: values.status },
+    ];
+  });
 
-    if (tableIds.length > 0) {
-      await prisma.cell.deleteMany({
-        where: { row: { tableId: { in: tableIds } } },
-      });
-      await prisma.row.deleteMany({ where: { tableId: { in: tableIds } } });
-      await prisma.column.deleteMany({ where: { tableId: { in: tableIds } } });
-      await prisma.table.deleteMany({ where: { id: { in: tableIds } } });
-    }
+  await prisma.cell.createMany({ data: cells });
+}
 
-    await prisma.base.delete({ where: { id: existingBase.id } });
-  }
+async function main() {
+  await clearDatabase();
 
   const base = await prisma.base.create({
     data: {
@@ -35,122 +152,16 @@ async function main() {
     },
   });
 
-  const table = await prisma.table.create({
-    data: {
-      name: "Lyra Employees",
-      baseId: base.id,
-    },
-  });
-
-  // Define fields (columns)
-  const nameColumn = await prisma.column.create({
-    data: {
-      name: "Name",
-      type: ColumnType.text,
-      position: 0,
-      tableId: table.id,
-    },
-  });
-
-  const ageColumn = await prisma.column.create({
-    data: {
-      name: "Age",
-      type: ColumnType.number,
-      position: 1,
-      tableId: table.id,
-    },
-  });
-
-  const addressColumn = await prisma.column.create({
-    data: {
-      name: "Address",
-      type: ColumnType.text,
-      position: 2,
-      tableId: table.id,
-    },
-  });
-
-  const hobbiesColumn = await prisma.column.create({
-    data: {
-      name: "Hobbies",
-      type: ColumnType.multiSelect,
-      position: 3,
-      tableId: table.id,
-    },
-  });
-
-  const websiteColumn = await prisma.column.create({
-    data: {
-      name: "Website",
-      type: ColumnType.url,
-      position: 4,
-      tableId: table.id,
-    },
-  });
-
-  const employees = [
-    {
-      name: "Alice Johnson",
-      age: 29,
-      address: "123 Market Street, San Francisco, CA",
-      hobbies: ["Climbing", "Yoga", "Reading"],
-      website: "https://alice.lyra.dev",
-    },
-    {
-      name: "Brian Lee",
-      age: 34,
-      address: "48 Mission Street, San Francisco, CA",
-      hobbies: ["Cycling", "Cooking"],
-      website: "https://brian.lyra.dev",
-    },
-    {
-      name: "Carla Gómez",
-      age: 27,
-      address: "5 Castro Street, Mountain View, CA",
-      hobbies: ["Photography", "Travel", "Chess"],
-      website: "https://carla.lyra.dev",
-    },
-  ] as const;
-
-  for (const employee of employees) {
-    const row = await prisma.row.create({
-      data: {
-        tableId: table.id,
-      },
-    });
-
-    await prisma.cell.createMany({
-      data: [
-        {
-          rowId: row.id,
-          columnId: nameColumn.id,
-          value: employee.name,
-        },
-        {
-          rowId: row.id,
-          columnId: ageColumn.id,
-          value: String(employee.age),
-        },
-        {
-          rowId: row.id,
-          columnId: addressColumn.id,
-          value: employee.address,
-        },
-        {
-          rowId: row.id,
-          columnId: hobbiesColumn.id,
-          value: JSON.stringify(employee.hobbies),
-        },
-        {
-          rowId: row.id,
-          columnId: websiteColumn.id,
-          value: employee.website,
-        },
-      ],
-    });
+  for (const config of TABLE_CONFIG) {
+    await seedTable(base.id, config.name, config.rows);
   }
 
-  console.log("Seeded Lyra Employees table with demo data.");
+  console.log(
+    `Seeded ${TABLE_CONFIG.length} tables with ${TABLE_CONFIG.reduce(
+      (sum, config) => sum + config.rows,
+      0,
+    )} total rows.`,
+  );
 }
 
 main()

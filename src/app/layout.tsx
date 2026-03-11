@@ -38,7 +38,14 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <div className="min-h-screen w-full bg-background text-foreground">
-            <div className="flex min-h-screen">
+            <header className="border-b">
+              <nav className="mx-auto flex h-14 w-full items-center px-4 md:px-6">
+                <Link href="/" className="text-sm font-semibold tracking-tight">
+                  airtable clone
+                </Link>
+              </nav>
+            </header>
+            <div className="flex min-h-[calc(100vh-3.5rem)]">
               <SidebarProvider>
                 <Sidebar>
                   <SidebarContent>

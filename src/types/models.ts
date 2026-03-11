@@ -24,51 +24,52 @@ export const viewFilterOperatorSchema = z.enum([
 ]);
 
 export const viewSortDirectionSchema = z.enum(["asc", "desc"]);
+const uuidSchema = z.string().uuid();
 
 export const BaseModelSchema = z.object({
-  id: z.number().int().positive(),
+  id: uuidSchema,
   name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
 export const TableModelSchema = z.object({
-  id: z.number().int().positive(),
+  id: uuidSchema,
   name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  baseId: z.number().int().positive(),
+  baseId: uuidSchema,
 });
 
 export const ColumnModelSchema = z.object({
-  id: z.number().int().positive(),
+  id: uuidSchema,
   name: z.string(),
   type: columnTypeSchema,
   position: z.number().int().nonnegative(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  tableId: z.number().int().positive(),
+  tableId: uuidSchema,
 });
 
 export const RowModelSchema = z.object({
-  id: z.number().int().positive(),
+  id: uuidSchema,
   createdAt: z.date(),
   updatedAt: z.date(),
-  tableId: z.number().int().positive(),
+  tableId: uuidSchema,
 });
 
 export const CellModelSchema = z.object({
-  id: z.number().int().positive(),
+  id: uuidSchema,
   value: z.string().nullable(),
-  rowId: z.number().int().positive(),
-  columnId: z.number().int().positive(),
+  rowId: uuidSchema,
+  columnId: uuidSchema,
 });
 
 export const ViewModelSchema = z.object({
-  id: z.number().int().positive(),
+  id: uuidSchema,
   name: z.string(),
   type: viewTypeSchema,
-  tableId: z.number().int().positive(),
+  tableId: uuidSchema,
   isDefault: z.boolean(),
   searchQuery: z.string().nullable(),
   createdAt: z.date(),
@@ -76,25 +77,25 @@ export const ViewModelSchema = z.object({
 });
 
 export const ViewFilterModelSchema = z.object({
-  id: z.number().int().positive(),
-  viewId: z.number().int().positive(),
-  columnId: z.number().int().positive(),
+  id: uuidSchema,
+  viewId: uuidSchema,
+  columnId: uuidSchema,
   operator: viewFilterOperatorSchema,
   value: z.string().nullable(),
   position: z.number().int().nonnegative(),
 });
 
 export const ViewSortModelSchema = z.object({
-  id: z.number().int().positive(),
-  viewId: z.number().int().positive(),
-  columnId: z.number().int().positive(),
+  id: uuidSchema,
+  viewId: uuidSchema,
+  columnId: uuidSchema,
   direction: viewSortDirectionSchema,
   position: z.number().int().nonnegative(),
 });
 
 export const ViewColumnVisibilityModelSchema = z.object({
-  id: z.number().int().positive(),
-  viewId: z.number().int().positive(),
-  columnId: z.number().int().positive(),
+  id: uuidSchema,
+  viewId: uuidSchema,
+  columnId: uuidSchema,
   isVisible: z.boolean(),
 });

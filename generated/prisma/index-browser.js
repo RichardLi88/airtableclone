@@ -146,6 +146,20 @@ exports.Prisma.ColumnScalarFieldEnum = {
   tableId: 'tableId'
 };
 
+exports.Prisma.RowScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  tableId: 'tableId'
+};
+
+exports.Prisma.CellScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  rowId: 'rowId',
+  columnId: 'columnId'
+};
+
 exports.Prisma.ViewScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -179,20 +193,6 @@ exports.Prisma.ViewColumnVisibilityScalarFieldEnum = {
   viewId: 'viewId',
   columnId: 'columnId',
   isVisible: 'isVisible'
-};
-
-exports.Prisma.RowScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  tableId: 'tableId'
-};
-
-exports.Prisma.CellScalarFieldEnum = {
-  id: 'id',
-  value: 'value',
-  rowId: 'rowId',
-  columnId: 'columnId'
 };
 
 exports.Prisma.SortOrder = {
@@ -244,12 +244,12 @@ exports.Prisma.ModelName = {
   Base: 'Base',
   Table: 'Table',
   Column: 'Column',
+  Row: 'Row',
+  Cell: 'Cell',
   View: 'View',
   ViewFilter: 'ViewFilter',
   ViewSort: 'ViewSort',
-  ViewColumnVisibility: 'ViewColumnVisibility',
-  Row: 'Row',
-  Cell: 'Cell'
+  ViewColumnVisibility: 'ViewColumnVisibility'
 };
 
 /**

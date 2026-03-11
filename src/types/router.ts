@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-import { BaseModelSchema, CellModelSchema, TableModelSchema } from "./models";
+import {
+  BaseModelSchema,
+  CellModelSchema,
+  ColumnModelSchema,
+  RowModelSchema,
+  TableModelSchema,
+} from "./models";
 
 export const BaseGetAllOutputSchema = z.array(
   BaseModelSchema.pick({
@@ -22,6 +28,26 @@ export const TableGetByBaseOutputSchema = z.array(
     baseId: true,
     createdAt: true,
     updatedAt: true,
+  }),
+);
+
+export const TableGetAllRowsInputSchema = z.object({
+  tableId: TableModelSchema.shape.id,
+});
+
+export const TableGetAllRowsOutputSchema = z.array(
+  RowModelSchema.extend({
+    cells: z.array(
+      CellModelSchema.extend({
+        column: ColumnModelSchema.pick({
+          id: true,
+          name: true,
+          type: true,
+          position: true,
+          tableId: true,
+        }),
+      }),
+    ),
   }),
 );
 

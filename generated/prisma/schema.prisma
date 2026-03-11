@@ -43,7 +43,7 @@ enum ViewSortDirection {
 }
 
 model Base {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) @db.Uuid
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -53,11 +53,11 @@ model Base {
 }
 
 model Table {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) @db.Uuid
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  baseId    Int
+  baseId    String   @db.Uuid
   base      Base     @relation(fields: [baseId], references: [id])
   columns   Column[]
   rows      Row[]
@@ -67,13 +67,13 @@ model Table {
 }
 
 model Column {
-  id                     Int                    @id @default(autoincrement())
+  id                     String                 @id @default(uuid()) @db.Uuid
   name                   String
   type                   ColumnType
   position               Int
   createdAt              DateTime               @default(now())
   updatedAt              DateTime               @updatedAt
-  tableId                Int
+  tableId                String                 @db.Uuid
   table                  Table                  @relation(fields: [tableId], references: [id])
   cells                  Cell[]
   viewFilters            ViewFilter[]
@@ -83,11 +83,35 @@ model Column {
   @@index([tableId])
 }
 
+model Row {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tableId   String   @db.Uuid
+  table     Table    @relation(fields: [tableId], references: [id])
+  cells     Cell[]
+
+  @@index([tableId])
+}
+
+model Cell {
+  id       String  @id @default(uuid()) @db.Uuid
+  value    String? // stored as string; parse based on Field.type
+  rowId    String  @db.Uuid
+  columnId String  @db.Uuid
+  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  column   Column  @relation(fields: [columnId], references: [id], onDelete: Cascade)
+
+  @@unique([rowId, columnId])
+  @@index([rowId])
+  @@index([columnId])
+}
+
 model View {
-  id                 Int                    @id @default(autoincrement())
+  id                 String                 @id @default(uuid()) @db.Uuid
   name               String
   type               ViewType               @default(grid)
-  tableId            Int
+  tableId            String                 @db.Uuid
   table              Table                  @relation(fields: [tableId], references: [id])
   isDefault          Boolean                @default(false)
   searchQuery        String?
@@ -101,10 +125,10 @@ model View {
 }
 
 model ViewFilter {
-  id       Int                @id @default(autoincrement())
-  viewId   Int
+  id       String             @id @default(uuid()) @db.Uuid
+  viewId   String             @db.Uuid
   view     View               @relation(fields: [viewId], references: [id])
-  columnId Int
+  columnId String             @db.Uuid
   column   Column             @relation(fields: [columnId], references: [id])
   operator ViewFilterOperator
   value    String?
@@ -115,10 +139,10 @@ model ViewFilter {
 }
 
 model ViewSort {
-  id        Int               @id @default(autoincrement())
-  viewId    Int
+  id        String            @id @default(uuid()) @db.Uuid
+  viewId    String            @db.Uuid
   view      View              @relation(fields: [viewId], references: [id])
-  columnId  Int
+  columnId  String            @db.Uuid
   column    Column            @relation(fields: [columnId], references: [id])
   direction ViewSortDirection
   position  Int               @default(0)
@@ -128,38 +152,14 @@ model ViewSort {
 }
 
 model ViewColumnVisibility {
-  id        Int     @id @default(autoincrement())
-  viewId    Int
+  id        String  @id @default(uuid()) @db.Uuid
+  viewId    String  @db.Uuid
   view      View    @relation(fields: [viewId], references: [id])
-  columnId  Int
+  columnId  String  @db.Uuid
   column    Column  @relation(fields: [columnId], references: [id])
   isVisible Boolean @default(true)
 
   @@unique([viewId, columnId])
   @@index([viewId])
-  @@index([columnId])
-}
-
-model Row {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tableId   Int
-  table     Table    @relation(fields: [tableId], references: [id])
-  cells     Cell[]
-
-  @@index([tableId])
-}
-
-model Cell {
-  id       Int     @id @default(autoincrement())
-  value    String? // stored as string; parse based on Field.type
-  rowId    Int
-  columnId Int
-  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
-  column   Column  @relation(fields: [columnId], references: [id], onDelete: Cascade)
-
-  @@unique([rowId, columnId])
-  @@index([rowId])
   @@index([columnId])
 }

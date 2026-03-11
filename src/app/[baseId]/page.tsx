@@ -12,27 +12,18 @@ type BasePageProps = {
   }>;
 };
 
+type BaseItem = RouterOutputs["base"]["getAll"][number];
 type TableItem = RouterOutputs["table"]["getByBase"][number];
 
 export default async function BasePage({ params }: BasePageProps) {
   const resolvedParams = await params;
-  const baseId = Number(resolvedParams.baseId);
+  const baseId: TableItem["baseId"] = resolvedParams.baseId;
 
-  if (!Number.isInteger(baseId) || baseId <= 0) {
-    return (
-      <main className="w-full">
-        <div className="p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Invalid base id</CardTitle>
-            </CardHeader>
-          </Card>
-        </div>
-      </main>
-    );
-  }
-
-  const tables: TableItem[] = await api.table.getByBase({ baseId });
+  const [tables, bases]: [TableItem[], BaseItem[]] = await Promise.all([
+    api.table.getByBase({ baseId }),
+    api.base.getAll(),
+  ]);
+  const currentBaseName = bases.find((base) => base.id === baseId)?.name ?? "Unknown base";
   const firstTableId = tables[0]?.id;
 
   if (firstTableId) {
@@ -68,10 +59,10 @@ export default async function BasePage({ params }: BasePageProps) {
       <section className="flex-1 p-6">
         <Card>
           <CardHeader>
-            <CardTitle>Table placeholder</CardTitle>
+            <CardTitle>{currentBaseName}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm">tableId: N/A</p>
+            <p className="text-sm">No table selected</p>
           </CardContent>
         </Card>
       </section>

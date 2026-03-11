@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { TableRowsGrid } from "~/components/TableRowsGrid";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import type { RouterOutputs } from "~/trpc/react";
@@ -13,28 +14,22 @@ type BaseTablePageProps = {
   }>;
 };
 
+type BaseItem = RouterOutputs["base"]["getAll"][number];
 type TableItem = RouterOutputs["table"]["getByBase"][number];
+type TableRow = RouterOutputs["table"]["getAllRows"][number];
 
 export default async function BaseTablePage({ params }: BaseTablePageProps) {
   const resolvedParams = await params;
-  const baseId = Number(resolvedParams.baseId);
-  const tableId = Number(resolvedParams.tableId);
+  const baseId: TableItem["baseId"] = resolvedParams.baseId;
+  const tableId: TableItem["id"] = resolvedParams.tableId;
 
-  if (!Number.isInteger(baseId) || baseId <= 0) {
-    return (
-      <main className="w-full">
-        <div className="p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Invalid base id</CardTitle>
-            </CardHeader>
-          </Card>
-        </div>
-      </main>
-    );
-  }
-
-  const tables: TableItem[] = await api.table.getByBase({ baseId });
+  const [tables, bases, rows]: [TableItem[], BaseItem[], TableRow[]] = await Promise.all([
+    api.table.getByBase({ baseId }),
+    api.base.getAll(),
+    api.table.getAllRows({ tableId }),
+  ]);
+  const currentBaseName = bases.find((base) => base.id === baseId)?.name ?? "Unknown base";
+  const currentTableName = tables.find((table) => table.id === tableId)?.name ?? "Unknown table";
   const firstTableId = tables[0]?.id;
 
   if (tables.length > 0) {
@@ -74,10 +69,13 @@ export default async function BaseTablePage({ params }: BaseTablePageProps) {
       <section className="flex-1 p-6">
         <Card>
           <CardHeader>
-            <CardTitle>Table placeholder</CardTitle>
+            <CardTitle>{currentTableName}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm">tableId: {tableId}</p>
+            <p className="text-sm">Base: {currentBaseName}</p>
+            <div className="mt-4">
+              <TableRowsGrid rows={rows} />
+            </div>
           </CardContent>
         </Card>
       </section>
