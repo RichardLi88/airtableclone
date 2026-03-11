@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist, JetBrains_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import Link from "next/link";
 
 import {
@@ -16,8 +16,6 @@ import {
 } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
-
-const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
 export const metadata: Metadata = {
   title: "Airtable Clone",
@@ -34,18 +32,18 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(geist.variable, "font-mono", jetbrainsMono.variable)}>
+    <html lang="en" className={cn(geist.variable)}>
       <body className="h-screen overflow-hidden">
         <TRPCReactProvider>
           <div className="h-full w-full overflow-hidden bg-background text-foreground">
             <header className="border-b">
-              <nav className="mx-auto flex h-14 w-full items-center px-4 md:px-6">
+              <nav className="mx-auto flex h-12 w-full items-center px-4 md:px-6">
                 <Link href="/" className="text-sm font-semibold tracking-tight">
                   airtable clone
                 </Link>
               </nav>
             </header>
-            <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden">
+            <div className="flex h-[calc(100vh-3rem)] overflow-hidden">
               <SidebarProvider>
                 <Sidebar>
                   <SidebarContent>

@@ -74,12 +74,12 @@ export function TableRowsGrid({ rows }: TableRowsGridProps) {
 
   return (
     <div className="h-full w-full overflow-auto rounded-md border">
-      <table className="w-full text-sm">
-        <thead className="bg-muted/50">
+      <table className="w-full text-[13px]">
+        <thead className="bg-muted/40">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id} className="border-b">
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-3 py-2 text-left font-medium">
+                <th key={header.id} className="px-3 py-2 text-left text-[12px] font-medium">
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -92,7 +92,7 @@ export function TableRowsGrid({ rows }: TableRowsGridProps) {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id} className="border-b last:border-b-0">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-3 py-2 align-top">
+                <td key={cell.id} className="px-3 py-2 align-top text-[13px]">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
