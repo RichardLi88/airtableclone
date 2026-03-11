@@ -73,7 +73,7 @@ export function TableRowsGrid({ rows }: TableRowsGridProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-md border">
+    <div className="h-full w-full overflow-auto rounded-md border">
       <table className="w-full text-sm">
         <thead className="bg-muted/50">
           {table.getHeaderGroups().map((headerGroup) => (

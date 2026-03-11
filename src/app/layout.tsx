@@ -35,9 +35,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={cn(geist.variable, "font-mono", jetbrainsMono.variable)}>
-      <body>
+      <body className="h-screen overflow-hidden">
         <TRPCReactProvider>
-          <div className="min-h-screen w-full bg-background text-foreground">
+          <div className="h-full w-full overflow-hidden bg-background text-foreground">
             <header className="border-b">
               <nav className="mx-auto flex h-14 w-full items-center px-4 md:px-6">
                 <Link href="/" className="text-sm font-semibold tracking-tight">
@@ -45,7 +45,7 @@ export default function RootLayout({
                 </Link>
               </nav>
             </header>
-            <div className="flex min-h-[calc(100vh-3.5rem)]">
+            <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden">
               <SidebarProvider>
                 <Sidebar>
                   <SidebarContent>
@@ -66,7 +66,7 @@ export default function RootLayout({
                     </SidebarMenu>
                   </SidebarContent>
                 </Sidebar>
-                <SidebarInset>{children}</SidebarInset>
+                <SidebarInset className="min-h-0 overflow-hidden">{children}</SidebarInset>
               </SidebarProvider>
             </div>
           </div>
