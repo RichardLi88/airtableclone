@@ -69,17 +69,20 @@ export function TableRowsGrid({ rows }: TableRowsGridProps) {
   });
 
   if (gridColumns.length === 0) {
-    return <p className="text-muted-foreground text-sm">No rows found for this table.</p>;
+    return <p className="text-muted-foreground p-6 text-sm">No rows found for this table.</p>;
   }
 
   return (
-    <div className="h-full w-full overflow-auto rounded-md border">
-      <table className="w-full text-[13px]">
-        <thead className="bg-muted/40">
+    <div className="h-full w-full overflow-auto">
+      <table className="w-full border-collapse text-[12px]">
+        <thead className="bg-[#f7f8fa]">
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="border-b">
+            <tr key={headerGroup.id} className="border-b border-[#dde2ea]">
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-3 py-2 text-left text-[12px] font-medium">
+                <th
+                  key={header.id}
+                  className="border-r border-[#e5e9f0] px-3 py-1.5 text-left text-[12px] font-medium text-[#323844] last:border-r-0"
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -90,9 +93,12 @@ export function TableRowsGrid({ rows }: TableRowsGridProps) {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="border-b last:border-b-0">
+            <tr key={row.id} className="border-b border-[#e3e7ee] last:border-b-0">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-3 py-2 align-top text-[13px]">
+                <td
+                  key={cell.id}
+                  className="border-r border-[#edf0f5] px-3 py-1.5 align-top text-[12px] text-[#414a59] last:border-r-0"
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

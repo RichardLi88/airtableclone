@@ -34,32 +34,38 @@ export default async function BaseTablePage({ params }: BaseTablePageProps) {
   }
 
   return (
-    <main className="flex h-full w-full overflow-hidden">
-      <aside className="w-72 shrink-0 overflow-y-auto border-r p-4">
-        <div className="mb-4">
-          <Button className="w-full" variant="outline">
-            Create new...
-          </Button>
+    <main className="flex h-full w-full overflow-hidden bg-[#f3f4f7]">
+      <aside className="flex w-72 shrink-0 border-r border-[#d9dde4] bg-[#eef1f5]">
+        <div className="flex w-10 flex-col items-center justify-between border-r border-[#d9dde4] py-3">
+          <span className="h-5 w-5 rounded-full border border-[#c3c9d3] bg-background" />
+          <span className="h-5 w-5 rounded-full border border-[#c3c9d3] bg-background" />
         </div>
+        <div className="min-w-0 flex-1 overflow-y-auto p-3">
+          <div className="mb-3">
+            <Button className="w-full justify-start rounded-lg border-[#cfd5de] bg-background" variant="outline">
+              Create new...
+            </Button>
+          </div>
 
-        <div className="space-y-1">
-          {tables.length === 0 ? (
-            <p className="text-muted-foreground px-2 py-1 text-sm">No tables found.</p>
-          ) : (
-            tables.map((table) => (
-              <Link
-                key={table.id}
-                href={`/${baseId}/${table.id}`}
-                aria-current={table.id === tableId ? "page" : undefined}
-                className={[
-                  "block rounded-md px-2 py-1 text-sm",
-                  table.id === tableId ? "bg-muted font-medium" : "hover:bg-muted",
-                ].join(" ")}
-              >
-                {table.name}
-              </Link>
-            ))
-          )}
+          <div className="space-y-1">
+            {tables.length === 0 ? (
+              <p className="text-muted-foreground px-2 py-1 text-sm">No tables found.</p>
+            ) : (
+              tables.map((table) => (
+                <Link
+                  key={table.id}
+                  href={`/${baseId}/${table.id}`}
+                  aria-current={table.id === tableId ? "page" : undefined}
+                  className={[
+                    "block rounded-md px-2 py-1.5 text-sm text-[#2f3540]",
+                    table.id === tableId ? "bg-[#dfe5ee] font-medium" : "hover:bg-[#e6ebf3]",
+                  ].join(" ")}
+                >
+                  {table.name}
+                </Link>
+              ))
+            )}
+          </div>
         </div>
       </aside>
 
