@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { TablePanel } from "~/components/TablePanel";
 import { TablePanelLoading } from "~/components/TablePanelLoading";
-import { Button } from "~/components/ui/button";
+import { TableTabsBar } from "~/components/TableTabsBar";
+import { TableWorkspaceChrome } from "~/components/TableWorkspaceChrome";
 import type { RouterOutputs } from "~/trpc/react";
 import { api } from "~/trpc/server";
 
@@ -13,17 +13,26 @@ type BaseTablePageProps = {
     baseId: string;
     tableId: string;
   }>;
+  searchParams: Promise<{
+    viewId?: string;
+  }>;
 };
 
 type TableItem = RouterOutputs["table"]["getByBase"][number];
+type ViewItem = RouterOutputs["view"]["getByTable"][number];
 
-export default async function BaseTablePage({ params }: BaseTablePageProps) {
-  const resolvedParams = await params;
+export default async function BaseTablePage({ params, searchParams }: BaseTablePageProps) {
+  const [resolvedParams, resolvedSearchParams] = await Promise.all([params, searchParams]);
   const baseId: TableItem["baseId"] = resolvedParams.baseId;
   const tableId: TableItem["id"] = resolvedParams.tableId;
+  const requestedViewId = resolvedSearchParams.viewId;
 
-  const tables: TableItem[] = await api.table.getByBase({ baseId });
+  const [tables, views]: [TableItem[], ViewItem[]] = await Promise.all([
+    api.table.getByBase({ baseId }),
+    api.view.getByTable({ tableId }),
+  ]);
   const firstTableId = tables[0]?.id;
+  const firstViewId = views[0]?.id;
 
   if (tables.length > 0) {
     const tableExistsInBase = tables.some((table) => table.id === tableId);
@@ -33,45 +42,23 @@ export default async function BaseTablePage({ params }: BaseTablePageProps) {
     }
   }
 
+  const currentViewId = requestedViewId ?? firstViewId;
+  const currentViewName = views.find((view) => view.id === currentViewId)?.name ?? "Grid view";
+
   return (
-    <main className="flex h-full w-full overflow-hidden bg-[#f3f4f7]">
-      <aside className="flex w-72 shrink-0 border-r border-[#d9dde4] bg-[#eef1f5]">
-        <div className="flex w-10 flex-col items-center justify-between border-r border-[#d9dde4] py-3">
-          <span className="h-5 w-5 rounded-full border border-[#c3c9d3] bg-background" />
-          <span className="h-5 w-5 rounded-full border border-[#c3c9d3] bg-background" />
-        </div>
-        <div className="min-w-0 flex-1 overflow-y-auto p-3">
-          <div className="mb-3">
-            <Button className="w-full justify-start rounded-lg border-[#cfd5de] bg-background" variant="outline">
-              Create new...
-            </Button>
-          </div>
-
-          <div className="space-y-1">
-            {tables.length === 0 ? (
-              <p className="text-muted-foreground px-2 py-1 text-sm">No tables found.</p>
-            ) : (
-              tables.map((table) => (
-                <Link
-                  key={table.id}
-                  href={`/${baseId}/${table.id}`}
-                  aria-current={table.id === tableId ? "page" : undefined}
-                  className={[
-                    "block rounded-md px-2 py-1.5 text-sm text-[#2f3540]",
-                    table.id === tableId ? "bg-[#dfe5ee] font-medium" : "hover:bg-[#e6ebf3]",
-                  ].join(" ")}
-                >
-                  {table.name}
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-      </aside>
-
-      <Suspense key={tableId} fallback={<TablePanelLoading />}>
-        <TablePanel tableId={tableId} />
-      </Suspense>
+    <main className="flex h-full w-full flex-col overflow-hidden bg-[#f3f4f7]">
+      <TableTabsBar baseId={baseId} tables={tables} currentTableId={tableId} />
+      <TableWorkspaceChrome
+        baseId={baseId}
+        tableId={tableId}
+        views={views}
+        currentViewId={currentViewId}
+        currentViewName={currentViewName}
+      >
+        <Suspense key={tableId} fallback={<TablePanelLoading />}>
+          <TablePanel tableId={tableId} />
+        </Suspense>
+      </TableWorkspaceChrome>
     </main>
   );
 }

@@ -29,6 +29,7 @@ const uuidSchema = z.string().uuid();
 export const BaseModelSchema = z.object({
   id: uuidSchema,
   name: z.string(),
+  lastOpened: z.date().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

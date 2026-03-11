@@ -45,6 +45,7 @@ enum ViewSortDirection {
 model Base {
     id        String   @id @default(uuid()) @db.Uuid
     name      String
+    lastOpened DateTime?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     tables    Table[]
