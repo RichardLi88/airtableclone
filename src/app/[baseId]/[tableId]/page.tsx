@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-import { TableRowsGrid } from "~/components/TableRowsGrid";
+import { TablePanel } from "~/components/TablePanel";
+import { TablePanelLoading } from "~/components/TablePanelLoading";
 import { Button } from "~/components/ui/button";
 import type { RouterOutputs } from "~/trpc/react";
 import { api } from "~/trpc/server";
@@ -14,17 +16,13 @@ type BaseTablePageProps = {
 };
 
 type TableItem = RouterOutputs["table"]["getByBase"][number];
-type TableRow = RouterOutputs["table"]["getAllRows"][number];
 
 export default async function BaseTablePage({ params }: BaseTablePageProps) {
   const resolvedParams = await params;
   const baseId: TableItem["baseId"] = resolvedParams.baseId;
   const tableId: TableItem["id"] = resolvedParams.tableId;
 
-  const [tables, rows]: [TableItem[], TableRow[]] = await Promise.all([
-    api.table.getByBase({ baseId }),
-    api.table.getAllRows({ tableId }),
-  ]);
+  const tables: TableItem[] = await api.table.getByBase({ baseId });
   const firstTableId = tables[0]?.id;
 
   if (tables.length > 0) {
@@ -65,9 +63,9 @@ export default async function BaseTablePage({ params }: BaseTablePageProps) {
         </div>
       </aside>
 
-      <section className="flex min-h-0 flex-1 flex-col overflow-hidden p-6">
-        <TableRowsGrid rows={rows} />
-      </section>
+      <Suspense key={tableId} fallback={<TablePanelLoading />}>
+        <TablePanel tableId={tableId} />
+      </Suspense>
     </main>
   );
 }
