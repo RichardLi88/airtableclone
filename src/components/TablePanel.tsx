@@ -13,7 +13,7 @@ type TablePanelProps = {
 };
 type TableRow = RouterOutputs["view"]["getRowsPage"]["rows"][number];
 type TableCellColumn = TableRow["cells"][number]["column"];
-const ROWS_PAGE_LIMIT = 1000;
+const ROWS_PAGE_LIMIT = 800;
 
 export function TablePanel({ viewId, tableId }: TablePanelProps) {
   const utils = api.useUtils();
@@ -234,12 +234,6 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
               return;
             }
             void rowsQuery.fetchNextPage();
-          }}
-          onCancelLoadMore={() => {
-            if (!rowsQuery.isFetchingNextPage) {
-              return;
-            }
-            void utils.view.getRowsPage.cancel(rowsPageInput);
           }}
           onCellValueChange={handleCellValueChange}
           onAddColumnClick={() => setIsCreateColumnModalOpen(true)}

@@ -27,7 +27,8 @@ export function AirtableBaseNavBar({ baseId }: AirtableBaseNavBarProps) {
   const { data: bases } = api.base.getAll.useQuery(undefined, {
     staleTime: 30_000,
   });
-  const currentBaseName = bases?.find((base) => base.id === baseId)?.name ?? "Untitled Base";
+  const currentBaseName =
+    bases?.find((base) => base.id === baseId)?.name ?? "Untitled Base";
   const activeSection = pathname.split("/")[2];
 
   return (
@@ -42,16 +43,21 @@ export function AirtableBaseNavBar({ baseId }: AirtableBaseNavBarProps) {
         </Link>
         <button
           type="button"
-          className="inline-flex min-w-0 max-w-[480px] items-center gap-1 rounded px-1 py-0.5 text-[#1f2530] hover:bg-[#f2f4f8]"
+          className="inline-flex max-w-[480px] min-w-0 items-center gap-1 rounded px-1 py-0.5 text-[#1f2530] hover:bg-[#f2f4f8]"
           aria-label="Open base settings menu"
         >
-          <span className="truncate text-[14px] font-semibold">{currentBaseName}</span>
+          <span className="truncate text-[14px] font-semibold">
+            {currentBaseName}
+          </span>
           <CaretDown size={12} className="shrink-0 text-[#6b7485]" />
         </button>
       </div>
       <ul className="flex h-full items-stretch gap-5 px-1">
         {baseNavItems.map((item) => {
-          const isActive = item.label === "Data" ? activeSection === undefined : activeSection === item.label.toLowerCase();
+          const isActive =
+            item.label === "Data"
+              ? activeSection === undefined
+              : activeSection === item.label.toLowerCase();
 
           return (
             <li key={item.label} className="relative flex h-full items-center">
@@ -59,7 +65,9 @@ export function AirtableBaseNavBar({ baseId }: AirtableBaseNavBarProps) {
                 href={item.href(baseId)}
                 aria-current={isActive ? "page" : undefined}
                 className={`relative inline-flex h-full items-center text-[13px] font-semibold ${
-                  isActive ? "text-[#1f2530]" : "text-[#687386] hover:text-[#2f3746]"
+                  isActive
+                    ? "text-[#1f2530]"
+                    : "text-[#687386] hover:text-[#2f3746]"
                 }`}
               >
                 {item.label}

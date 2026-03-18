@@ -14,7 +14,6 @@ type TableRowsGridProps = {
   hasMore?: boolean;
   isFetchingMore?: boolean;
   onLoadMore?: () => void;
-  onCancelLoadMore?: () => void;
   onCellValueChange?: (rowId: string, columnId: string, value: string) => void;
   onAddColumnClick?: () => void;
   onAddRowClick?: () => void;
@@ -31,6 +30,8 @@ type GridColumn = {
   position: number;
   type: TableRow["cells"][number]["column"]["type"];
 };
+
+const LOAD_MORE_THRESHOLD_ROWS = 100;
 
 type EditableCellInputProps = {
   rowId: string;
@@ -118,7 +119,6 @@ export function TableRowsGrid({
   hasMore = false,
   isFetchingMore = false,
   onLoadMore,
-  onCancelLoadMore,
   onCellValueChange,
   onAddColumnClick,
   onAddRowClick,
@@ -191,25 +191,27 @@ export function TableRowsGrid({
     getScrollElement: () => parentRef.current,
     estimateSize: () => 31,
     overscan: 12,
+    useFlushSync: false,
     measureElement: (element) => element.getBoundingClientRect().height,
   });
   const virtualRows = rowVirtualizer.getVirtualItems();
 
   useEffect(() => {
-    const lastVirtualRow = virtualRows.at(-1);
-    if (!lastVirtualRow) {
-      return;
-    }
+    const lastVisibleRealRow = [...virtualRows]
+      .reverse()
+      .find((virtualRow) => virtualRow.index < tableRows.length);
+    const cursorRowIndex = lastVisibleRealRow?.index ?? -1;
+    const rowsRemaining = tableRows.length - 1 - cursorRowIndex;
+    const shouldLoadMore =
+      rowsRemaining <= LOAD_MORE_THRESHOLD_ROWS &&
+      hasMore &&
+      !isFetchingMore &&
+      !!onLoadMore;
 
-    const prefetchThreshold = 20;
-    const isNearEnd = lastVirtualRow.index >= tableRows.length - 1 - prefetchThreshold;
-    if (isNearEnd && hasMore && !isFetchingMore && onLoadMore) {
+    if (shouldLoadMore) {
       onLoadMore();
     }
-    if (!isNearEnd && isFetchingMore && onCancelLoadMore) {
-      onCancelLoadMore();
-    }
-  }, [hasMore, isFetchingMore, onCancelLoadMore, onLoadMore, tableRows.length, virtualRows]);
+  }, [hasMore, isFetchingMore, onLoadMore, tableRows.length, virtualRows]);
 
   if (gridColumns.length === 0) {
     return <p className="text-muted-foreground p-6 text-sm">No rows found for this table.</p>;
@@ -290,9 +292,6 @@ export function TableRowsGrid({
           </button>
         </div>
       </div>
-      {isFetchingMore ? (
-        <div className="border-t border-[#e3e7ee] px-3 py-2 text-[12px] text-[#5d6676]">Loading more rows...</div>
-      ) : null}
       <div className="flex h-8 border-t border-[#cfd6df] bg-[#eceff4]">
         <button
           type="button"

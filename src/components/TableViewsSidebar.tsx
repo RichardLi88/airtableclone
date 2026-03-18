@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { LuCog, LuCopy, LuEllipsis, LuGrid2X2, LuPencil, LuPlus, LuSearch, LuStar, LuTrash2 } from "react-icons/lu";
-
+import { AirtableIcon } from "~/components/AirtableIcon";
 import { Button } from "~/components/ui/button";
 import type { RouterOutputs } from "~/trpc/react";
 import { api } from "~/trpc/react";
@@ -115,13 +114,16 @@ export function TableViewsSidebar({
           onClick={() => setIsCreateViewModalOpen(true)}
           disabled={createView.isPending}
         >
-          <LuPlus className="mr-2 h-4 w-4" />
+          <AirtableIcon name="Plus" className="mr-2 h-4 w-4" />
           {createView.isPending ? "Creating view..." : "Create new..."}
         </Button>
 
         <div className="mt-2 flex items-center gap-1.5">
           <div className="relative flex-1">
-            <LuSearch className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7b8493]" />
+            <AirtableIcon
+              name="MagnifyingGlass"
+              className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7b8493]"
+            />
             <input
               type="text"
               value={searchQuery}
@@ -136,7 +138,7 @@ export function TableViewsSidebar({
             aria-label="View list options"
             className="grid h-7 w-7 place-items-center rounded-md text-[#6d7788] hover:bg-[#eef2f7] hover:text-[#2f3540]"
           >
-            <LuCog className="h-4 w-4" />
+            <AirtableIcon name="Cog" className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -161,7 +163,8 @@ export function TableViewsSidebar({
                   aria-current={view.id === activeViewId ? "page" : undefined}
                   className="flex items-center px-2.5 py-2 pr-9 text-[13px] text-[#2f3540]"
                 >
-                  <LuGrid2X2
+                  <AirtableIcon
+                    name="GridFeature"
                     className={[
                       "mr-2 h-4 w-4 shrink-0",
                       view.id === activeViewId ? "text-[#166ee1]" : "text-[#7b8493]",
@@ -184,7 +187,7 @@ export function TableViewsSidebar({
                   }}
                   aria-label={`Open ${view.name} view menu`}
                 >
-                  <LuEllipsis className="h-4 w-4" />
+                  <AirtableIcon name="DotsThree" className="h-4 w-4" />
                 </button>
                 {openMenuViewId === view.id ? (
                   <div
@@ -198,7 +201,7 @@ export function TableViewsSidebar({
                         setOpenMenuViewId(null);
                       }}
                     >
-                      <LuStar className="mr-2 h-4 w-4" />
+                      <AirtableIcon name="Star" className="mr-2 h-4 w-4" />
                       <span>Add to 'My favorites'</span>
                     </button>
                     <div className="my-1 h-px bg-[#e4e7ec]" />
@@ -210,7 +213,7 @@ export function TableViewsSidebar({
                         setRenameValue(view.name);
                       }}
                     >
-                      <LuPencil className="mr-2 h-4 w-4" />
+                      <AirtableIcon name="Pencil" className="mr-2 h-4 w-4" />
                       <span>Rename view</span>
                     </button>
                     <button
@@ -219,7 +222,7 @@ export function TableViewsSidebar({
                       onClick={() => duplicateView.mutate({ viewId: view.id })}
                       disabled={duplicateView.isPending}
                     >
-                      <LuCopy className="mr-2 h-4 w-4" />
+                      <AirtableIcon name="Copy" className="mr-2 h-4 w-4" />
                       <span>Duplicate view</span>
                     </button>
                     <button
@@ -228,7 +231,7 @@ export function TableViewsSidebar({
                       onClick={() => deleteView.mutate({ viewId: view.id })}
                       disabled={!canDeleteView || deleteView.isPending}
                     >
-                      <LuTrash2 className="mr-2 h-4 w-4" />
+                      <AirtableIcon name="Trash" className="mr-2 h-4 w-4" />
                       <span>Delete view</span>
                     </button>
                   </div>

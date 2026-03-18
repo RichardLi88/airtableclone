@@ -93,7 +93,7 @@ export const ViewGetAllRowsOutputSchema = z.array(
 
 export const ViewGetRowsPageInputSchema = z.object({
   viewId: ViewModelSchema.shape.id,
-  limit: z.number().int().min(1).max(1000).default(200),
+  limit: z.number().int().min(1).max(5000).default(500),
   cursor: RowModelSchema.shape.id.optional(),
 });
 

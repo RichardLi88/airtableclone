@@ -1,25 +1,7 @@
 "use client";
 
-import debounce from "lodash/debounce";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  LuChevronDown,
-  LuCircleHelp,
-  LuEyeOff,
-  LuFilter,
-  LuGrid2X2,
-  LuGroup,
-  LuHash,
-  LuGripVertical,
-  LuMenu,
-  LuPalette,
-  LuPlus,
-  LuSearch,
-  LuType,
-  LuTrash2,
-  LuArrowUpDown,
-} from "react-icons/lu";
-
+import { AirtableIcon } from "~/components/AirtableIcon";
 import { TableFilterPanel } from "~/components/TableFilterPanel";
 import { TableViewsSidebar } from "~/components/TableViewsSidebar";
 import { Button } from "~/components/ui/button";
@@ -65,7 +47,7 @@ const numberSortDirectionOptions: Array<{ value: ViewSortInput["direction"]; lab
   { value: "asc", label: "0 -> 9" },
   { value: "desc", label: "9 -> 0" },
 ];
-const ROWS_PAGE_LIMIT = 1000;
+const ROWS_PAGE_LIMIT = 800;
 
 function getDefaultOperator(columnType: TableColumn["type"]): ViewFilterInput["operator"] {
   return columnType === "number" ? "greaterThan" : "contains";
@@ -253,13 +235,13 @@ function SortColumnPicker({ columns, value, onSelect }: SortColumnPickerProps) {
                 className="text-[#8a94a6] hover:text-[#6b7280]"
                 aria-label="Learn more about sorting"
               >
-                <LuCircleHelp className="h-3.5 w-3.5" />
+                <AirtableIcon name="Question" className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
           <div className="mb-2 border-t border-[#e4e7ec]" />
           <div className="mb-2 flex items-center rounded px-1.5 py-1">
-            <LuSearch className="h-3.5 w-3.5 text-[#8a94a6]" />
+            <AirtableIcon name="MagnifyingGlass" className="h-3.5 w-3.5 text-[#8a94a6]" />
             <input
               type="text"
               value={searchQuery}
@@ -281,9 +263,9 @@ function SortColumnPicker({ columns, value, onSelect }: SortColumnPickerProps) {
                 }}
               >
                 {column.type === "number" ? (
-                  <LuHash className="mr-2 h-3.5 w-3.5 text-[#8a94a6]" />
+                  <AirtableIcon name="HashStraight" className="mr-2 h-3.5 w-3.5 text-[#8a94a6]" />
                 ) : (
-                  <LuType className="mr-2 h-3.5 w-3.5 text-[#8a94a6]" />
+                  <AirtableIcon name="TextAa" className="mr-2 h-3.5 w-3.5 text-[#8a94a6]" />
                 )}
                 {column.name}
               </button>
@@ -337,11 +319,10 @@ export function TableWorkspaceChrome({
     onMutate: async (variables) => {
       await Promise.all([
         utils.view.getFilters.cancel({ viewId: variables.viewId }),
-        utils.view.getAllRows.cancel({ viewId: variables.viewId }),
+        utils.view.getRowsPage.cancel({ viewId: variables.viewId, limit: ROWS_PAGE_LIMIT }),
       ]);
 
       const previousFilters = utils.view.getFilters.getData({ viewId: variables.viewId });
-      const previousRows = utils.view.getAllRows.getData({ viewId: variables.viewId });
       utils.view.getFilters.setData(
         { viewId: variables.viewId },
         variables.filters.map((filter, index) => ({
@@ -354,28 +335,17 @@ export function TableWorkspaceChrome({
           position: index,
         })),
       );
-      utils.view.getAllRows.setData({ viewId: variables.viewId }, (currentRows) => {
-        if (!currentRows) {
-          return currentRows;
-        }
-        return applyFiltersToRows(currentRows, variables.filters, columnsById);
-      });
 
-      return { previousFilters, previousRows };
+      return { previousFilters };
     },
     onError: (_error, variables, context) => {
       if (context?.previousFilters) {
         utils.view.getFilters.setData({ viewId: variables.viewId }, context.previousFilters);
       }
-      if (!context?.previousRows) {
-        return;
-      }
-      utils.view.getAllRows.setData({ viewId: variables.viewId }, context.previousRows);
     },
     onSettled: async (_, __, variables) => {
       await Promise.all([
         utils.view.getFilters.invalidate({ viewId: variables.viewId }),
-        utils.view.getAllRows.invalidate({ viewId: variables.viewId }),
         utils.view.getRowsPage.invalidate({ viewId: variables.viewId, limit: ROWS_PAGE_LIMIT }),
       ]);
     },
@@ -624,26 +594,13 @@ export function TableWorkspaceChrome({
     [canUseViewFilters, currentViewId, setFiltersMutation, toPersistedFilters],
   );
 
-  const debouncedPersistFilters = useMemo(
-    () => debounce((candidateFilters: LocalViewFilterInput[]) => persistFilters(candidateFilters), 300),
-    [persistFilters],
-  );
-
   useEffect(() => {
-    debouncedPersistFilters(filters);
-  }, [debouncedPersistFilters, filters]);
-
-  useEffect(
-    () => () => {
-      debouncedPersistFilters.cancel();
-    },
-    [debouncedPersistFilters],
-  );
+    persistFilters(filters);
+  }, [filters, persistFilters]);
 
   const commitFiltersNow = useCallback(() => {
-    debouncedPersistFilters.cancel();
     persistFilters(filters);
-  }, [debouncedPersistFilters, filters, persistFilters]);
+  }, [filters, persistFilters]);
 
   const upsertFilter = (index: number, patch: Partial<ViewFilterInput>) => {
     setFilters((current) =>
@@ -676,15 +633,31 @@ export function TableWorkspaceChrome({
   };
 
   const removeFilter = (index: number) => {
-    if (index === 0) {
-      return;
-    }
+    setFilters((current) => {
+      if (current.length === 1) {
+        const onlyFilter = current[0];
+        if (!onlyFilter) {
+          return current;
+        }
+        return [
+          normalizeLocalFilter(
+            {
+              ...onlyFilter,
+              value: "",
+            },
+            0,
+          ),
+        ];
+      }
 
-    setFilters((current) =>
-      current
+      if (index === 0) {
+        return current;
+      }
+
+      return current
         .filter((_, candidateIndex) => candidateIndex !== index)
-        .map((filter, nextIndex) => normalizeLocalFilter(filter, nextIndex)),
-    );
+        .map((filter, nextIndex) => normalizeLocalFilter(filter, nextIndex));
+    });
   };
 
   const reorderFilters = (fromIndex: number, toIndex: number) => {
@@ -808,7 +781,14 @@ export function TableWorkspaceChrome({
             onClick={() => setIsSidebarCollapsed((value) => !value)}
             aria-label={isSidebarCollapsed ? "Expand views sidebar" : "Collapse views sidebar"}
           >
-            <LuMenu className="h-3.5 w-3.5" />
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M5.64775 2.22725C5.86742 2.44692 5.86742 2.80308 5.64775 3.02275L3.233 5.4375H10.125C10.4357 5.4375 10.6875 5.68934 10.6875 6C10.6875 6.31066 10.4357 6.5625 10.125 6.5625H3.233L5.64775 8.97725C5.86742 9.19692 5.86742 9.55308 5.64775 9.77275C5.42808 9.99242 5.07192 9.99242 4.85225 9.77275L1.47725 6.39775C1.37176 6.29226 1.3125 6.14918 1.3125 6C1.3125 5.85082 1.37176 5.70774 1.47725 5.60225L4.85225 2.22725C5.07192 2.00758 5.42808 2.00758 5.64775 2.22725Z"
+                fill="currentColor"
+              />
+            </svg>
           </Button>
           <h2 className="flex items-center">
             <Button
@@ -816,9 +796,9 @@ export function TableWorkspaceChrome({
               size="sm"
               className="inline-flex h-7 items-center rounded px-2 text-[13px] font-semibold text-[#2f3a4b] hover:bg-[#eef2f7]"
             >
-              <LuGrid2X2 className="h-3.5 w-3.5 text-[#166ee1]" />
+              <AirtableIcon name="GridFeature" className="h-3.5 w-3.5 text-[#166ee1]" />
               <span className="mx-1 max-w-[200px] truncate">{currentViewName}</span>
-              <LuChevronDown className="h-3 w-3 text-[#7b8698]" />
+              <AirtableIcon name="ChevronDown" className="h-3 w-3 text-[#7b8698]" />
             </Button>
           </h2>
         </div>
@@ -837,7 +817,7 @@ export function TableWorkspaceChrome({
             }}
             aria-label={hiddenColumnCount > 0 ? `${hiddenColumnCount} hidden fields` : "Hide fields"}
           >
-            <LuEyeOff className={toolbarIconClass} />
+            <AirtableIcon name="EyeSlash" className={toolbarIconClass} />
             {hiddenColumnCount > 0
               ? `${hiddenColumnCount} hidden field${hiddenColumnCount === 1 ? "" : "s"}`
               : "Hide fields"}
@@ -857,7 +837,7 @@ export function TableWorkspaceChrome({
                   className="text-[#8a94a6] hover:text-[#6b7280]"
                   aria-label="Learn more about hiding fields"
                 >
-                  <LuCircleHelp className="h-3.5 w-3.5" />
+                  <AirtableIcon name="Question" className="h-3.5 w-3.5" />
                 </button>
               </div>
               <div className="max-h-64 min-h-[100px] overflow-auto pr-1">
@@ -892,13 +872,13 @@ export function TableWorkspaceChrome({
                           <span className="h-2.5 w-2.5 rounded-full bg-white" />
                         </span>
                         {column.type === "number" ? (
-                          <LuHash className="mr-2 h-3.5 w-3.5 text-[#7b8493]" />
+                          <AirtableIcon name="HashStraight" className="mr-2 h-3.5 w-3.5 text-[#7b8493]" />
                         ) : (
-                          <LuType className="mr-2 h-3.5 w-3.5 text-[#7b8493]" />
+                          <AirtableIcon name="TextAa" className="mr-2 h-3.5 w-3.5 text-[#7b8493]" />
                         )}
                         <span className="truncate text-[12px] text-[#334155]">{column.name}</span>
                       </button>
-                      <LuGripVertical className="h-4 w-4 text-[#9aa3b2]" />
+                      <AirtableIcon name="DotsSixVertical" className="h-4 w-4 text-[#9aa3b2]" />
                     </div>
                   );
                 })}
@@ -951,7 +931,7 @@ export function TableWorkspaceChrome({
             }}
             aria-label={filterButtonLabel}
           >
-            <LuFilter className={toolbarIconClass} />
+            <AirtableIcon name="Filter" className={toolbarIconClass} />
             {filterButtonLabel}
           </Button>
           <TableFilterPanel
@@ -969,7 +949,7 @@ export function TableWorkspaceChrome({
             getDefaultValue={getDefaultValue}
           />
           <Button variant="ghost" size="sm" className={toolbarButtonClass}>
-            <LuGroup className={toolbarIconClass} />
+            <AirtableIcon name="Group" className={toolbarIconClass} />
             Group
           </Button>
           <Button
@@ -982,7 +962,7 @@ export function TableWorkspaceChrome({
               setIsSortPanelOpen((value) => !value);
             }}
           >
-            <LuArrowUpDown className={toolbarIconClass} />
+            <AirtableIcon name="ArrowsDownUp" className={toolbarIconClass} />
             Sort
           </Button>
           <Button
@@ -992,14 +972,14 @@ export function TableWorkspaceChrome({
             onClick={() => createBulkRowsMutation.mutate({ tableId, count: 100000 })}
             disabled={createBulkRowsMutation.isPending}
           >
-            <LuPlus className={toolbarIconClass} />
+            <AirtableIcon name="Plus" className={toolbarIconClass} />
             {createBulkRowsMutation.isPending ? "Adding 100,000..." : "Add 100,000 rows"}
           </Button>
           {isSortPanelOpen ? (
             <div className="absolute right-0 top-10 z-30 w-[760px] max-w-[calc(100vw-1rem)] rounded-md border border-[#d7dbe3] bg-white p-3 shadow-lg">
               <div className="mb-3 flex items-center gap-2">
                 <p className="text-[14px] font-medium text-[#374151]">Sort by</p>
-                <LuCircleHelp className="h-3.5 w-3.5 text-[#8a94a6]" />
+                <AirtableIcon name="Question" className="h-3.5 w-3.5 text-[#8a94a6]" />
               </div>
               <div className="mb-3 border-t border-[#e4e7ec]" />
               {visibleColumns.length === 0 ? (
@@ -1047,7 +1027,7 @@ export function TableWorkspaceChrome({
                           onClick={() => removeSort(index)}
                           aria-label="Delete sort condition"
                         >
-                          <LuTrash2 className="h-4 w-4" />
+                          <AirtableIcon name="Trash" className="h-4 w-4" />
                         </Button>
                       </div>
                     );
@@ -1062,7 +1042,7 @@ export function TableWorkspaceChrome({
                   onClick={addSort}
                   disabled={visibleColumns.length === 0}
                 >
-                  <LuPlus className="mr-1 h-4 w-4" />
+                  <AirtableIcon name="Plus" className="mr-1 h-4 w-4" />
                   Add another sort
                 </Button>
               </div>
@@ -1072,7 +1052,7 @@ export function TableWorkspaceChrome({
             </div>
           ) : null}
           <Button variant="ghost" size="sm" className={toolbarButtonClass}>
-            <LuPalette className={toolbarIconClass} />
+            <AirtableIcon name="Palette" className={toolbarIconClass} />
             Color
           </Button>
           <Button
@@ -1081,14 +1061,14 @@ export function TableWorkspaceChrome({
             className="inline-flex h-7 items-center rounded px-2 text-[#5a6474] hover:bg-[#eef2f7]"
             aria-label="Row height"
           >
-            <LuArrowUpDown className={toolbarIconClass} />
+            <AirtableIcon name="ArrowsInLineVertical" className={toolbarIconClass} />
           </Button>
           <Button
             variant="ghost"
             size="sm"
             className={toolbarButtonClass}
           >
-            <LuSearch className={toolbarIconClass} />
+            <AirtableIcon name="MagnifyingGlass" className={toolbarIconClass} />
             Share and sync
           </Button>
           <Button
@@ -1097,7 +1077,7 @@ export function TableWorkspaceChrome({
             className="inline-flex h-7 items-center rounded p-0 text-[#5a6474] hover:bg-[#eef2f7]"
             aria-label="Find in view"
           >
-            <LuSearch className={toolbarIconClass} />
+            <AirtableIcon name="MagnifyingGlass" className={toolbarIconClass} />
           </Button>
         </div>
       </div>

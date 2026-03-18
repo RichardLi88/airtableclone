@@ -83,6 +83,7 @@ type TableFilterPanelProps = {
 
 type SortableFilterConditionRowProps = {
   itemId: string;
+  totalFilters: number;
   index: number;
   filter: LocalViewFilterInput;
   filterColumn?: TableColumn;
@@ -97,6 +98,7 @@ type SortableFilterConditionRowProps = {
 
 function SortableFilterConditionRow({
   itemId,
+  totalFilters,
   index,
   filter,
   filterColumn,
@@ -114,6 +116,8 @@ function SortableFilterConditionRow({
   const operatorOptions =
     filterColumn?.type === "number" ? numberOperatorOptions : textOperatorOptions;
   const needsValue = filter.operator !== "isEmpty" && filter.operator !== "isNotEmpty";
+
+  const canDeleteThisFilter = totalFilters === 1 || index > 0;
 
   return (
     <div
@@ -193,7 +197,7 @@ function SortableFilterConditionRow({
         size="sm"
         className="h-10 rounded-none border-r border-[#d7dde8] px-0 text-[11px] text-[#64748b] hover:bg-[#f8fafc]"
         onClick={() => onRemoveFilter(index)}
-        disabled={index === 0}
+        disabled={!canDeleteThisFilter}
         aria-label="Delete filter condition"
       >
         <LuTrash2 className="h-4 w-4" />
@@ -272,6 +276,7 @@ export function TableFilterPanel({
                 <SortableFilterConditionRow
                   key={filter.localId}
                   itemId={filter.localId}
+                  totalFilters={filters.length}
                   index={index}
                   filter={filter}
                   filterColumn={columnsById.get(filter.columnId)}
