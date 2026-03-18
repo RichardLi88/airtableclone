@@ -6,6 +6,8 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
   TableCreateColumnInputSchema,
   TableCreateColumnOutputSchema,
+  TableDeleteColumnInputSchema,
+  TableDeleteColumnOutputSchema,
   TableGetColumnsInputSchema,
   TableGetColumnsOutputSchema,
   TableGetByBaseInputSchema,
@@ -16,8 +18,14 @@ import {
   TableCreateBulkRowsInputSchema,
   TableCreateBulkRowsOutputSchema,
   TableCreateOutputSchema,
+  TableDeleteRowInputSchema,
+  TableDeleteRowOutputSchema,
+  TableDuplicateRowInputSchema,
+  TableDuplicateRowOutputSchema,
   TableRenameInputSchema,
   TableRenameOutputSchema,
+  TableUpdateColumnInputSchema,
+  TableUpdateColumnOutputSchema,
   TableDeleteInputSchema,
   TableDeleteOutputSchema,
 } from "~/types/router";
@@ -74,6 +82,78 @@ export const tableRouter = createTRPCRouter({
             })),
           });
         }
+
+        return row;
+      });
+    }),
+  duplicateRow: publicProcedure
+    .input(TableDuplicateRowInputSchema)
+    .output(TableDuplicateRowOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.$transaction(async (tx) => {
+        const sourceRow = await tx.row.findUnique({
+          where: { id: input.rowId },
+          select: {
+            id: true,
+            tableId: true,
+          },
+        });
+
+        if (!sourceRow) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Row not found." });
+        }
+
+        const duplicatedRow = await tx.row.create({
+          data: { tableId: sourceRow.tableId },
+          select: {
+            id: true,
+            createdAt: true,
+            updatedAt: true,
+            tableId: true,
+          },
+        });
+
+        const sourceCells = await tx.cell.findMany({
+          where: { rowId: sourceRow.id },
+          select: {
+            columnId: true,
+            value: true,
+          },
+        });
+
+        if (sourceCells.length > 0) {
+          await tx.cell.createMany({
+            data: sourceCells.map((cell) => ({
+              rowId: duplicatedRow.id,
+              columnId: cell.columnId,
+              value: cell.value,
+            })),
+          });
+        }
+
+        return duplicatedRow;
+      });
+    }),
+  deleteRow: publicProcedure
+    .input(TableDeleteRowInputSchema)
+    .output(TableDeleteRowOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.$transaction(async (tx) => {
+        const row = await tx.row.findUnique({
+          where: { id: input.rowId },
+          select: {
+            id: true,
+            tableId: true,
+          },
+        });
+
+        if (!row) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Row not found." });
+        }
+
+        await tx.row.delete({
+          where: { id: row.id },
+        });
 
         return row;
       });
@@ -160,13 +240,26 @@ export const tableRouter = createTRPCRouter({
         const existingColumnCount = await tx.column.count({
           where: { tableId: input.tableId },
         });
+        const targetPosition = Math.max(0, Math.min(input.position ?? existingColumnCount, existingColumnCount));
+
+        if (targetPosition < existingColumnCount) {
+          await tx.column.updateMany({
+            where: {
+              tableId: input.tableId,
+              position: { gte: targetPosition },
+            },
+            data: {
+              position: { increment: 1 },
+            },
+          });
+        }
 
         const column = await tx.column.create({
           data: {
             tableId: input.tableId,
             name: input.name,
             type: input.type,
-            position: existingColumnCount,
+            position: targetPosition,
           },
           select: {
             id: true,
@@ -193,6 +286,80 @@ export const tableRouter = createTRPCRouter({
         }
 
         return column;
+      });
+    }),
+
+  updateColumn: publicProcedure
+    .input(TableUpdateColumnInputSchema)
+    .output(TableUpdateColumnOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const column = await ctx.db.column.findUnique({
+        where: { id: input.columnId },
+        select: { id: true },
+      });
+      if (!column) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Column not found." });
+      }
+
+      return await ctx.db.column.update({
+        where: { id: input.columnId },
+        data: {
+          name: input.name,
+          type: input.type,
+        },
+        select: {
+          id: true,
+          name: true,
+          type: true,
+          position: true,
+          tableId: true,
+        },
+      });
+    }),
+
+  deleteColumn: publicProcedure
+    .input(TableDeleteColumnInputSchema)
+    .output(TableDeleteColumnOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.$transaction(async (tx) => {
+        const column = await tx.column.findUnique({
+          where: { id: input.columnId },
+          select: { id: true, tableId: true, position: true },
+        });
+        if (!column) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Column not found." });
+        }
+
+        const columnCount = await tx.column.count({
+          where: { tableId: column.tableId },
+        });
+        if (columnCount <= 1) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Cannot delete the only field in a table.",
+          });
+        }
+
+        await tx.viewFilter.deleteMany({ where: { columnId: column.id } });
+        await tx.viewSort.deleteMany({ where: { columnId: column.id } });
+        await tx.viewColumnVisibility.deleteMany({ where: { columnId: column.id } });
+        await tx.cell.deleteMany({ where: { columnId: column.id } });
+        await tx.column.delete({ where: { id: column.id } });
+
+        await tx.column.updateMany({
+          where: {
+            tableId: column.tableId,
+            position: { gt: column.position },
+          },
+          data: {
+            position: { decrement: 1 },
+          },
+        });
+
+        return {
+          id: column.id,
+          tableId: column.tableId,
+        };
       });
     }),
 

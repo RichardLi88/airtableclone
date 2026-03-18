@@ -13,7 +13,7 @@ type TablePanelProps = {
 };
 type TableRow = RouterOutputs["view"]["getRowsPage"]["rows"][number];
 type TableCellColumn = TableRow["cells"][number]["column"];
-const ROWS_PAGE_LIMIT = 800;
+const ROWS_PAGE_LIMIT = 300;
 
 export function TablePanel({ viewId, tableId }: TablePanelProps) {
   const utils = api.useUtils();
@@ -23,7 +23,6 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
   const [newColumnType, setNewColumnType] = useState<RouterInputs["table"]["createColumn"]["type"]>("text");
   const rowsQuery = api.view.getRowsPage.useInfiniteQuery(rowsPageInput, {
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    maxPages: 10,
   });
   const rows = useMemo(
     () => rowsQuery.data?.pages.flatMap((page) => page.rows) ?? [],
@@ -31,6 +30,7 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
   );
   const isLoading = rowsQuery.isLoading;
   const columnsQuery = api.table.getColumns.useQuery({ tableId });
+  const viewColumnVisibilityQuery = api.view.getColumnVisibility.useQuery({ viewId });
   const inferredColumns = useMemo(() => {
     const deduped = new Map<string, TableCellColumn>();
     for (const row of rows ?? []) {
@@ -184,6 +184,80 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
       await utils.view.getRowsPage.invalidate(rowsPageInput);
     },
   });
+  const duplicateRow = api.table.duplicateRow.useMutation({
+    onSuccess: (duplicatedRow, input) => {
+      const sourceRowFromPage =
+        utils.view
+          .getRowsPage.getInfiniteData(rowsPageInput)
+          ?.pages.flatMap((page) => page.rows)
+          .find((row) => row.id === input.rowId) ?? null;
+
+      if (!sourceRowFromPage) {
+        void Promise.all([
+          utils.view.getRowsPage.invalidate(rowsPageInput),
+          utils.view.getAllRows.invalidate({ viewId }),
+        ]);
+        return;
+      }
+
+      const duplicatedRowWithCells = {
+        ...duplicatedRow,
+        cells: sourceRowFromPage.cells.map((cell) => ({
+          ...cell,
+          id: `cell-${duplicatedRow.id}-${cell.columnId}`,
+          rowId: duplicatedRow.id,
+        })),
+      };
+
+      utils.view.getRowsPage.setInfiniteData(rowsPageInput, (currentData) => {
+        if (!currentData) {
+          return currentData;
+        }
+
+        return {
+          ...currentData,
+          pages: currentData.pages.map((page) => {
+            const sourceRowIndex = page.rows.findIndex((row) => row.id === input.rowId);
+            if (sourceRowIndex < 0) {
+              return page;
+            }
+
+            const nextRows = [...page.rows];
+            nextRows.splice(sourceRowIndex + 1, 0, duplicatedRowWithCells);
+            return { ...page, rows: nextRows };
+          }),
+        };
+      });
+
+      utils.view.getAllRows.setData({ viewId }, (currentRows) => {
+        if (!currentRows) {
+          return currentRows;
+        }
+        const sourceRowIndex = currentRows.findIndex((row) => row.id === input.rowId);
+        if (sourceRowIndex < 0) {
+          return currentRows;
+        }
+
+        const nextRows = [...currentRows];
+        nextRows.splice(sourceRowIndex + 1, 0, duplicatedRowWithCells);
+        return nextRows;
+      });
+    },
+    onError: async () => {
+      await Promise.all([
+        utils.view.getRowsPage.invalidate(rowsPageInput),
+        utils.view.getAllRows.invalidate({ viewId }),
+      ]);
+    },
+  });
+  const deleteRow = api.table.deleteRow.useMutation({
+    onSettled: async () => {
+      await Promise.all([
+        utils.view.getRowsPage.invalidate(rowsPageInput),
+        utils.view.getAllRows.invalidate({ viewId }),
+      ]);
+    },
+  });
   const createColumn = api.table.createColumn.useMutation({
     onSuccess: () => {
       setIsCreateColumnModalOpen(false);
@@ -197,6 +271,122 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
       ]);
     },
   });
+  const updateColumn = api.table.updateColumn.useMutation({
+    onMutate: async (input) => {
+      await Promise.all([
+        utils.table.getColumns.cancel({ tableId }),
+        utils.view.getRowsPage.cancel(rowsPageInput),
+        utils.view.getAllRows.cancel({ viewId }),
+      ]);
+
+      const previousColumns = utils.table.getColumns.getData({ tableId });
+      const previousRowsPage = utils.view.getRowsPage.getInfiniteData(rowsPageInput);
+      const previousAllRows = utils.view.getAllRows.getData({ viewId });
+
+      utils.table.getColumns.setData({ tableId }, (currentColumns) => {
+        if (!currentColumns) {
+          return currentColumns;
+        }
+        return currentColumns.map((column) =>
+          column.id === input.columnId ? { ...column, name: input.name, type: input.type } : column,
+        );
+      });
+
+      utils.view.getRowsPage.setInfiniteData(rowsPageInput, (currentData) => {
+        if (!currentData) {
+          return currentData;
+        }
+        return {
+          ...currentData,
+          pages: currentData.pages.map((page) => ({
+            ...page,
+            rows: page.rows.map((row) => ({
+              ...row,
+              cells: row.cells.map((cell) =>
+                cell.columnId === input.columnId
+                  ? {
+                      ...cell,
+                      column: {
+                        ...cell.column,
+                        name: input.name,
+                        type: input.type,
+                      },
+                    }
+                  : cell,
+              ),
+            })),
+          })),
+        };
+      });
+
+      utils.view.getAllRows.setData({ viewId }, (currentRows) => {
+        if (!currentRows) {
+          return currentRows;
+        }
+        return currentRows.map((row) => ({
+          ...row,
+          cells: row.cells.map((cell) =>
+            cell.columnId === input.columnId
+              ? {
+                  ...cell,
+                  column: {
+                    ...cell.column,
+                    name: input.name,
+                    type: input.type,
+                  },
+                }
+              : cell,
+          ),
+        }));
+      });
+
+      return { previousColumns, previousRowsPage, previousAllRows };
+    },
+    onError: (_error, _input, context) => {
+      if (context?.previousColumns) {
+        utils.table.getColumns.setData({ tableId }, context.previousColumns);
+      }
+      if (context?.previousRowsPage) {
+        utils.view.getRowsPage.setInfiniteData(rowsPageInput, context.previousRowsPage);
+      }
+      if (context?.previousAllRows) {
+        utils.view.getAllRows.setData({ viewId }, context.previousAllRows);
+      }
+    },
+    onSettled: async () => {
+      await Promise.all([
+        utils.table.getColumns.invalidate({ tableId }),
+        utils.view.getRowsPage.invalidate(rowsPageInput),
+        utils.view.getAllRows.invalidate({ viewId }),
+      ]);
+    },
+  });
+  const deleteColumn = api.table.deleteColumn.useMutation({
+    onSettled: async () => {
+      await Promise.all([
+        utils.table.getColumns.invalidate({ tableId }),
+        utils.view.getRowsPage.invalidate(rowsPageInput),
+        utils.view.getColumnVisibility.invalidate({ viewId }),
+        utils.view.getAllRows.invalidate({ viewId }),
+      ]);
+    },
+  });
+  const setColumnVisibilityMutation = api.view.setColumnVisibility.useMutation({
+    onSettled: async () => {
+      await Promise.all([
+        utils.view.getColumnVisibility.invalidate({ viewId }),
+        utils.view.getRowsPage.invalidate(rowsPageInput),
+        utils.view.getAllRows.invalidate({ viewId }),
+      ]);
+    },
+  });
+  const columnVisibilityById = useMemo(() => {
+    const map = new Map<string, boolean>();
+    for (const entry of viewColumnVisibilityQuery.data ?? []) {
+      map.set(entry.columnId, entry.isVisible);
+    }
+    return map;
+  }, [viewColumnVisibilityQuery.data]);
   const handleCellValueChange = useCallback(
     (rowId: string, columnId: string, value: string) => {
       updateCell.mutate({ rowId, columnId, value });
@@ -217,6 +407,71 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
       type: newColumnType,
     });
   }, [createColumn, newColumnName, newColumnType, tableId]);
+  const persistColumnVisibility = useCallback(
+    (nextVisibilityByColumn: Map<string, boolean>) => {
+      const primaryColumnId = columns[0]?.id;
+      if (primaryColumnId) {
+        nextVisibilityByColumn.set(primaryColumnId, true);
+      }
+      const payload = columns.map((column) => ({
+        columnId: column.id,
+        isVisible: column.id === primaryColumnId ? true : nextVisibilityByColumn.get(column.id) !== false,
+      }));
+      setColumnVisibilityMutation.mutate({
+        viewId,
+        columnVisibility: payload,
+      });
+    },
+    [columns, setColumnVisibilityMutation, viewId],
+  );
+  const handleHideColumn = useCallback(
+    (columnId: string) => {
+      const primaryColumnId = columns[0]?.id;
+      if (columnId === primaryColumnId) {
+        return;
+      }
+      const visibleCount = columns.filter((column) => columnVisibilityById.get(column.id) !== false).length;
+      if (visibleCount <= 1) {
+        return;
+      }
+      const nextVisibility = new Map(columnVisibilityById);
+      nextVisibility.set(columnId, false);
+      persistColumnVisibility(nextVisibility);
+    },
+    [columnVisibilityById, columns, persistColumnVisibility],
+  );
+  const handleInsertColumnAt = useCallback(
+    (position: number) => {
+      const targetPosition = Math.max(0, Math.min(position, columns.length));
+      createColumn.mutate({
+        tableId,
+        name: `Field ${columns.length + 1}`,
+        type: "text",
+        position: targetPosition,
+      });
+    },
+    [columns.length, createColumn, tableId],
+  );
+  const handleInsertColumnLeft = useCallback(
+    (columnId: string) => {
+      const column = columns.find((candidate) => candidate.id === columnId);
+      if (!column) {
+        return;
+      }
+      handleInsertColumnAt(column.position);
+    },
+    [columns, handleInsertColumnAt],
+  );
+  const handleInsertColumnRight = useCallback(
+    (columnId: string) => {
+      const column = columns.find((candidate) => candidate.id === columnId);
+      if (!column) {
+        return;
+      }
+      handleInsertColumnAt(column.position + 1);
+    },
+    [columns, handleInsertColumnAt],
+  );
 
   if (isLoading) {
     return <TablePanelLoading />;
@@ -227,6 +482,7 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
       <div className="min-h-0 flex-1 overflow-hidden bg-background">
         <TableRowsGrid
           rows={rows}
+          columns={columns}
           hasMore={Boolean(rowsQuery.hasNextPage)}
           isFetchingMore={rowsQuery.isFetchingNextPage}
           onLoadMore={() => {
@@ -238,6 +494,29 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
           onCellValueChange={handleCellValueChange}
           onAddColumnClick={() => setIsCreateColumnModalOpen(true)}
           onAddRowClick={handleAddRow}
+          onEditColumn={(columnId, nextName) => {
+            const existingColumn = columns.find((column) => column.id === columnId);
+            if (!existingColumn) {
+              return;
+            }
+            updateColumn.mutate({
+              columnId,
+              name: nextName,
+              type: existingColumn.type,
+            });
+          }}
+          onInsertColumnLeft={handleInsertColumnLeft}
+          onInsertColumnRight={handleInsertColumnRight}
+          onHideColumn={handleHideColumn}
+          onDeleteColumn={(columnId) => {
+            deleteColumn.mutate({ columnId });
+          }}
+          onDuplicateRow={(rowId) => {
+            duplicateRow.mutate({ rowId });
+          }}
+          onDeleteRow={(rowId) => {
+            deleteRow.mutate({ rowId });
+          }}
         />
       </div>
       {isCreateColumnModalOpen ? (
@@ -292,6 +571,31 @@ export function TablePanel({ viewId, tableId }: TablePanelProps) {
               </button>
             </div>
           </div>
+        </div>
+      ) : null}
+      {updateColumn.error ? (
+        <div className="border-t border-[#f3d7d7] bg-[#fff7f7] px-3 py-1.5 text-[11px] text-red-700">
+          {updateColumn.error.message}
+        </div>
+      ) : null}
+      {deleteColumn.error ? (
+        <div className="border-t border-[#f3d7d7] bg-[#fff7f7] px-3 py-1.5 text-[11px] text-red-700">
+          {deleteColumn.error.message}
+        </div>
+      ) : null}
+      {setColumnVisibilityMutation.error ? (
+        <div className="border-t border-[#f3d7d7] bg-[#fff7f7] px-3 py-1.5 text-[11px] text-red-700">
+          {setColumnVisibilityMutation.error.message}
+        </div>
+      ) : null}
+      {duplicateRow.error ? (
+        <div className="border-t border-[#f3d7d7] bg-[#fff7f7] px-3 py-1.5 text-[11px] text-red-700">
+          {duplicateRow.error.message}
+        </div>
+      ) : null}
+      {deleteRow.error ? (
+        <div className="border-t border-[#f3d7d7] bg-[#fff7f7] px-3 py-1.5 text-[11px] text-red-700">
+          {deleteRow.error.message}
         </div>
       ) : null}
     </section>

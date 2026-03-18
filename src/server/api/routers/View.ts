@@ -48,6 +48,16 @@ type ViewDefinition = {
       type: "text" | "number";
     };
   }>;
+  sorts: Array<{
+    id: string;
+    columnId: string;
+    direction: "asc" | "desc";
+    position: number;
+    column: {
+      id: string;
+      type: "text" | "number";
+    };
+  }>;
   columnVisibilities: Array<{
     id: string;
     columnId: string;
@@ -94,6 +104,21 @@ async function getViewDefinition(ctx: TRPCContext, viewId: string): Promise<View
           conjunction: true,
           operator: true,
           value: true,
+          position: true,
+          column: {
+            select: {
+              id: true,
+              type: true,
+            },
+          },
+        },
+      },
+      sorts: {
+        orderBy: [{ position: "asc" }, { id: "asc" }],
+        select: {
+          id: true,
+          columnId: true,
+          direction: true,
           position: true,
           column: {
             select: {
@@ -267,8 +292,92 @@ function buildFiltersWhereClause(view: ViewDefinition): Prisma.RowWhereInput | u
   return filtersWhereClause;
 }
 
-async function getRowsForView(ctx: TRPCContext, viewId: string) {
-  const view = await getViewDefinition(ctx, viewId);
+function toComparableValue(
+  value: string | null | undefined,
+  type: "text" | "number",
+): string | number | null {
+  const normalized = value?.trim() ?? "";
+  if (normalized.length === 0) {
+    return null;
+  }
+
+  if (type === "number") {
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return normalized.toLowerCase();
+}
+
+function compareRowsBySorts(
+  left: Prisma.RowGetPayload<{ select: typeof rowSelect }>,
+  right: Prisma.RowGetPayload<{ select: typeof rowSelect }>,
+  sorts: ViewDefinition["sorts"],
+): number {
+  for (const sort of sorts) {
+    const leftValue = toComparableValue(
+      left.cells.find((cell) => cell.columnId === sort.columnId)?.value,
+      sort.column.type,
+    );
+    const rightValue = toComparableValue(
+      right.cells.find((cell) => cell.columnId === sort.columnId)?.value,
+      sort.column.type,
+    );
+
+    if (leftValue === null && rightValue !== null) {
+      return 1;
+    }
+    if (leftValue !== null && rightValue === null) {
+      return -1;
+    }
+    if (leftValue === null && rightValue === null) {
+      continue;
+    }
+
+    const comparison =
+      sort.column.type === "number"
+        ? (leftValue as number) - (rightValue as number)
+        : String(leftValue).localeCompare(String(rightValue));
+
+    if (comparison !== 0) {
+      return sort.direction === "asc" ? comparison : -comparison;
+    }
+  }
+
+  return left.id.localeCompare(right.id);
+}
+
+function applyViewSorts(
+  rows: Prisma.RowGetPayload<{ select: typeof rowSelect }>[],
+  view: ViewDefinition,
+): Prisma.RowGetPayload<{ select: typeof rowSelect }>[] {
+  if (view.sorts.length === 0) {
+    return [...rows].sort((left, right) => left.id.localeCompare(right.id));
+  }
+
+  return [...rows].sort((left, right) => compareRowsBySorts(left, right, view.sorts));
+}
+
+function applyColumnVisibility(
+  rows: Prisma.RowGetPayload<{ select: typeof rowSelect }>[],
+  visibleColumnIds: Set<string>,
+) {
+  return rows.map((row) => ({
+    ...row,
+    cells: row.cells.filter((cell) => visibleColumnIds.has(cell.columnId)),
+  }));
+}
+
+async function getRowsForView(
+  ctx: TRPCContext,
+  input: {
+    viewId: string;
+    limit?: number;
+    cursor?: string;
+  },
+) {
+  const view = await getViewDefinition(ctx, input.viewId);
+  const pageSize = input.limit ?? (input.cursor ? 500 : undefined);
   const filtersWhereClause = buildFiltersWhereClause(view);
   const tableColumns = await ctx.db.column.findMany({
     where: { tableId: view.tableId },
@@ -282,23 +391,24 @@ async function getRowsForView(ctx: TRPCContext, viewId: string) {
     visibleColumnIds = [tableColumns[0]!.id];
   }
 
-  return await ctx.db.row.findMany({
+  const rows = await ctx.db.row.findMany({
     where: {
       tableId: view.tableId,
       ...(filtersWhereClause ? { AND: [filtersWhereClause] } : {}),
     },
-    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+    orderBy: [{ id: "asc" }],
     select: {
       ...rowSelect,
-      cells: {
-        orderBy: [{ column: { position: "asc" } }, { id: "asc" }],
-        where: {
-          ...(visibleColumnIds.length > 0 ? { columnId: { in: visibleColumnIds } } : { id: "__no_visible_cells__" }),
-        },
-        select: rowSelect.cells.select,
-      },
     },
   });
+
+  const visibleColumnIdSet = new Set(visibleColumnIds);
+  const sortedRows = applyViewSorts(rows, view);
+  const cursorIndex = input.cursor ? sortedRows.findIndex((row) => row.id === input.cursor) : -1;
+  const startIndex = cursorIndex >= 0 ? cursorIndex + 1 : 0;
+  const pagedRows = pageSize ? sortedRows.slice(startIndex, startIndex + pageSize) : sortedRows.slice(startIndex);
+
+  return applyColumnVisibility(pagedRows, visibleColumnIdSet);
 }
 
 async function getRowsPageForView(
@@ -329,31 +439,21 @@ async function getRowsPageForView(
       ...(filtersWhereClause ? { AND: [filtersWhereClause] } : {}),
     },
     orderBy: [{ id: "asc" }],
-    take: input.limit + 1,
-    ...(input.cursor
-      ? {
-          cursor: { id: input.cursor },
-          skip: 1,
-        }
-      : {}),
     select: {
       ...rowSelect,
-      cells: {
-        orderBy: [{ column: { position: "asc" } }, { id: "asc" }],
-        where: {
-          ...(visibleColumnIds.length > 0 ? { columnId: { in: visibleColumnIds } } : { id: "__no_visible_cells__" }),
-        },
-        select: rowSelect.cells.select,
-      },
     },
   });
 
-  const hasMore = rows.length > input.limit;
-  const pagedRows = hasMore ? rows.slice(0, input.limit) : rows;
+  const visibleColumnIdSet = new Set(visibleColumnIds);
+  const sortedRows = applyViewSorts(rows, view);
+  const cursorIndex = input.cursor ? sortedRows.findIndex((row) => row.id === input.cursor) : -1;
+  const startIndex = cursorIndex >= 0 ? cursorIndex + 1 : 0;
+  const pagedRows = sortedRows.slice(startIndex, startIndex + input.limit);
+  const hasMore = startIndex + input.limit < sortedRows.length;
   const nextCursor = hasMore ? pagedRows[pagedRows.length - 1]?.id ?? null : null;
 
   return {
-    rows: pagedRows,
+    rows: applyColumnVisibility(pagedRows, visibleColumnIdSet),
     nextCursor,
   };
 }
@@ -588,7 +688,7 @@ export const viewRouter = createTRPCRouter({
   getAllRows: publicProcedure
     .input(ViewGetAllRowsInputSchema)
     .output(ViewGetAllRowsOutputSchema)
-    .query(async ({ ctx, input }) => getRowsForView(ctx, input.viewId)),
+    .query(async ({ ctx, input }) => getRowsForView(ctx, input)),
 
   getRowsPage: publicProcedure
     .input(ViewGetRowsPageInputSchema)
@@ -875,6 +975,12 @@ export const viewRouter = createTRPCRouter({
         }
 
         const uniqueColumnIds = [...new Set(input.sorts.map((sort) => sort.columnId))];
+        if (uniqueColumnIds.length !== input.sorts.length) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Each column can only be sorted once.",
+          });
+        }
         const columns = uniqueColumnIds.length
           ? await tx.column.findMany({
               where: {

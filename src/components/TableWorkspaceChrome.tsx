@@ -10,7 +10,6 @@ import type { RouterInputs, RouterOutputs } from "~/trpc/react";
 
 type ViewItem = RouterOutputs["view"]["getByTable"][number];
 type TableColumn = RouterOutputs["table"]["getColumns"][number];
-type ViewRow = RouterOutputs["view"]["getAllRows"][number];
 type ViewFilterInput = RouterInputs["view"]["setFilters"]["filters"][number];
 type ViewSortInput = RouterInputs["view"]["setSorts"]["sorts"][number];
 type ViewColumnVisibilityInput = RouterInputs["view"]["setColumnVisibility"]["columnVisibility"][number];
@@ -47,7 +46,7 @@ const numberSortDirectionOptions: Array<{ value: ViewSortInput["direction"]; lab
   { value: "asc", label: "0 -> 9" },
   { value: "desc", label: "9 -> 0" },
 ];
-const ROWS_PAGE_LIMIT = 800;
+const ROWS_PAGE_LIMIT = 300;
 
 function getDefaultOperator(columnType: TableColumn["type"]): ViewFilterInput["operator"] {
   return columnType === "number" ? "greaterThan" : "contains";
@@ -99,88 +98,6 @@ function isFilterComplete(filter: ViewFilterInput): boolean {
   return (filter.value ?? "").trim().length > 0;
 }
 
-function getRowCellValue(row: ViewRow, columnId: string): string | null {
-  const cell = row.cells.find((candidateCell) => candidateCell.columnId === columnId);
-  return cell?.value ?? null;
-}
-
-function getRowColumnType(
-  row: ViewRow,
-  columnId: string,
-  columnsById: Map<string, TableColumn>,
-): TableColumn["type"] | undefined {
-  const rowColumnType = row.cells.find((cell) => cell.columnId === columnId)?.column.type;
-  return rowColumnType ?? columnsById.get(columnId)?.type;
-}
-
-function matchesSingleFilter(
-  row: ViewRow,
-  filter: ViewFilterInput,
-  columnsById: Map<string, TableColumn>,
-): boolean {
-  const columnType = getRowColumnType(row, filter.columnId, columnsById);
-  const rawValue = getRowCellValue(row, filter.columnId);
-  const cellValue = rawValue ?? "";
-  const normalizedFilterValue = filter.value?.trim() ?? "";
-
-  if (columnType === "number") {
-    const numericFilterValue = Number(normalizedFilterValue);
-    if (!Number.isFinite(numericFilterValue)) {
-      return false;
-    }
-
-    const numericCellValue = Number(cellValue);
-    if (!Number.isFinite(numericCellValue)) {
-      return false;
-    }
-
-    if (filter.operator === "greaterThan") {
-      return numericCellValue > numericFilterValue;
-    }
-    if (filter.operator === "lessThan") {
-      return numericCellValue < numericFilterValue;
-    }
-  }
-
-  const lowerCellValue = cellValue.toLowerCase();
-  const lowerFilterValue = normalizedFilterValue.toLowerCase();
-
-  switch (filter.operator) {
-    case "equals":
-      return lowerCellValue === lowerFilterValue;
-    case "contains":
-      return lowerCellValue.includes(lowerFilterValue);
-    case "notContains":
-      return rawValue === null || !lowerCellValue.includes(lowerFilterValue);
-    case "isEmpty":
-      return rawValue === null || cellValue === "";
-    case "isNotEmpty":
-      return rawValue !== null && cellValue !== "";
-    default:
-      return false;
-  }
-}
-
-function applyFiltersToRows(
-  rows: ViewRow[],
-  filters: ViewFilterInput[],
-  columnsById: Map<string, TableColumn>,
-): ViewRow[] {
-  if (filters.length === 0) {
-    return rows;
-  }
-
-  return rows.filter((row) => {
-    let matches = matchesSingleFilter(row, filters[0]!, columnsById);
-    for (let index = 1; index < filters.length; index += 1) {
-      const filter = filters[index]!;
-      const nextMatch = matchesSingleFilter(row, filter, columnsById);
-      matches = filter.conjunction === "or" ? matches || nextMatch : matches && nextMatch;
-    }
-    return matches;
-  });
-}
-
 type SortColumnPickerProps = {
   columns: TableColumn[];
   value: string;
@@ -220,16 +137,16 @@ function SortColumnPicker({ columns, value, onSelect }: SortColumnPickerProps) {
     <div ref={panelRef} className="relative">
       <button
         type="button"
-        className="flex h-12 w-full items-center rounded border border-[#d0d5de] bg-background px-3 text-left text-[12px] text-[#334155]"
+        className="flex h-8 w-full items-center rounded border border-[#d0d5de] bg-background px-2 text-left text-[11px] text-[#334155]"
         onClick={() => setIsOpen((current) => !current)}
       >
         {selectedColumnName}
       </button>
       {isOpen ? (
-        <div className="absolute left-0 top-12 z-40 mt-1 w-[300px] rounded-md border border-[#d7dbe3] bg-white p-3 shadow-lg">
+        <div className="absolute left-0 top-8 z-40 mt-1 w-[260px] rounded-md border border-[#d7dbe3] bg-white p-2 shadow-lg">
           <div className="mb-2 flex items-center justify-between px-1">
             <div className="flex items-center gap-1.5">
-              <p className="text-[13px] font-semibold text-[#4b5563]">Sort by</p>
+              <p className="text-[12px] font-semibold text-[#4b5563]">Sort by</p>
               <button
                 type="button"
                 className="text-[#8a94a6] hover:text-[#6b7280]"
@@ -240,14 +157,14 @@ function SortColumnPicker({ columns, value, onSelect }: SortColumnPickerProps) {
             </div>
           </div>
           <div className="mb-2 border-t border-[#e4e7ec]" />
-          <div className="mb-2 flex items-center rounded px-1.5 py-1">
+          <div className="mb-2 flex items-center rounded px-1.5 py-0.5">
             <AirtableIcon name="MagnifyingGlass" className="h-3.5 w-3.5 text-[#8a94a6]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Find a field"
-              className="h-7 w-full border-none bg-transparent px-2 text-[12px] text-[#334155] outline-none"
+              className="h-5 w-full border-none bg-transparent px-2 text-[11px] text-[#334155] outline-none"
             />
           </div>
           <div className="max-h-56 min-h-[100px] overflow-auto">
@@ -255,7 +172,7 @@ function SortColumnPicker({ columns, value, onSelect }: SortColumnPickerProps) {
               <button
                 key={column.id}
                 type="button"
-                className="flex w-full items-center rounded px-2 py-1.5 text-left text-[12px] text-[#334155] hover:bg-[#eef2f7]"
+                className="flex w-full items-center rounded px-2 py-1 text-left text-[11px] text-[#334155] hover:bg-[#eef2f7]"
                 onClick={() => {
                   onSelect(column.id);
                   setIsOpen(false);
@@ -294,6 +211,8 @@ export function TableWorkspaceChrome({
   const [isSortPanelOpen, setIsSortPanelOpen] = useState(false);
   const [isHideFieldsPanelOpen, setIsHideFieldsPanelOpen] = useState(false);
   const [hideFieldsSearchQuery, setHideFieldsSearchQuery] = useState("");
+  const [sortSearchQuery, setSortSearchQuery] = useState("");
+  const [isAddSortPickerOpen, setIsAddSortPickerOpen] = useState(false);
   const [filters, setFilters] = useState<LocalViewFilterInput[]>([]);
   const [sorts, setSorts] = useState<ViewSortInput[]>([]);
   const canUseViewFilters = Boolean(currentViewId);
@@ -301,6 +220,7 @@ export function TableWorkspaceChrome({
   const lastSavedSortsRef = useRef("[]");
   const filterIdCounterRef = useRef(0);
   const hydratedFiltersViewIdRef = useRef<string | null>(null);
+  const addSortPickerRef = useRef<HTMLDivElement>(null);
   const columnsQuery = api.table.getColumns.useQuery({ tableId });
   const supportedColumns = useMemo(
     () =>
@@ -421,9 +341,21 @@ export function TableWorkspaceChrome({
     },
   });
   const setSortsMutation = api.view.setSorts.useMutation({
+    onMutate: async (variables) => {
+      await Promise.all([
+        utils.view.getRowsPage.cancel({ viewId: variables.viewId, limit: ROWS_PAGE_LIMIT }),
+        utils.view.getAllRows.cancel({ viewId: variables.viewId }),
+      ]);
+
+      // Sorting changes invalidate existing cursors/page params, so clear cached rows first.
+      utils.view.getRowsPage.setInfiniteData(
+        { viewId: variables.viewId, limit: ROWS_PAGE_LIMIT },
+        () => undefined,
+      );
+      utils.view.getAllRows.setData({ viewId: variables.viewId }, () => undefined);
+    },
     onSettled: async (_, __, variables) => {
       await Promise.all([
-        utils.table.getColumns.invalidate({ tableId }),
         utils.view.getSorts.invalidate({ viewId: variables.viewId }),
         utils.view.getAllRows.invalidate({ viewId: variables.viewId }),
         utils.view.getRowsPage.invalidate({ viewId: variables.viewId, limit: ROWS_PAGE_LIMIT }),
@@ -698,6 +630,8 @@ export function TableWorkspaceChrome({
       : appliedFilterColumnNames.length === 1
         ? `Filtered by ${appliedFilterColumnNames[0]}`
         : `Filtered by ${appliedFilterColumnNames.join(", ")}`;
+  const sortCount = sorts.length;
+  const sortButtonLabel = sortCount > 0 ? `${sortCount} sort${sortCount === 1 ? "" : "s"}` : "Sort";
 
   const createDefaultSort = useCallback((column: TableColumn, index = 0): ViewSortInput => {
     return {
@@ -717,15 +651,9 @@ export function TableWorkspaceChrome({
       direction: sort.direction,
       position: index,
     }));
-    const nextSorts =
-      hydratedSorts.length > 0
-        ? hydratedSorts
-        : supportedColumns.length > 0
-          ? [createDefaultSort(supportedColumns[0]!)]
-          : [];
-    lastSavedSortsRef.current = JSON.stringify(nextSorts);
-    setSorts(nextSorts);
-  }, [canUseViewFilters, createDefaultSort, supportedColumns, viewSortsQuery.data]);
+    lastSavedSortsRef.current = JSON.stringify(hydratedSorts);
+    setSorts(hydratedSorts);
+  }, [canUseViewFilters, viewSortsQuery.data]);
 
   useEffect(() => {
     if (!canUseViewFilters || !currentViewId) {
@@ -763,12 +691,68 @@ export function TableWorkspaceChrome({
   };
 
   const removeSort = (index: number) => {
+    setIsAddSortPickerOpen(false);
     setSorts((current) =>
       current
         .filter((_, candidateIndex) => candidateIndex !== index)
         .map((sort, nextIndex) => ({ ...sort, position: nextIndex })),
     );
   };
+  const appendSortForColumn = useCallback(
+    (column: TableColumn) => {
+      setSorts((current) => [...current, createDefaultSort(column, current.length)]);
+      setSortSearchQuery("");
+      setIsAddSortPickerOpen(false);
+    },
+    [createDefaultSort],
+  );
+  const openAddSortPicker = useCallback(() => {
+    if (visibleColumns.length === 0 || sorts.length >= visibleColumns.length) {
+      return;
+    }
+    setSortSearchQuery("");
+    setIsAddSortPickerOpen(true);
+  }, [sorts.length, visibleColumns.length]);
+  const filteredSortableColumns = useMemo(() => {
+    const normalizedQuery = sortSearchQuery.trim().toLowerCase();
+    if (!normalizedQuery) {
+      return visibleColumns;
+    }
+    return visibleColumns.filter((column) => column.name.toLowerCase().includes(normalizedQuery));
+  }, [sortSearchQuery, visibleColumns]);
+  const availableColumnsForNewSort = useMemo(() => {
+    const usedColumnIds = new Set(sorts.map((sort) => sort.columnId));
+    return visibleColumns.filter((column) => !usedColumnIds.has(column.id));
+  }, [sorts, visibleColumns]);
+  const filteredAvailableColumnsForNewSort = useMemo(() => {
+    const normalizedQuery = sortSearchQuery.trim().toLowerCase();
+    if (!normalizedQuery) {
+      return availableColumnsForNewSort;
+    }
+    return availableColumnsForNewSort.filter((column) =>
+      column.name.toLowerCase().includes(normalizedQuery),
+    );
+  }, [availableColumnsForNewSort, sortSearchQuery]);
+  useEffect(() => {
+    const onMouseDown = (event: MouseEvent) => {
+      if (!isAddSortPickerOpen || !addSortPickerRef.current) {
+        return;
+      }
+      if (event.target instanceof Node && !addSortPickerRef.current.contains(event.target)) {
+        setIsAddSortPickerOpen(false);
+      }
+    };
+
+    window.addEventListener("mousedown", onMouseDown);
+    return () => {
+      window.removeEventListener("mousedown", onMouseDown);
+    };
+  }, [isAddSortPickerOpen]);
+  useEffect(() => {
+    if (sorts.length === 0) {
+      setIsAddSortPickerOpen(false);
+    }
+  }, [sorts.length]);
 
   return (
     <>
@@ -812,6 +796,7 @@ export function TableWorkspaceChrome({
             ].join(" ")}
             onClick={() => {
               setIsSortPanelOpen(false);
+              setIsAddSortPickerOpen(false);
               setIsFilterPanelOpen(false);
               setIsHideFieldsPanelOpen((value) => !value);
             }}
@@ -927,6 +912,7 @@ export function TableWorkspaceChrome({
             onClick={() => {
               setIsHideFieldsPanelOpen(false);
               setIsSortPanelOpen(false);
+              setIsAddSortPickerOpen(false);
               setIsFilterPanelOpen((value) => !value);
             }}
             aria-label={filterButtonLabel}
@@ -955,15 +941,20 @@ export function TableWorkspaceChrome({
           <Button
             variant="ghost"
             size="sm"
-            className={toolbarButtonClass}
+            className={[
+              toolbarButtonClass,
+              sortCount > 0 ? "bg-[#f3e8ff] text-[#6b21a8] hover:bg-[#ead8fe]" : "",
+            ].join(" ")}
             onClick={() => {
               setIsHideFieldsPanelOpen(false);
               setIsFilterPanelOpen(false);
+              setIsAddSortPickerOpen(false);
               setIsSortPanelOpen((value) => !value);
             }}
+            aria-label={sortButtonLabel}
           >
             <AirtableIcon name="ArrowsDownUp" className={toolbarIconClass} />
-            Sort
+            {sortButtonLabel}
           </Button>
           <Button
             variant="ghost"
@@ -976,14 +967,51 @@ export function TableWorkspaceChrome({
             {createBulkRowsMutation.isPending ? "Adding 100,000..." : "Add 100,000 rows"}
           </Button>
           {isSortPanelOpen ? (
-            <div className="absolute right-0 top-10 z-30 w-[760px] max-w-[calc(100vw-1rem)] rounded-md border border-[#d7dbe3] bg-white p-3 shadow-lg">
-              <div className="mb-3 flex items-center gap-2">
-                <p className="text-[14px] font-medium text-[#374151]">Sort by</p>
+            <div className="absolute right-0 top-10 z-30 w-[380px] max-w-[calc(100vw-1rem)] rounded-md border border-[#d7dbe3] bg-white p-2 shadow-lg">
+              <div className="mb-2 flex items-center gap-2">
+                <p className="text-[12px] font-medium text-[#374151]">Sort by</p>
                 <AirtableIcon name="Question" className="h-3.5 w-3.5 text-[#8a94a6]" />
               </div>
-              <div className="mb-3 border-t border-[#e4e7ec]" />
+              <div className="mb-2 border-t border-[#e4e7ec]" />
               {visibleColumns.length === 0 ? (
                 <p className="text-[12px] text-[#6b7280]">No text or number columns available.</p>
+              ) : sorts.length === 0 ? (
+                <>
+                  <div className="mb-2 flex items-center rounded px-1.5 py-0.5">
+                    <AirtableIcon name="MagnifyingGlass" className="h-3.5 w-3.5 text-[#8a94a6]" />
+                    <input
+                      type="text"
+                      value={sortSearchQuery}
+                      onChange={(event) => setSortSearchQuery(event.target.value)}
+                      placeholder="Find a field"
+                      className="h-5 w-full border-none bg-transparent px-2 text-[11px] text-[#334155] outline-none"
+                    />
+                  </div>
+                  <div className="max-h-56 min-h-[100px] overflow-auto">
+                    {filteredSortableColumns.map((column) => (
+                      <button
+                        key={column.id}
+                        type="button"
+                        className="flex w-full items-center rounded px-2 py-1 text-left text-[11px] text-[#334155] hover:bg-[#eef2f7]"
+                        onClick={() => {
+                          setSorts([createDefaultSort(column)]);
+                          setSortSearchQuery("");
+                          setIsAddSortPickerOpen(false);
+                        }}
+                      >
+                        {column.type === "number" ? (
+                          <AirtableIcon name="HashStraight" className="mr-2 h-3.5 w-3.5 text-[#8a94a6]" />
+                        ) : (
+                          <AirtableIcon name="TextAa" className="mr-2 h-3.5 w-3.5 text-[#8a94a6]" />
+                        )}
+                        {column.name}
+                      </button>
+                    ))}
+                    {filteredSortableColumns.length === 0 ? (
+                      <p className="px-2 py-2 text-[12px] text-[#8a94a6]">No matching fields.</p>
+                    ) : null}
+                  </div>
+                </>
               ) : (
                 <div className="space-y-2">
                   {sorts.map((sort, index) => {
@@ -992,21 +1020,34 @@ export function TableWorkspaceChrome({
                       sortColumn?.type === "number"
                         ? numberSortDirectionOptions
                         : textSortDirectionOptions;
+                    const pickerColumns = visibleColumns.filter(
+                      (column) =>
+                        column.id === sort.columnId ||
+                        !sorts.some(
+                          (existingSort, existingIndex) =>
+                            existingIndex !== index && existingSort.columnId === column.id,
+                        ),
+                    );
 
                     return (
                       <div
                         key={`${sort.columnId}-${index}`}
-                        className="grid grid-cols-[1fr_240px_auto] gap-1.5"
+                        className="grid grid-cols-[180px_110px_32px] gap-1.5"
                       >
                         <SortColumnPicker
-                          columns={visibleColumns}
+                          columns={pickerColumns}
                           value={sort.columnId}
                           onSelect={(columnId) => {
+                            if (sorts.some((existingSort, existingIndex) => {
+                              return existingIndex !== index && existingSort.columnId === columnId;
+                            })) {
+                              return;
+                            }
                             upsertSort(index, { columnId, direction: "asc" });
                           }}
                         />
                         <select
-                          className="h-12 rounded border border-[#d0d5de] bg-background px-3 text-[12px] text-[#334155] outline-none"
+                          className="h-8 rounded border border-[#d0d5de] bg-background px-2 text-[11px] text-[#334155] outline-none"
                           value={sort.direction}
                           onChange={(event) =>
                             upsertSort(index, {
@@ -1023,29 +1064,71 @@ export function TableWorkspaceChrome({
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-12 border-[#d0d5de] bg-background px-3 text-[11px] text-[#4b5563]"
+                          className="h-8 w-8 border-[#d0d5de] bg-background p-0 text-[#4b5563]"
                           onClick={() => removeSort(index)}
                           aria-label="Delete sort condition"
                         >
-                          <AirtableIcon name="Trash" className="h-4 w-4" />
+                          <AirtableIcon name="Trash" className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     );
                   })}
                 </div>
               )}
-              <div className="mt-3 border-t border-[#d9dde5] pt-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-10 border-[#d0d5de] bg-background px-3 text-[18px] font-normal text-[#4b5563]"
-                  onClick={addSort}
-                  disabled={visibleColumns.length === 0}
-                >
-                  <AirtableIcon name="Plus" className="mr-1 h-4 w-4" />
-                  Add another sort
-                </Button>
-              </div>
+              {sorts.length > 0 ? (
+                <div className="relative mt-2 border-t border-[#d9dde5] pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 border-[#d0d5de] bg-background px-2 text-[11px] font-normal text-[#4b5563]"
+                    onClick={openAddSortPicker}
+                    disabled={visibleColumns.length === 0 || availableColumnsForNewSort.length === 0}
+                  >
+                    <AirtableIcon name="Plus" className="mr-1 h-3.5 w-3.5" />
+                    Add another sort
+                  </Button>
+                  {isAddSortPickerOpen ? (
+                    <div
+                      ref={addSortPickerRef}
+                      className="absolute left-0 top-full z-40 mt-1 w-[260px] rounded-md border border-[#d7dbe3] bg-white p-2 shadow-lg"
+                    >
+                      <div className="mb-2 flex items-center rounded px-1.5 py-0.5">
+                        <AirtableIcon name="MagnifyingGlass" className="h-3.5 w-3.5 text-[#8a94a6]" />
+                        <input
+                          type="text"
+                          value={sortSearchQuery}
+                          onChange={(event) => setSortSearchQuery(event.target.value)}
+                          placeholder="Find a field"
+                          className="h-5 w-full border-none bg-transparent px-2 text-[11px] text-[#334155] outline-none"
+                        />
+                      </div>
+                      <div className="max-h-48 min-h-[80px] overflow-auto">
+                        {filteredAvailableColumnsForNewSort.map((column) => (
+                          <button
+                            key={column.id}
+                            type="button"
+                            className="flex w-full items-center rounded px-2 py-1 text-left text-[11px] text-[#334155] hover:bg-[#eef2f7]"
+                            onClick={() => appendSortForColumn(column)}
+                          >
+                            {column.type === "number" ? (
+                              <AirtableIcon
+                                name="HashStraight"
+                                className="mr-2 h-3.5 w-3.5 text-[#8a94a6]"
+                              />
+                            ) : (
+                              <AirtableIcon name="TextAa" className="mr-2 h-3.5 w-3.5 text-[#8a94a6]" />
+                            )}
+                            {column.name}
+                          </button>
+                        ))}
+                        {filteredAvailableColumnsForNewSort.length === 0 ? (
+                          <p className="px-2 py-2 text-[11px] text-[#8a94a6]">No matching fields.</p>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
               {setSortsMutation.error ? (
                 <p className="mt-2 text-[11px] text-red-600">{setSortsMutation.error.message}</p>
               ) : null}

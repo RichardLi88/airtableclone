@@ -73,6 +73,8 @@ export const TableGetColumnsOutputSchema = z.array(
 
 export const ViewGetAllRowsInputSchema = z.object({
   viewId: ViewModelSchema.shape.id,
+  limit: z.number().int().min(1).max(5000).optional(),
+  cursor: RowModelSchema.shape.id.optional(),
 });
 
 export const ViewGetAllRowsOutputSchema = z.array(
@@ -144,6 +146,21 @@ export const TableCreateRowOutputSchema = RowModelSchema.pick({
   tableId: true,
 });
 
+export const TableDuplicateRowInputSchema = z.object({
+  rowId: RowModelSchema.shape.id,
+});
+
+export const TableDuplicateRowOutputSchema = TableCreateRowOutputSchema;
+
+export const TableDeleteRowInputSchema = z.object({
+  rowId: RowModelSchema.shape.id,
+});
+
+export const TableDeleteRowOutputSchema = z.object({
+  id: RowModelSchema.shape.id,
+  tableId: RowModelSchema.shape.tableId,
+});
+
 export const TableCreateBulkRowsInputSchema = z.object({
   tableId: TableModelSchema.shape.id,
   count: z.number().int().min(1).max(100000),
@@ -158,6 +175,7 @@ export const TableCreateColumnInputSchema = z.object({
   tableId: TableModelSchema.shape.id,
   name: z.string().trim().min(1).max(100),
   type: ColumnModelSchema.shape.type,
+  position: z.number().int().min(0).optional(),
 });
 
 export const TableCreateColumnOutputSchema = ColumnModelSchema.pick({
@@ -166,6 +184,23 @@ export const TableCreateColumnOutputSchema = ColumnModelSchema.pick({
   type: true,
   position: true,
   tableId: true,
+});
+
+export const TableUpdateColumnInputSchema = z.object({
+  columnId: ColumnModelSchema.shape.id,
+  name: z.string().trim().min(1).max(100),
+  type: ColumnModelSchema.shape.type,
+});
+
+export const TableUpdateColumnOutputSchema = TableCreateColumnOutputSchema;
+
+export const TableDeleteColumnInputSchema = z.object({
+  columnId: ColumnModelSchema.shape.id,
+});
+
+export const TableDeleteColumnOutputSchema = z.object({
+  id: ColumnModelSchema.shape.id,
+  tableId: ColumnModelSchema.shape.tableId,
 });
 
 export const ViewGetByTableInputSchema = z.object({
