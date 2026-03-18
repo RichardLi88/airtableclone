@@ -7,6 +7,7 @@ import {
   RowModelSchema,
   TableModelSchema,
   ViewFilterModelSchema,
+  ViewColumnVisibilityModelSchema,
   ViewSortModelSchema,
   ViewModelSchema,
 } from "./models";
@@ -28,6 +29,18 @@ export const BaseMarkOpenedInputSchema = z.object({
 export const BaseMarkOpenedOutputSchema = BaseModelSchema.pick({
   id: true,
   lastOpened: true,
+});
+
+export const BaseCreateInputSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+});
+
+export const BaseCreateOutputSchema = BaseModelSchema.pick({
+  id: true,
+  name: true,
+  lastOpened: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const TableGetByBaseInputSchema = TableModelSchema.pick({
@@ -78,8 +91,21 @@ export const ViewGetAllRowsOutputSchema = z.array(
   }),
 );
 
+export const ViewGetRowsPageInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+  limit: z.number().int().min(1).max(1000).default(200),
+  cursor: RowModelSchema.shape.id.optional(),
+});
+
+export const ViewGetRowsPageOutputSchema = z.object({
+  rows: ViewGetAllRowsOutputSchema,
+  nextCursor: RowModelSchema.shape.id.nullable(),
+});
+
 export const TableCreateInputSchema = TableModelSchema.pick({
   baseId: true,
+}).extend({
+  name: z.string().trim().min(1).max(100),
 });
 
 export const TableCreateOutputSchema = TableModelSchema.pick({
@@ -88,6 +114,58 @@ export const TableCreateOutputSchema = TableModelSchema.pick({
   baseId: true,
   createdAt: true,
   updatedAt: true,
+});
+
+export const TableRenameInputSchema = z.object({
+  tableId: TableModelSchema.shape.id,
+  name: z.string().trim().min(1).max(100),
+});
+
+export const TableRenameOutputSchema = TableCreateOutputSchema;
+
+export const TableDeleteInputSchema = z.object({
+  tableId: TableModelSchema.shape.id,
+});
+
+export const TableDeleteOutputSchema = z.object({
+  id: TableModelSchema.shape.id,
+  baseId: TableModelSchema.shape.baseId,
+  nextTableId: TableModelSchema.shape.id.nullable(),
+});
+
+export const TableCreateRowInputSchema = z.object({
+  tableId: TableModelSchema.shape.id,
+});
+
+export const TableCreateRowOutputSchema = RowModelSchema.pick({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  tableId: true,
+});
+
+export const TableCreateBulkRowsInputSchema = z.object({
+  tableId: TableModelSchema.shape.id,
+  count: z.number().int().min(1).max(100000),
+});
+
+export const TableCreateBulkRowsOutputSchema = z.object({
+  tableId: TableModelSchema.shape.id,
+  createdCount: z.number().int().min(0),
+});
+
+export const TableCreateColumnInputSchema = z.object({
+  tableId: TableModelSchema.shape.id,
+  name: z.string().trim().min(1).max(100),
+  type: ColumnModelSchema.shape.type,
+});
+
+export const TableCreateColumnOutputSchema = ColumnModelSchema.pick({
+  id: true,
+  name: true,
+  type: true,
+  position: true,
+  tableId: true,
 });
 
 export const ViewGetByTableInputSchema = z.object({
@@ -109,6 +187,7 @@ export const ViewGetByTableOutputSchema = z.array(
 
 export const ViewCreateInputSchema = z.object({
   tableId: ViewModelSchema.shape.tableId,
+  name: z.string().trim().min(1).max(100),
 });
 
 export const ViewCreateOutputSchema = ViewModelSchema.pick({
@@ -120,6 +199,28 @@ export const ViewCreateOutputSchema = ViewModelSchema.pick({
   searchQuery: true,
   createdAt: true,
   updatedAt: true,
+});
+
+export const ViewRenameInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+  name: z.string().trim().min(1).max(100),
+});
+
+export const ViewRenameOutputSchema = ViewCreateOutputSchema;
+
+export const ViewDuplicateInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+});
+
+export const ViewDuplicateOutputSchema = ViewCreateOutputSchema;
+
+export const ViewDeleteInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+});
+
+export const ViewDeleteOutputSchema = z.object({
+  id: ViewModelSchema.shape.id,
+  tableId: ViewModelSchema.shape.tableId,
 });
 
 export const ViewFilterInputSchema = z.object({
@@ -179,6 +280,31 @@ export const ViewGetSortsInputSchema = z.object({
 });
 
 export const ViewGetSortsOutputSchema = ViewSetSortsOutputSchema;
+
+export const ViewGetColumnVisibilityInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+});
+
+export const ViewGetColumnVisibilityOutputSchema = z.array(
+  ViewColumnVisibilityModelSchema.pick({
+    id: true,
+    viewId: true,
+    columnId: true,
+    isVisible: true,
+  }),
+);
+
+export const ViewColumnVisibilityInputSchema = z.object({
+  columnId: ViewColumnVisibilityModelSchema.shape.columnId,
+  isVisible: ViewColumnVisibilityModelSchema.shape.isVisible,
+});
+
+export const ViewSetColumnVisibilityInputSchema = z.object({
+  viewId: ViewModelSchema.shape.id,
+  columnVisibility: z.array(ViewColumnVisibilityInputSchema),
+});
+
+export const ViewSetColumnVisibilityOutputSchema = ViewGetColumnVisibilityOutputSchema;
 
 export const CellUpdateValueInputSchema = CellModelSchema.pick({
   rowId: true,

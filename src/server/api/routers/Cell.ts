@@ -18,7 +18,7 @@ export const cellRouter = createTRPCRouter({
         }),
         ctx.db.column.findUnique({
           where: { id: input.columnId },
-          select: { id: true, tableId: true },
+          select: { id: true, tableId: true, type: true },
         }),
       ]);
 
@@ -35,6 +35,16 @@ export const cellRouter = createTRPCRouter({
           code: "BAD_REQUEST",
           message: "Row and column must belong to the same table.",
         });
+      }
+
+      if (column.type === "number") {
+        const normalizedValue = (input.value ?? "").trim();
+        if (normalizedValue.length > 0 && !Number.isFinite(Number(normalizedValue))) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Please enter a number",
+          });
+        }
       }
 
       return await ctx.db.cell.upsert({

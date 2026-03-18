@@ -5,16 +5,28 @@ import { type createTRPCContext, createTRPCRouter, publicProcedure } from "~/ser
 import {
   ViewCreateInputSchema,
   ViewCreateOutputSchema,
+  ViewDeleteInputSchema,
+  ViewDeleteOutputSchema,
+  ViewDuplicateInputSchema,
+  ViewDuplicateOutputSchema,
   ViewGetAllRowsInputSchema,
   ViewGetAllRowsOutputSchema,
+  ViewGetRowsPageInputSchema,
+  ViewGetRowsPageOutputSchema,
+  ViewGetColumnVisibilityInputSchema,
+  ViewGetColumnVisibilityOutputSchema,
   ViewGetFiltersInputSchema,
   ViewGetFiltersOutputSchema,
   ViewGetSortsInputSchema,
   ViewGetSortsOutputSchema,
   ViewGetByTableInputSchema,
   ViewGetByTableOutputSchema,
+  ViewRenameInputSchema,
+  ViewRenameOutputSchema,
   ViewSetFiltersInputSchema,
   ViewSetFiltersOutputSchema,
+  ViewSetColumnVisibilityInputSchema,
+  ViewSetColumnVisibilityOutputSchema,
   ViewSetSortsInputSchema,
   ViewSetSortsOutputSchema,
 } from "~/types/router";
@@ -35,6 +47,11 @@ type ViewDefinition = {
       id: string;
       type: "text" | "number";
     };
+  }>;
+  columnVisibilities: Array<{
+    id: string;
+    columnId: string;
+    isVisible: boolean;
   }>;
 };
 
@@ -84,6 +101,14 @@ async function getViewDefinition(ctx: TRPCContext, viewId: string): Promise<View
               type: true,
             },
           },
+        },
+      },
+      columnVisibilities: {
+        orderBy: [{ id: "asc" }],
+        select: {
+          id: true,
+          columnId: true,
+          isVisible: true,
         },
       },
     },
@@ -245,14 +270,92 @@ function buildFiltersWhereClause(view: ViewDefinition): Prisma.RowWhereInput | u
 async function getRowsForView(ctx: TRPCContext, viewId: string) {
   const view = await getViewDefinition(ctx, viewId);
   const filtersWhereClause = buildFiltersWhereClause(view);
+  const tableColumns = await ctx.db.column.findMany({
+    where: { tableId: view.tableId },
+    select: { id: true },
+  });
+  const visibilityMap = new Map(view.columnVisibilities.map((entry) => [entry.columnId, entry.isVisible]));
+  let visibleColumnIds = tableColumns
+    .filter((column) => visibilityMap.get(column.id) !== false)
+    .map((column) => column.id);
+  if (visibleColumnIds.length === 0 && tableColumns.length > 0) {
+    visibleColumnIds = [tableColumns[0]!.id];
+  }
+
   return await ctx.db.row.findMany({
     where: {
       tableId: view.tableId,
       ...(filtersWhereClause ? { AND: [filtersWhereClause] } : {}),
     },
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
-    select: rowSelect,
+    select: {
+      ...rowSelect,
+      cells: {
+        orderBy: [{ column: { position: "asc" } }, { id: "asc" }],
+        where: {
+          ...(visibleColumnIds.length > 0 ? { columnId: { in: visibleColumnIds } } : { id: "__no_visible_cells__" }),
+        },
+        select: rowSelect.cells.select,
+      },
+    },
   });
+}
+
+async function getRowsPageForView(
+  ctx: TRPCContext,
+  input: {
+    viewId: string;
+    limit: number;
+    cursor?: string;
+  },
+) {
+  const view = await getViewDefinition(ctx, input.viewId);
+  const filtersWhereClause = buildFiltersWhereClause(view);
+  const tableColumns = await ctx.db.column.findMany({
+    where: { tableId: view.tableId },
+    select: { id: true },
+  });
+  const visibilityMap = new Map(view.columnVisibilities.map((entry) => [entry.columnId, entry.isVisible]));
+  let visibleColumnIds = tableColumns
+    .filter((column) => visibilityMap.get(column.id) !== false)
+    .map((column) => column.id);
+  if (visibleColumnIds.length === 0 && tableColumns.length > 0) {
+    visibleColumnIds = [tableColumns[0]!.id];
+  }
+
+  const rows = await ctx.db.row.findMany({
+    where: {
+      tableId: view.tableId,
+      ...(filtersWhereClause ? { AND: [filtersWhereClause] } : {}),
+    },
+    orderBy: [{ id: "asc" }],
+    take: input.limit + 1,
+    ...(input.cursor
+      ? {
+          cursor: { id: input.cursor },
+          skip: 1,
+        }
+      : {}),
+    select: {
+      ...rowSelect,
+      cells: {
+        orderBy: [{ column: { position: "asc" } }, { id: "asc" }],
+        where: {
+          ...(visibleColumnIds.length > 0 ? { columnId: { in: visibleColumnIds } } : { id: "__no_visible_cells__" }),
+        },
+        select: rowSelect.cells.select,
+      },
+    },
+  });
+
+  const hasMore = rows.length > input.limit;
+  const pagedRows = hasMore ? rows.slice(0, input.limit) : rows;
+  const nextCursor = hasMore ? pagedRows[pagedRows.length - 1]?.id ?? null : null;
+
+  return {
+    rows: pagedRows,
+    nextCursor,
+  };
 }
 
 export const viewRouter = createTRPCRouter({
@@ -321,7 +424,7 @@ export const viewRouter = createTRPCRouter({
       return await ctx.db.view.create({
         data: {
           tableId: input.tableId,
-          name: existingViewCount === 0 ? "Grid view" : `Grid view ${existingViewCount + 1}`,
+          name: input.name.trim(),
           type: "grid",
           isDefault: existingViewCount === 0,
           searchQuery: null,
@@ -338,11 +441,159 @@ export const viewRouter = createTRPCRouter({
         },
       });
     }),
+  rename: publicProcedure
+    .input(ViewRenameInputSchema)
+    .output(ViewRenameOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const view = await ctx.db.view.findUnique({
+        where: { id: input.viewId },
+        select: { id: true },
+      });
+      if (!view) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "View not found." });
+      }
+
+      return await ctx.db.view.update({
+        where: { id: input.viewId },
+        data: { name: input.name },
+        select: {
+          id: true,
+          name: true,
+          type: true,
+          tableId: true,
+          isDefault: true,
+          searchQuery: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    }),
+  duplicate: publicProcedure
+    .input(ViewDuplicateInputSchema)
+    .output(ViewDuplicateOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.$transaction(async (tx) => {
+        const originalView = await tx.view.findUnique({
+          where: { id: input.viewId },
+          include: {
+            filters: {
+              orderBy: [{ position: "asc" }, { id: "asc" }],
+            },
+            sorts: {
+              orderBy: [{ position: "asc" }, { id: "asc" }],
+            },
+          },
+        });
+
+        if (!originalView) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "View not found." });
+        }
+
+        const duplicatedView = await tx.view.create({
+          data: {
+            tableId: originalView.tableId,
+            name: `${originalView.name} copy`,
+            type: originalView.type,
+            isDefault: false,
+            searchQuery: originalView.searchQuery,
+          },
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            tableId: true,
+            isDefault: true,
+            searchQuery: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        });
+
+        if (originalView.filters.length > 0) {
+          await tx.viewFilter.createMany({
+            data: originalView.filters.map((filter, index) => ({
+              viewId: duplicatedView.id,
+              columnId: filter.columnId,
+              conjunction: filter.conjunction,
+              operator: filter.operator,
+              value: filter.value,
+              position: index,
+            })),
+          });
+        }
+
+        if (originalView.sorts.length > 0) {
+          await tx.viewSort.createMany({
+            data: originalView.sorts.map((sort, index) => ({
+              viewId: duplicatedView.id,
+              columnId: sort.columnId,
+              direction: sort.direction,
+              position: index,
+            })),
+          });
+        }
+
+        return duplicatedView;
+      });
+    }),
+  delete: publicProcedure
+    .input(ViewDeleteInputSchema)
+    .output(ViewDeleteOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.$transaction(async (tx) => {
+        const view = await tx.view.findUnique({
+          where: { id: input.viewId },
+          select: { id: true, tableId: true, isDefault: true },
+        });
+
+        if (!view) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "View not found." });
+        }
+
+        const siblingViews = await tx.view.findMany({
+          where: { tableId: view.tableId },
+          orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+          select: { id: true, isDefault: true },
+        });
+
+        if (siblingViews.length <= 1) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Cannot delete the only view in a table.",
+          });
+        }
+
+        await tx.viewFilter.deleteMany({ where: { viewId: view.id } });
+        await tx.viewSort.deleteMany({ where: { viewId: view.id } });
+        await tx.viewColumnVisibility.deleteMany({ where: { viewId: view.id } });
+        await tx.view.delete({ where: { id: view.id } });
+
+        if (view.isDefault) {
+          const nextDefault = siblingViews.find((candidate) => candidate.id !== view.id);
+          if (nextDefault) {
+            await tx.view.update({
+              where: { id: nextDefault.id },
+              data: { isDefault: true },
+            });
+          }
+        }
+
+        return {
+          id: view.id,
+          tableId: view.tableId,
+        };
+      });
+    }),
 
   getAllRows: publicProcedure
     .input(ViewGetAllRowsInputSchema)
     .output(ViewGetAllRowsOutputSchema)
     .query(async ({ ctx, input }) => getRowsForView(ctx, input.viewId)),
+
+  getRowsPage: publicProcedure
+    .input(ViewGetRowsPageInputSchema)
+    .output(ViewGetRowsPageOutputSchema)
+    .query(async ({ ctx, input }) => getRowsPageForView(ctx, input)),
 
   getFilters: publicProcedure
     .input(ViewGetFiltersInputSchema)
@@ -510,6 +761,103 @@ export const viewRouter = createTRPCRouter({
           direction: true,
           position: true,
         },
+      });
+    }),
+  getColumnVisibility: publicProcedure
+    .input(ViewGetColumnVisibilityInputSchema)
+    .output(ViewGetColumnVisibilityOutputSchema)
+    .query(async ({ ctx, input }) => {
+      const view = await ctx.db.view.findUnique({
+        where: { id: input.viewId },
+        select: { id: true },
+      });
+
+      if (!view) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "View not found." });
+      }
+
+      return await ctx.db.viewColumnVisibility.findMany({
+        where: { viewId: input.viewId },
+        orderBy: [{ id: "asc" }],
+        select: {
+          id: true,
+          viewId: true,
+          columnId: true,
+          isVisible: true,
+        },
+      });
+    }),
+  setColumnVisibility: publicProcedure
+    .input(ViewSetColumnVisibilityInputSchema)
+    .output(ViewSetColumnVisibilityOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.$transaction(async (tx) => {
+        const view = await tx.view.findUnique({
+          where: { id: input.viewId },
+          select: { id: true, tableId: true },
+        });
+
+        if (!view) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "View not found." });
+        }
+
+        const validColumns = await tx.column.findMany({
+          where: { tableId: view.tableId },
+          select: { id: true, position: true },
+          orderBy: [{ position: "asc" }, { id: "asc" }],
+        });
+        const validColumnIds = new Set(validColumns.map((column) => column.id));
+
+        for (const entry of input.columnVisibility) {
+          if (!validColumnIds.has(entry.columnId)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "All visibility settings must target columns in the same table as the view.",
+            });
+          }
+        }
+
+        const requestedVisibilityByColumn = new Map(
+          input.columnVisibility.map((entry) => [entry.columnId, entry.isVisible]),
+        );
+        const primaryColumnId = validColumns[0]?.id;
+        if (primaryColumnId) {
+          requestedVisibilityByColumn.set(primaryColumnId, true);
+        }
+        const visibleColumnCount = validColumns.filter(
+          (column) => requestedVisibilityByColumn.get(column.id) !== false,
+        ).length;
+        if (visibleColumnCount < 1) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "At least one column must remain visible.",
+          });
+        }
+
+        await tx.viewColumnVisibility.deleteMany({
+          where: { viewId: view.id },
+        });
+
+        if (input.columnVisibility.length > 0) {
+          await tx.viewColumnVisibility.createMany({
+            data: input.columnVisibility.map((entry) => ({
+              viewId: view.id,
+              columnId: entry.columnId,
+              isVisible: entry.columnId === primaryColumnId ? true : entry.isVisible,
+            })),
+          });
+        }
+
+        return await tx.viewColumnVisibility.findMany({
+          where: { viewId: view.id },
+          orderBy: [{ id: "asc" }],
+          select: {
+            id: true,
+            viewId: true,
+            columnId: true,
+            isVisible: true,
+          },
+        });
       });
     }),
   setSorts: publicProcedure

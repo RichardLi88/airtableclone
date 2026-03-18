@@ -59,7 +59,7 @@ export default async function BaseTablePage({ params, searchParams }: BaseTableP
         currentViewId={currentViewId}
         currentViewName={currentViewName}
       >
-        <TablePanel viewId={currentViewId} />
+        <TablePanel viewId={currentViewId} tableId={tableId} />
       </TableWorkspaceChrome>
     </main>
   );
